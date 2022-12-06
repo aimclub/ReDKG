@@ -1,1 +1,1 @@
-# REinforcement learning on Dynamic Knowledge Graphs (REDKG)
+# **Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**)
