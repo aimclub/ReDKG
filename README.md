@@ -41,7 +41,7 @@ and in the `tutorial for novices  </docs/tutorials/sample.rst>`__
 Project Structure
 =================
 
-The latest stable release of GEFEST is on the `main branch <https://github.com/ITMO-NSS-team/GEFEST/tree/main>`__.
+The latest stable release of GEFEST is on the
 
 The repository includes the following directories:
 
