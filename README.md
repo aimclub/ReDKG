@@ -17,7 +17,7 @@
 .. end-badges
 --->
 
-**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolbox for bla-bla-bla
+#**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolbox for bla-bla-bla
 
 In core it uses:
 
