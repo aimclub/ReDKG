@@ -20,7 +20,8 @@
 **Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolbox for bla-bla-bla
 ==========
 
-In core it uses:
+it is designed to encode static and dynamic (temporary) knowledge graphs (KG) by constructing vector representations for the entities and relationships included in them. 
+The algorithm implements the functions of strong AI in terms of supporting algorithms for strong AI. The algorithm of coding of knowledge graphs is used to obtain vector representations of KG and DKG, which are used to build a DSS using algorithms of strong AI learning with reinforcement on vector representations of KG and DKG.
 
 ![plot](/docs/img/lib_schema.png)
 
