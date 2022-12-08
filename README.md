@@ -96,7 +96,9 @@ author = {Elena Egorova and Gleb Glukhov and Egor Shikov},
 journal = {Procedia Computer Science},
 volume = {212},
 pages = {284-294},
-year = {2022}
+year = {2022},
+doi = {https://doi.org/10.1016/j.procs.2022.11.012},
+url = {https://www.sciencedirect.com/science/article/pii/S1877050922017033}
 }
 
 <!---
