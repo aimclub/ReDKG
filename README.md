@@ -90,19 +90,20 @@ Supported by
 
 Citation
 ========
+@article{starodubcev2022generative,
+  title={Generative Design of Physical Objects using Modular Framework},
+  author={Starodubcev, Nikita O and Nikitin, Nikolay O and Gavaza, Konstantin G and Andronova, Elizaveta A and Sidorenko, Denis O and Kalyuzhnaya, Anna V},
+  journal={arXiv preprint arXiv:2207.14621},
+  year={2022}
+}
+
 @article{EGOROVA2022284,
 title = {Customer transactional behaviour analysis through embedding interpretation},
+author = {Elena Egorova and Gleb Glukhov and Egor Shikov},
 journal = {Procedia Computer Science},
 volume = {212},
 pages = {284-294},
-year = {2022},
-note = {11th International Young Scientist Conference on Computational Science},
-issn = {1877-0509},
-doi = {https://doi.org/10.1016/j.procs.2022.11.012},
-url = {https://www.sciencedirect.com/science/article/pii/S1877050922017033},
-author = {Elena Egorova and Gleb Glukhov and Egor Shikov},
-keywords = {embeddings, transactinal data, knowledge graph},
-abstract = {Modelling customer behaviour is extremely important in areas such as banking, allowing for improvement in the quality of customer service. Embedding methods have proven adequate for predicting subsequent customer interactions in several areas. However, there is little research on banking data, and it is also unclear which factors most influence the model's decisions. At the same time, knowledge graph embeddings are gaining more and more popularity, explicitly taking into account various types of relations in the data. In this study, we consider the problem of predicting the store of a customer's next purchase based on historical transactional data. The results show that knowledge graph-based embeddings better account for repetitive customer behaviour, while traditional matrix factorization-based methods better predict previously unobserved triplets. The paper also presents exciting discoveries regarding the interpretation of representations.}
+year = {2022}
 }
 
 <!---
