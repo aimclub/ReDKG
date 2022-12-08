@@ -90,13 +90,6 @@ Supported by
 
 Citation
 ========
-@article{starodubcev2022generative,
-  title={Generative Design of Physical Objects using Modular Framework},
-  author={Starodubcev, Nikita O and Nikitin, Nikolay O and Gavaza, Konstantin G and Andronova, Elizaveta A and Sidorenko, Denis O and Kalyuzhnaya, Anna V},
-  journal={arXiv preprint arXiv:2207.14621},
-  year={2022}
-}
-
 @article{EGOROVA2022284,
 title = {Customer transactional behaviour analysis through embedding interpretation},
 author = {Elena Egorova and Gleb Glukhov and Egor Shikov},
