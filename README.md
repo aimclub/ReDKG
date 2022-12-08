@@ -2,6 +2,7 @@
    :alt: Logo of GEFEST framework
 --->
 
+<!---
 .. start-badges
 .. list-table::
    :stub-columns: 1
@@ -14,6 +15,7 @@
      - | |tg|
 
 .. end-badges
+--->
 
 **Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolbox for bla-bla-bla
 
