@@ -23,9 +23,6 @@
 In core it uses:
 
 .. figure:: /docs/img/lib_schema.png
-   :figwidth: image
-   :align: center
-
 
 
 How to use
