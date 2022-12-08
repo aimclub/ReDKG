@@ -22,11 +22,9 @@
 
 In core it uses:
 
-<!---
-.. figure:: /docs/img/workflow.png
+.. figure:: /docs/img/lib_schema.png
    :figwidth: image
    :align: center
---->
 
 
 
