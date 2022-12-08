@@ -93,7 +93,7 @@ Citation
 ========
 
 
-
+<!---
 .. |docs| image:: https://readthedocs.org/projects/gefest/badge/?version=latest
    :target: https://gefest.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
@@ -105,3 +105,4 @@ Citation
 .. |tg| image:: https://img.shields.io/badge/Telegram-Group-blue.svg
    :target: https://t.me/gefest_helpdesk
    :alt: Telegram Chat
+--->
