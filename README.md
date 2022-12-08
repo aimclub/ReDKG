@@ -22,7 +22,7 @@
 
 In core it uses:
 
-.. figure:: /docs/img/lib_schema.png
+.. image:: /docs/img/lib_schema.png
 
 
 How to use
