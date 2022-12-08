@@ -22,7 +22,7 @@
 
 In core it uses:
 
-.. image:: /docs/img/lib_schema.png
+![plot](/docs/img/lib_schema.png)
 
 
 How to use
