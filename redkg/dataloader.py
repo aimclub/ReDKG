@@ -1,9 +1,10 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
 import random
+from typing import  Dict, List, Optional, Tuple, Type
 
 class TransE_dataset(Dataset): 
-    def __init__(self, config, entity_vocab, relation_vocab):
+    def __init__(self, config, entity_vocab: Dict, relation_vocab: Dict):
         self.config = config
         self.positive_triples = []
         self.negative_triples = []
@@ -33,6 +34,6 @@ class TransE_dataset(Dataset):
         return self.positive_triples[index], self.negative_triples[index]
 
 
-def get_TransE_dataloader(config, entity_vocab, relation_vocab):
+def get_TransE_dataloader(config, entity_vocab: Dict, relation_vocab: Dict):
     dataset = TransE_dataset(config, entity_vocab, relation_vocab)
     return DataLoader(dataset, batch_size=128, shuffle=True)
