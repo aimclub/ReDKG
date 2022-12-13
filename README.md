@@ -17,7 +17,7 @@
 .. end-badges
 --->
 
-**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolbox for bla-bla-bla
+**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolkit for deep reinforcement learning on dynamci knowledge graphs.
 ==========
 
 it is designed to encode static and dynamic (temporary) knowledge graphs (KG) by constructing vector representations for the entities and relationships included in them. 
