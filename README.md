@@ -1,6 +1,6 @@
-<!---.. image:: /docs/img/gefest_logo.png
-   :alt: Logo of GEFEST framework
---->
+<p align="center">
+  <img src="https://github.com/ShikovEgor/ReDKG/blob/main/docs/logo.png?raw=true" width="300px"> 
+</p>
 
 <!---
 .. start-badges
