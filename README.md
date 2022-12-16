@@ -1,39 +1,46 @@
-<p align="center">
-  <img src="https://github.com/ShikovEgor/ReDKG/blob/main/docs/img/logo.png?raw=true" width="300px"> 
-</p>
-
-<!---
-.. start-badges
-.. list-table::
-   :stub-columns: 1
-
-   * - docs
-     - |docs|
-   * - license
-     - | |license|
-   * - support
-     - | |tg|
-
-.. end-badges
---->
-
 **Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolkit for deep reinforcement learning on dynamci knowledge graphs.
 ==========
-
-it is designed to encode static and dynamic (temporary) knowledge graphs (KG) by constructing vector representations for the entities and relationships included in them. 
-The algorithm implements the functions of strong AI in terms of supporting algorithms for strong AI. The algorithm of coding of knowledge graphs is used to obtain vector representations of KG and DKG, which are used to build a DSS using algorithms of strong AI learning with reinforcement on vector representations of KG and DKG.
+**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolkit for deep reinforcement learning on dynamci knowledge graphs. it is designed to encode static and dynamic (temporary) knowledge graphs (KG) by constructing vector representations for the entities and relationships included in them.  The algorithm implements the functions of strong AI in terms of supporting algorithms for strong AI. The algorithm of coding of knowledge graphs is used to obtain vector representations of KG and DKG, which are used to build a DSS using algorithms of strong AI learning with reinforcement on vector representations of KG and DKG.
 
 ![plot](/docs/img/lib_schema.png)
 
-
 How to use
 ==========
+ 1. Clone repository
+```
+git clone ...
+```
+2. Install requirements
+```python
+pip install -r /path/to/requirements.txt
+```
+3. Donwload test data
+Download [ratings.csv](https://grouplens.org/datasets/movielens/20m/) to /data/ folder./
+Data folder should be contains three files: 
+ - ratings.csv - raw rating file of Movielens-20M dataset;
+ -   kg.txt - knowledge graph file;
+ -  item_index2enity_id.txt - the mapping from item indices in the raw rating file to entity IDs in the KG file;
+4. Run preprocessing.py
+```python
+python preprocess.py
+```
+5. Run train.py
+```python train.py
+python preprocess.py
+```
+\
+More details about first steps with  might be found in the [quick start guide](qwe.asd) and in the [tutorial for novices](qwe.asd).
 
-All details about first steps with  might be found in the 
-<!---
-`quick start guide <https://gefest.readthedocs.io/en/latest/gefest/quickstart.html>`__
-and in the `tutorial for novices  </docs/tutorials/sample.rst>`__
---->
+
+
+ Dependencies
+=========
+ - Python >= 3.7.0 
+ - numpy >= 1.15.4
+ - pandas >= 1.0.0
+ - PyTorch >= 1.0.0
+ - PyTorch Geometric >= 1.6.0
+ - NetworkX >= 2.5.0
 
 Project Structure
 =================
@@ -41,52 +48,48 @@ Project Structure
 The latest stable release of  is on the
 
 The repository includes the following directories:
+* Package `redkg` contains the main classes and scripts;
+* Package `examples` includes several *how-to-use-cases* where you can start to discover how ReDKG works;
+* Directory `data` shoul be contains data for modeling;
+* All *unit and integration tests* can be observed in the `test` directory;
+* The sources of the documentation are in the `docs`.
 
-<!---
-* Package `core <https://github.com/ITMO-NSS-team/GEFEST/tree/main/gefest/core>`__  contains the main classes and scripts. It is the *core* of GEFEST framework;
-* Package `cases <https://github.com/ITMO-NSS-team/GEFEST/tree/main/cases>`__ includes several *how-to-use-cases* where you can start to discover how GEFEST works;
-* All *unit and integration tests* can be observed in the `test <https://github.com/ITMO-NSS-team/GEFEST/tree/main/test>`__ directory;
-* The sources of the documentation are in the `docs <https://github.com/ITMO-NSS-team/GEFEST/tree/main/docs>`__.
---->
 
 Cases and examples
 ==================
-<!---
-- `Experiments <https://github.com/ITMO-NSS-team/GEFEST-paper-experiments>`__ with various real and synthetic cases
-- `Case <https://github.com/ITMO-NSS-team/rbc-traps-generative-design>`__ devoted to the red blood cell traps design.
---->
+To learn representations with default values of arguments from command line, use:
+```
+python kg_run
+```
+
+To learn representations in ypur own project, use:
+
+```python
+from kge import KGEModel
+from edge_predict import Evaluator
+evaluator = Evaluator()
+kge_model = KGEModel(model_name = MODEL_NAME, nentity=nentity, nrelation=nrelation, embedding_size=EMBEDDING_SIZE, gamma=GAMMA, evaluator=evaluator)
+```
+
+### Train KGQR model
+To train KGQR model on your own data ...
+```
+...
+```
 
 Documentation
 =============
-<!---
-Detailed information and description of GEFEST framework is available in the `Read the Docs <https://gefest.readthedocs.io/en/latest/>`__
---->
-
-Contribution guide
-==================
-<!---
-The contribution guide is available in the `page <https://gefest.readthedocs.io/en/latest/contribution.html>`__
---->
-
-Acknowledgments
-===============
-
-We acknowledge the contributors for their important impact and the participants of the numerous scientific conferences
-and workshops for their valuable advice and suggestions.
+Detailed information and description of ReDKG framework is available in the [`Documentation`](link)
 
 Contacts
 ========
-<!---
-* `Telegram channel for solving problems and answering questions on GEFEST <https://t.me/gefest_helpdesk>`_
-* `Natural System Simulation Team <https://itmo-nss-team.github.io/>`_
-* `Newsfeed <https://t.me/NSS_group>`_
-* `Youtube channel <https://www.youtube.com/channel/UC4K9QWaEUpT_p3R4FeDp5jA>`_
---->
+- [Contact development team](mailto:egorshikov@itmo.ru)
+- Natural System Simulation Team <https://itmo-nss-team.github.io/>
 
 Supported by
 ============
 
-`National Center for Cognitive Research of ITMO University <https://actcognitive.org/>`_
+[National Center for Cognitive Research of ITMO University](https://actcognitive.org/) 
 
 Citation
 ========
