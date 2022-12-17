@@ -1,6 +1,6 @@
 **Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolkit for deep reinforcement learning on dynamci knowledge graphs.
 ==========
-**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolkit for deep reinforcement learning on dynamci knowledge graphs. it is designed to encode static and dynamic (temporary) knowledge graphs (KG) by constructing vector representations for the entities and relationships included in them.  The algorithm implements the functions of strong AI in terms of supporting algorithms for strong AI. The algorithm of coding of knowledge graphs is used to obtain vector representations of KG and DKG, which are used to build a DSS using algorithms of strong AI learning with reinforcement on vector representations of KG and DKG.
+**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolkit for deep reinforcement learning on dynamic knowledge graphs. it is designed to encode static and dynamic knowledge graphs (KG) by constructing vector representations for the entities and relationships. The reinforcement learning algorithm based on vector representations is designed to train recommendation models or models of decision support systems based on reinforcement learning (RL) using vector representations of graphs.
 
 ![plot](/docs/img/lib_schema.png)
 
