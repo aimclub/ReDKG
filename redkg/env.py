@@ -5,8 +5,8 @@ import torch
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 
-from utils import pickle_load
-from config import Config
+from redkg.utils import pickle_load
+from redkg.config import Config
 
 
 class Simulator:

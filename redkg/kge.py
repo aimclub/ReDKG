@@ -13,10 +13,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from torch.utils.data import DataLoader
-from dataloader import TestDataset
+from redkg.dataloader import TestDataset
 from collections import defaultdict
-
-from ogb.linkproppred import Evaluator
 
 class KGEModel(nn.Module):
     def __init__(self, model_name, nentity, nrelation, hidden_dim, gamma, evaluator,

@@ -1,5 +1,3 @@
-# Modified from https://github.com/AlexYangLi/KGCN_Keras
-
 import os
 import random
 from collections import defaultdict

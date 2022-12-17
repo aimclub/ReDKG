@@ -2,15 +2,22 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 import random
 from typing import  Dict, List, Optional, Tuple, Type
-
+from redkg.utils import *
 
 def get_TransE_dataloader(config, entity_vocab: Dict, relation_vocab: Dict):
     dataset = TrainDataset(config, entity_vocab, relation_vocab)
     return DataLoader(dataset, batch_size=128, shuffle=True)
 
-def _read_kg(self, path):
+def read_kg(path, kg_path):
+    with open(path + '/entity_vocab.pkl','rb') as f:
+        entity_vocab = pickle.load(f)
+    with open(path + '/item_vocab.pkl','rb') as f:
+        item_vocab = pickle.load(f)
+    with open(path + '/relation_vocab.pkl','rb') as f:
+        relation_vocab = pickle.load(f)
+        
     triples = {'head': [],'relation': [],'tail': []}
-    with open(path, encoding='utf8') as reader:
+    with open(kg_path, encoding='utf8') as reader:
             for line in reader:
                 head, relation, tail = line.strip().split('\t')
                 local_head, local_tail = int(head), int(tail)
@@ -18,9 +25,9 @@ def _read_kg(self, path):
                     local_relation = relation_vocab[relation]
 
                     triples['head'].append(local_head)
-                    triples['hearelationd'].append(local_relation)
+                    triples['relation'].append(local_relation)
                     triples['tail'].append(local_tail)
-    return triples
+    return triples, entity_vocab, item_vocab, relation_vocab
 
 
 class TrainDataset(Dataset): 
@@ -32,19 +39,13 @@ class TrainDataset(Dataset):
         self.negative_sample_size = negative_sample_size
         self.mode = mode
         self.count = count
-        self.true_head = true_head
-        self.true_tail = true_tail
+        # self.true_head = true_head
+        # self.true_tail = true_tail
 
-    @staticmethod
-    def _gen_negative(head, relation, tail):
+    def _gen_negative(self, head, relation, tail):   
         subsampling_weight = self.count[(head, relation)] + self.count[(tail, -relation-1)]
         subsampling_weight = torch.sqrt(1 / torch.Tensor([subsampling_weight]))
         return torch.randint(0, self.nentity, (self.negative_sample_size,)), subsampling_weight
-    # @staticmethod
-    # def _gen_negative(head, relation, tail):
-    #     subsampling_weight = self.count[(head, relation)] + self.count[(tail, -relation-1)]
-    #     subsampling_weight = torch.sqrt(1 / torch.Tensor([subsampling_weight]))
-    #     return torch.randint(0, self.nentity, (self.negative_sample_size,)), subsampling_weight
 
     def __len__(self):
         return self.len
@@ -52,9 +53,8 @@ class TrainDataset(Dataset):
     def __getitem__(self, idx):
         head, relation, tail = self.triples['head'][idx], self.triples['relation'][idx], self.triples['tail'][idx]
         positive_sample = [head, relation, tail]
-
+        
         negative_sample, subsampling_weight = self._gen_negative(head, relation, tail)
-
         return positive_sample, negative_sample, subsampling_weight, self.mode
     
     @staticmethod

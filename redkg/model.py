@@ -6,6 +6,7 @@ from torch.nn.parameter import Parameter
 import numpy as np
 from utils import pickle_load
 
+
 class GraphConvolution(nn.Module):
 	"""
 	Simple GCN layer, similar to https://arxiv.org/abs/1609.02907
@@ -66,6 +67,17 @@ class GCN_GRU(nn.Module):
 		uniform_range = 6 / np.sqrt(nfeat)
 		self.relation_emb.weight.data.uniform_(-uniform_range, uniform_range)
 
+        kge_model = KGEModel(
+            model_name="TransE",
+            nentity=nentity,
+            nrelation=nrelation,
+            hidden_dim=nfeat,
+            gamma=12.0,  #!!!!!!!!!!!!
+            double_entity_embedding=True,
+            double_relation_embedding=True,
+            evaluator=None
+)
+        
 		self.gc1 = GraphConvolution(nfeat, nfeat)
 		self.gc2 = GraphConvolution(nfeat, nfeat)
 
