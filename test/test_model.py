@@ -13,16 +13,14 @@ import sys
 sys.path.append('../')
 
 from edge_predict.Evaluator import Evaluator
-from edge_predict.LinkPrediction import LinkPrediction
-from edge_predict.KGEModel import KGEModel
 from edge_predict.KGEDataset import InfoData, KGEDataset
 
 class TestModel(unittest.TestCase):
 
     def setUp(self):
-        self.train = pd.read_csv(r'train.csv') 
-        self.test = pd.read_csv(r'test.csv')
-        self.valid = pd.read_csv(r'valid.csv')
+        self.train = pd.read_csv(r'data/train.csv') 
+        self.test = pd.read_csv(r'data/test.csv')
+        self.valid = pd.read_csv(r'data/valid.csv')
 
         for i in [self.train, self.test, self.valid]:
              i['neg_head'] = [eval(l) for l in i['neg_head']]
