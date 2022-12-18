@@ -12,8 +12,8 @@ os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
 import sys
 sys.path.append('../')
 
-from edge_predict.Evaluator import Evaluator
-from edge_predict.KGEDataset import InfoData, KGEDataset
+from evaluator import Evaluator
+from kge_dataset import InfoData, KGEDataset
 
 class TestModel(unittest.TestCase):
 
