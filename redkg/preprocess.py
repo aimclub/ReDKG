@@ -211,5 +211,5 @@ def process_data(config):
 	np.save(f'{config.preprocess_results_dir}/kg_adj_mat.npy', adj_mat)
 
 
-if __name__ == '__main__':
-	process_data(Config())
+# if __name__ == '__main__':
+# 	process_data(Config())
