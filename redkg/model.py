@@ -59,24 +59,24 @@ class GCN_GRU(nn.Module):
 		relation_max = max(relation_vocab.values())
 		self.n_hop_kg = pickle_load(f'{config.preprocess_results_dir}/n_hop_kg.pkl')
 
-		self.entity_emb = torch.nn.Embedding(entity_max, nfeat)
-		uniform_range = 6 / np.sqrt(nfeat)
-		self.entity_emb.weight.data.uniform_(-uniform_range, uniform_range)
+		# self.entity_emb = torch.nn.Embedding(entity_max, nfeat)
+		# uniform_range = 6 / np.sqrt(nfeat)
+		# self.entity_emb.weight.data.uniform_(-uniform_range, uniform_range)
 
-		self.relation_emb = torch.nn.Embedding(relation_max, nfeat)
-		uniform_range = 6 / np.sqrt(nfeat)
-		self.relation_emb.weight.data.uniform_(-uniform_range, uniform_range)
+		# self.relation_emb = torch.nn.Embedding(relation_max, nfeat)
+		# uniform_range = 6 / np.sqrt(nfeat)
+		# self.relation_emb.weight.data.uniform_(-uniform_range, uniform_range)
 
-        kge_model = KGEModel(
+        self.kge_model = KGEModel(
             model_name="TransE",
-            nentity=nentity,
-            nrelation=nrelation,
+            nentity=entity_max,
+            nrelation=relation_max,
             hidden_dim=nfeat,
-            gamma=12.0,  #!!!!!!!!!!!!
+            gamma=12.0,  
             double_entity_embedding=True,
             double_relation_embedding=True,
             evaluator=None
-)
+			)
         
 		self.gc1 = GraphConvolution(nfeat, nfeat)
 		self.gc2 = GraphConvolution(nfeat, nfeat)

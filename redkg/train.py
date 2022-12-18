@@ -1,26 +1,9 @@
+import random
 import numpy as np
-import pickle
 import torch
 import torch.optim as optim
 from model import GCN_GRU, Net
 from env import Simulator, Config
-from dataloader import *
-
-def pretrain_embedding(config, entity_vocab, relation_vocab, model, optimizer):
-	model.train()
-
-	dataloader = get_TransE_dataloader(config, entity_vocab, relation_vocab)
-	for epoch in range(200):
-		total_loss = 0
-		for positive_triples, negative_triples in dataloader:	
-			optimizer.zero_grad()
-			loss = model.TransE_forward(positive_triples, negative_triples)
-			loss.backward()
-			optimizer.step()
-
-			total_loss += loss.item()
-		print('TransE epoch', epoch, 'loss', total_loss)
-
 
 def train(config, item_vocab, model, optimizer):
 	memory = deque(maxlen=10000)
