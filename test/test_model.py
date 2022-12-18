@@ -12,7 +12,7 @@ os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
 import sys
 sys.path.append('../')
 
-from evaluator import Evaluator
+from redkg.kge import Evaluator
 from kge_dataset import InfoData, KGEDataset
 
 class TestModel(unittest.TestCase):
