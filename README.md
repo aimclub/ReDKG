@@ -31,6 +31,7 @@ python preprocess.py
 ```
 \
 ![plot](/docs/img/lib_schema.png.png)
+\
 More details about first steps with  might be found in the [quick start guide](qwe.asd) and in the [tutorial for novices](qwe.asd).
 
 
