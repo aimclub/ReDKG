@@ -8,16 +8,18 @@ import pandas as pd
 from config import Config
 from utils import pickle_dump, pickle_load
 
-
 random.seed(14)
 np.random.seed(14)
 
 
-def read_item2entity_file(item2entity_path, item_vocab, entity_vocab):
-	'''
-		item_vocab : Change indicator in rating file to item index in code
-		entity_vocab: Change indicator in knowledge graph file to index in code
-	'''
+def read_item2entity_file(item2entity_path:str, item_vocab:dict, entity_vocab:dict):
+	"""_summary_
+
+	:param item2entity_path: Path to user and entity files
+	:type item2entity_path: str
+	:param item_vocab: Mapping from attribute file to item index in code
+	:param entity_vocab: Mapping from attribute file to entity index in code
+	"""
 	print(f'Logging Info - Reading item2entity file: {item2entity_path}')
 	assert len(item_vocab) == 0 and len(entity_vocab) == 0
 	with open(item2entity_path, encoding='utf8') as reader:
@@ -29,51 +31,51 @@ def read_item2entity_file(item2entity_path, item_vocab, entity_vocab):
 			entity_vocab[entity] = len(entity_vocab)
 
 
-def read_rating_file(rating_path, separator, minimum_interactions, user_vocab, item_vocab, entity_vocab):
+def read_attribute_file(attribute_path, separator, minimum_interactions, user_vocab, item_vocab, entity_vocab):
 	'''
-		user_vocab: Change user indicator in rating to user index in code
+		user_vocab: Change user indicator in attribute to user index in code
 	'''
-	print(f'Logging Info - Reading rating file: {rating_path}')
+	print(f'Logging Info - Reading attribute file: {attribute_path}')
 	assert len(user_vocab) == 0 and len(item_vocab) > 0
-	user_rating = defaultdict(list)
+	user_attribute = defaultdict(list)
 
-	# Save rating datas into user_rating dict
-	with open(rating_path, encoding='utf8') as reader:
+	# Save attribute datas into user_attribute dict
+	with open(attribute_path, encoding='utf8') as reader:
 		for idx, line in enumerate(reader):
 			if idx == 0:                                            # Ignore first line
 				continue
-			user, item, rating, timestamp = line.strip().split(separator)[:4]
-			user, item, rating = int(user), int(item), float(rating)
+			user, item, attribute, timestamp = line.strip().split(separator)[:4]
+			user, item, attribute = int(user), int(item), float(attribute)
 			if item in item_vocab:                                  # Ignore item not in KG
-				user_rating[user].append((item_vocab[item], rating, timestamp))
+				user_attribute[user].append((item_vocab[item], attribute, timestamp))
 
 	# Remove user who has less interaction than 200 (minimum_interactions)
 	# # of remained users has to be 16,525
 	users2remove = []
-	for k, v in user_rating.items():
+	for k, v in user_attribute.items():
 		if len(v) < minimum_interactions:
 			users2remove.append(k)
 	for user2remove in users2remove:
-		del user_rating[user2remove]
+		del user_attribute[user2remove]
 
 	# Split train : val : test = 8 : 1 : 1
-	remained_users = list(user_rating.keys())
+	remained_users = list(user_attribute.keys())
 	total_users = len(remained_users)
 	random.shuffle(remained_users)
 	train_users = remained_users[:int(total_users*0.8)]
 	val_users = remained_users[int(total_users*0.8):int(total_users*0.9)]
 
 	# # of interactions has to be 6,711,013
-	print('Logging Info - Converting rating file...')
-	train_rating_dict, valid_rating_dict, test_rating_dict = {}, {}, {}
+	print('Logging Info - Converting attribute file...')
+	train_attribute_dict, valid_attribute_dict, test_attribute_dict = {}, {}, {}
 	unwatched_item_id_set = set(item_vocab.values())
-	for user, rated_items_by_user in user_rating.items():
+	for user, rated_items_by_user in user_attribute.items():
 		if user in train_users:
-			dict = train_rating_dict
+			dict = train_attribute_dict
 		elif user in val_users:
-			dict = valid_rating_dict
+			dict = valid_attribute_dict
 		else:
-			dict = test_rating_dict
+			dict = test_attribute_dict
 
 		user_vocab[user] = len(user_vocab)
 		user_id = user_vocab[user]
@@ -100,15 +102,18 @@ def read_rating_file(rating_path, separator, minimum_interactions, user_vocab, i
 		del entity_vocab[entities2remove[i]]
 
 	print(f'Logging Info - num of users: {len(user_vocab)}, num of items: {len(item_vocab)}')
-	return train_rating_dict, test_rating_dict, valid_rating_dict
-
+	return train_attribute_dict, test_attribute_dict, valid_attribute_dict
 
 def read_kg(kg_path, entity_vocab, relation_vocab, user_vocab, item_vocab):
-	'''
-		entity_vocab: Change c indicator in item2entity file to entity index in code
-		adj_mat: adjacency matrix of kg
-		feat_mat: TransE pretrained feature of kg
-	'''
+	"""_summary_
+
+	:param kg_path: _description_
+	:param entity_vocab:  Change c indicator in item2entity file to entity index in code
+	:param relation_vocab: _description_
+	:param user_vocab: _description_
+	:param item_vocab: _description_
+	:return: adj_mat adjacency matrix of kg
+	"""
 	print(f'Logging Info - Reading kg file: {kg_path}')
 
 	kg = defaultdict(list)
@@ -178,11 +183,11 @@ def read_kg(kg_path, entity_vocab, relation_vocab, user_vocab, item_vocab):
 def process_data(config):
 	os.makedirs(config.preprocess_results_dir, exist_ok=True)
 
-	# Sort rating file based on user id and timestamp
-	df = pd.read_csv(f'{config.raw_data_dir}/{config.dataset_name}/ratings.csv', delimiter=',')
+	# Sort attribute file based on user id and timestamp
+	df = pd.read_csv(f'{config.raw_data_dir}/{config.dataset_name}/attributes.csv', delimiter=',')
 	df = df.sort_values(by=['userId', 'timestamp'], ascending=[True, True])
-	sorted_rating_path = f'{config.raw_data_dir}/{config.dataset_name}/sorted.csv'
-	df.to_csv(sorted_rating_path, index=False)
+	sorted_attribute_path = f'{config.raw_data_dir}/{config.dataset_name}/sorted.csv'
+	df.to_csv(sorted_attribute_path, index=False)
 
 	user_vocab = {}
 	item_vocab = {}
@@ -190,7 +195,7 @@ def process_data(config):
 	relation_vocab = {}
 
 	read_item2entity_file(config.item2entity_path, item_vocab, entity_vocab)
-	train_data_dict, val_data_dict, test_data_dict = read_rating_file(sorted_rating_path, config.separator,
+	train_data_dict, val_data_dict, test_data_dict = read_attribute_file(sorted_attribute_path, config.separator,
 																	  config.minimum_interactions,
 																	  user_vocab, item_vocab, entity_vocab)
 	pickle_dump(f'{config.preprocess_results_dir}/user_vocab.pkl', user_vocab)

@@ -10,6 +10,7 @@ from redkg.config import Config
 
 
 class Simulator:
+    """Custom Environment that follows gym interface"""
     def __init__(self, config, mode):
         self.rating_dict = pickle_load(f'{config.preprocess_results_dir}/{mode}_data_dict.pkl')
         self.user_ids = list(self.rating_dict.keys())
@@ -25,6 +26,12 @@ class Simulator:
         return user_id, item_ids, rates
 
     def step(self, user_id: int, recommended_item_id: int):
+        """Executes a step in the environment by applying an action. Returns the new observation and reward.
+
+        :param user_id: Current agent (user)
+        :param recommended_item_id: Action (selected item)
+        :return: reward (0 if not interaction, attribute otherwise)
+        """        
         user_ratings = np.array(self.rating_dict[user_id])
         item_ids, rates = user_ratings[:, 0].astype(np.int), user_ratings[:, 1].astype(np.float)
         try:
@@ -35,6 +42,8 @@ class Simulator:
 
 
 class Graph:
+    """Class holding k-hop neighbor information for each vertex"""
+
     def __init__(self, config):
         self.n_hop_kg = pickle_load(f'{config.preprocess_results_dir}/n_hop_kg.pkl')
 
