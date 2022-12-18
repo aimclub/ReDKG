@@ -9,7 +9,7 @@ from utils import pickle_load
 
 class GraphConvolution(nn.Module):
 	"""
-	Simple GCN layer, similar to https://arxiv.org/abs/1609.02907
+	GCN graph convolution layer
 	"""
 
 	def __init__(self, in_features, out_features, bias=True):
@@ -95,17 +95,6 @@ class GCN_GRU(nn.Module):
 		return (self.kge_model.entity_embedding.weight[heads] + 
 				self.relation_emb.weight[relations] - 
 				self.kge_model.entity_embedding.weight[tails]).norm(p=1, dim=1)
-
-	def TransE_forward(self, pos_triplet, neg_triplet):
-		# -1 to avoid nan for OOV vector
-		self.kge_model.entity_embedding.weight.data[:-1, :].div_(self.kge_model.entity_embedding.weight.data[:-1, :].norm(p=2, dim=1, keepdim=True))
-
-		pos_distance = self.distance(pos_triplet)
-		neg_distance = self.distance(neg_triplet)
-
-		target = torch.tensor([-1], dtype=torch.long)
-
-		return self.criterion(pos_distance, neg_distance, target)
 
 	def forward_GCN(self, x):
 		# GCN
@@ -196,3 +185,20 @@ class Net(nn.Module):
         x = F.relu(self.dense2(x))
         x = self.dense3(x)
         return x
+
+class MLP(nn.Module):
+    def __init__(self, input_shape, encoded_size, arch):
+        super().__init__()
+
+        layers = []
+        inputs = input_shape
+        for arc in arch:
+            layers.append(nn.Linear(inputs, arc))
+            layers.append(nn.ReLU())
+            layers.append(nn.BatchNorm1d(arc))
+            inputs = arc
+        layers.append(nn.Linear(arch[-1], encoded_size * 2))
+        self.encoder = nn.Sequential(*layers)
+
+    def forward(self, x):
+        return self.encoder(x)
