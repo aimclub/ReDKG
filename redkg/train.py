@@ -104,29 +104,3 @@ def train(config, item_vocab, model, optimizer):
 				if len(memory) > 100:    
 					optimize_model(memory)
 
-# if __name__ == '__main__':
-
-# 	with open('./data/movie/entity_vocab.pkl','rb') as f:
-# 		entity_vocab = pickle.load(f)
-# 	with open('./data/movie/item_vocab.pkl','rb') as f:
-# 		item_vocab = pickle.load(f)
-# 	with open('./data/movie/relation_vocab.pkl','rb') as f:
-# 		relation_vocab = pickle.load(f)
-
-# 	print('| Building Net')
-# 	model = GCN_GRU(Config(), 50, entity_vocab, relation_vocab)
-# 	optimizer = optim.SGD(model.parameters(), lr=0.01)
-	
-# 	print('Embedding pretrain by TransE...')
-# 	pretrain_embedding(Config(), entity_vocab, relation_vocab, model, optimizer)
-
-# 	print('Save embedding_pretrained model...')
-# 	path = './embedding_pretrained.pth'
-# 	torch.save(model.state_dict(),path)
-	
-# 	print('Load embedding_pretrained model...')
-# 	path = './embedding_pretrained.pth'
-# 	model.load_state_dict(torch.load(path))
-
-# 	print('Train...')
-# 	train(Config(), item_vocab, model, optimizer)
