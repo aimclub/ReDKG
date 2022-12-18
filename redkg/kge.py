@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -17,9 +15,27 @@ from redkg.dataloader import TestDataset
 from collections import defaultdict
 
 class KGEModel(nn.Module):
+    """An implementation of several knowledge graph embedding models.
+
+    The following models were ...
+    """
     def __init__(self, model_name, nentity, nrelation, hidden_dim, gamma, evaluator,
                  double_entity_embedding=False, double_relation_embedding=False):
         super(KGEModel, self).__init__()
+        """Initialize KGE model.
+
+        :model_name: model name; only TransE, DistMult, ComplEx, RotatE models are currently available
+        :nentity: The entit
+        :nrelation: The entit
+        :gamma: The entit
+        :evaluator: The entit
+        :double_entity_embedding: The entit
+        :double_relation_embedding: The entit
+
+        :raises ValueError: _description_
+        :raises ValueError: _description_
+        :raises ValueError: _description_
+        """
         self.model_name = model_name
         self.nentity = nentity
         self.nrelation = nrelation
@@ -64,17 +80,25 @@ class KGEModel(nn.Module):
             raise ValueError('ComplEx should use --double_entity_embedding and --double_relation_embedding')
 
         self.evaluator = evaluator
-        
+      
     def forward(self, sample, mode='single'):
-        '''
-        Forward function that calculate the score of a batch of triples.
+        """Forward function that calculate the score of a batch of triples.
         In the 'single' mode, sample is a batch of triple.
         In the 'head-batch' or 'tail-batch' mode, sample consists two part.
         The first part is usually the positive sample.
         And the second part is the entities in the negative samples.
         Because negative samples and positive samples usually share two elements 
         in their triple ((head, relation) or (relation, tail)).
-        '''
+
+        :param sample: _description_
+        :type sample: _type_
+        :param mode: _description_, defaults to 'single'
+        :type mode: str, optional
+        :raises ValueError: _description_
+        :raises ValueError: _description_
+        :return: _description_
+        :rtype: _type_
+        """
 
         if mode == 'single':
             batch_size, negative_sample_size = sample.size(0), 1
@@ -225,10 +249,19 @@ class KGEModel(nn.Module):
 
     @staticmethod
     def train_step(model, optimizer, train_iterator, args):
-        '''
-        A single train step. Apply back-propation and return the loss
-        '''
+        """A single train step. Apply back-propation and return the loss
 
+        :param model: _description_
+        :type model: _type_
+        :param optimizer: _description_
+        :type optimizer: _type_
+        :param train_iterator: _description_
+        :type train_iterator: _type_
+        :param args: _description_
+        :type args: _type_
+        :return: _description_
+        :rtype: _type_
+        """
         model.train()
         optimizer.zero_grad()
         positive_sample, negative_sample, subsampling_weight, mode = next(train_iterator)
@@ -281,12 +314,22 @@ class KGEModel(nn.Module):
         }
 
         return log
-    
+
     @staticmethod
     def test_step(model, test_triples, args, random_sampling=False):
-        '''
-        Evaluate the model on test or valid datasets
-        '''
+        """Evaluate the model on test or valid datasets
+
+        :param model: _description_
+        :type model: _type_
+        :param test_triples: _description_
+        :type test_triples: _type_
+        :param args: _description_
+        :type args: _type_
+        :param random_sampling: _description_, defaults to False
+        :type random_sampling: bool, optional
+        :return: _description_
+        :rtype: _type_
+        """
         
         model.eval()
 
