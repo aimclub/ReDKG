@@ -4,9 +4,9 @@ import pandas as pd
 class TestData(unittest.TestCase):
 
     def setUp(self):
-        self.train = pd.read_csv(r'train.csv')
-        self.test = pd.read_csv(r'test.csv')
-        self.valid = pd.read_csv(r'valid.csv')
+        self.train = pd.read_csv(r'data/train.csv')
+        self.test = pd.read_csv(r'data/test.csv')
+        self.valid = pd.read_csv(r'data/valid.csv')
 
         for i in [self.train, self.test, self.valid]:
              i['neg_head'] = [eval(l) for l in i['neg_head']]
