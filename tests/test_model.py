@@ -1,18 +1,13 @@
 import torch
-
 torch.manual_seed(0)
+
 import random
-
 random.seed(0)
+
 import numpy as np
-
 np.random.seed(0)
-import os
-
-os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
 import sys
-
 sys.path.append("../")
 
 from redkg.kge import Evaluator, KGEModel
