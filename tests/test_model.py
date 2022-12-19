@@ -63,7 +63,7 @@ def test_evaluator():
 
 def test_model():
     evaluator = Evaluator()
-    kge_model = KGEModel(model_name="TransE", nentity=20, nrelation=2, gamma=12, evaluator=evaluator)
+    kge_model = KGEModel(model_name="TransE", nentity=20, nrelation=2, hidden_dim=2, gamma=12, evaluator=evaluator)
     assert list(kge_model.entity_embedding.shape) == [20, 2]
     assert list(kge_model.relation_embedding.shape) == [2, 2]
     positive_score, negative_tail_score, negative_head_score = kge_model(
