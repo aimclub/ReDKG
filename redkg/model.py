@@ -92,9 +92,9 @@ class GCN_GRU(nn.Module):
         relations = triplets[:, 1]
         tails = triplets[:, 2]
         return (
-            self.kge_model.entity_embedding.weight[heads]
-            + self.relation_emb.weight[relations]
-            - self.kge_model.entity_embedding.weight[tails]
+                self.kge_model.entity_embedding.weight[heads]
+                + self.relation_emb.weight[relations]
+                - self.kge_model.entity_embedding.weight[tails]
         ).norm(p=1, dim=1)
 
     def forward_GCN(self, x):
@@ -146,9 +146,9 @@ class GRU(nn.Module):
         relations = triplets[:, 1]
         tails = triplets[:, 2]
         return (
-            self.kge_model.entity_embedding.weight[heads]
-            + self.relation_emb.weight[relations]
-            - self.kge_model.entity_embedding.weight[tails]
+                self.kge_model.entity_embedding.weight[heads]
+                + self.relation_emb.weight[relations]
+                - self.kge_model.entity_embedding.weight[tails]
         ).norm(p=1, dim=1)
 
     def TransE_forward(self, pos_triplet, neg_triplet):

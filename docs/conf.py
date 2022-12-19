@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, os.path.abspath(".."))
 
 
-project = "StableGNN"
+project = "ReDKG"
 copyright = "2022, NCCR Team (ITMO University)"
 author = "NCCR Team (ITMO University)"
 

@@ -1,8 +1,6 @@
-import random
 from typing import Dict, List, Optional, Tuple, Type
-
+import pickle
 import torch
-from redkg.utils import *
 from torch.utils.data import DataLoader, Dataset
 
 

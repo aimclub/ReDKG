@@ -78,9 +78,7 @@ def parse_args(args=None):
 
 
 def override_config(args):
-    """
-    Override model and data configuration
-    """
+    """Override model and data configuration"""
 
     with open(os.path.join(args.init_checkpoint, "config.json"), "r") as fjson:
         argparse_dict = json.load(fjson)
@@ -94,11 +92,7 @@ def override_config(args):
 
 
 def save_model(model, optimizer, save_variable_list, args):
-    """
-    Save the parameters of the model and the optimizer,
-    as well as some other variables such as step and learning_rate
-    """
-
+    """Save the parameters of the model and the optimizer, as well as some other variables such as step and learning_rate"""
     argparse_dict = vars(args)
     with open(os.path.join(args.save_path, "config.json"), "w") as fjson:
         json.dump(argparse_dict, fjson)
@@ -115,9 +109,7 @@ def save_model(model, optimizer, save_variable_list, args):
 
 
 def set_logger(args):
-    """
-    Write logs to checkpoint and console
-    """
+    """Write logs to checkpoint and console"""
 
     if args.do_train:
         log_file = os.path.join(args.save_path or args.init_checkpoint, "train.log")
@@ -158,7 +150,7 @@ def main(args):
 
     args.save_path = (
         "log/%s/%s/%s-%s/%s" % (args.dataset, args.model, args.hidden_dim, args.gamma, time.time())
-        if args.save_path == None
+        if args.save_path is None
         else args.save_path
     )
     writer = SummaryWriter(args.save_path)
