@@ -1,4 +1,4 @@
-# ReDKG
+# ReDKG1
 
 <p align="center">
   <img src="https://github.com/ShikovEgor/ReDKG/blob/main/docs/img/logo.png?raw=true" width="300px"> 
