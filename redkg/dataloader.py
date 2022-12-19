@@ -1,8 +1,38 @@
 from typing import Dict, List, Optional, Tuple, Type
+from collections import defaultdict
 import pickle
 import torch
 from torch.utils.data import DataLoader, Dataset
 
+
+def get_info(dataset, triples):
+    nrelation = int(max(triples['relation']))+1
+    entity_dict = dict()
+    cur_idx = 0
+    for key in dataset[0]['num_nodes_dict']:
+        entity_dict[key] = (cur_idx, cur_idx + dataset[0]['num_nodes_dict'][key])
+        cur_idx += dataset[0]['num_nodes_dict'][key]
+    nentity = sum(dataset[0]['num_nodes_dict'].values())
+
+    count, true_head, true_tail = defaultdict(lambda: 4), defaultdict(list), defaultdict(list)
+    for i in range(len(triples['head'])):
+        head, relation, tail = triples['head'][i], triples['relation'][i], triples['tail'][i]
+        head_type, tail_type = triples['head_type'][i], triples['tail_type'][i]
+        count[(head, relation, head_type)] += 1
+        count[(tail, -relation-1, tail_type)] += 1
+        true_head[(relation, tail)].append(head)
+        true_tail[(head, relation)].append(tail)
+    
+    info = {
+        'nentity': nentity,
+        'nrelation': nrelation,
+        'count': count,
+        'true_head': true_head,
+        'true_tail': true_tail,
+        'entity_dict': entity_dict   
+    }
+      
+    return info
 
 def get_TransE_dataloader(config, entity_vocab: Dict, relation_vocab: Dict):
     dataset = TrainDataset(config, entity_vocab, relation_vocab)
