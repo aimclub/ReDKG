@@ -3,9 +3,20 @@ from collections import defaultdict
 import pickle
 import torch
 from torch.utils.data import DataLoader, Dataset
-
+import pandas as pd
 
 def get_info(dataset, triples):
+    if not dataset:
+        train,test,valid = triples
+        nentity = len(pd.concat([train['head'], valid['head'], test['head']]).unique()) + \
+                len(pd.concat([train['tail'], valid['tail'], test['tail']]).unique())
+        nrelation = len(pd.concat([train['relation'], valid['relation'], test['relation']]).unique())
+        volume_train = round(len(train)/(len(train)+len(test)+len(valid))*100)
+        volume_valid = round(len(valid)/(len(train)+len(test)+len(valid))*100)
+        volume_test = round(len(test)/(len(train)+len(test)+len(valid))*100)
+        info = f' NUMBER OF ENTITY: {nentity} \n NUMBER OF RELETION: {nrelation} \n TRAIN: {volume_train}% \n VALID: {volume_valid}% \n TEST: {volume_test}%'
+        return nentity, nrelation, volume_train, volume_valid, volume_test, info
+     
     nrelation = int(max(triples['relation']))+1
     entity_dict = dict()
     cur_idx = 0
@@ -62,32 +73,55 @@ def read_kg(path, kg_path):
 
 
 class TrainDataset(Dataset):
-    def __init__(self, triples, nentity, nrelation, negative_sample_size, mode, count):
+    def __init__(self, triples, nentity, nrelation, negative_sample_size, mode, count, true_head = None, true_tail = None, entity_dict = None, negative_mode = "full"):
+        self.len = len(triples['head'])
         self.triples = triples
-        self.len = len(triples["head"])
         self.nentity = nentity
         self.nrelation = nrelation
         self.negative_sample_size = negative_sample_size
         self.mode = mode
         self.count = count
-        # self.true_head = true_head
-        # self.true_tail = true_tail
-
-    def _gen_negative(self, head, relation, tail):
-        subsampling_weight = self.count[(head, relation)] + self.count[(tail, -relation - 1)]
-        subsampling_weight = torch.sqrt(1 / torch.Tensor([subsampling_weight]))
-        return torch.randint(0, self.nentity, (self.negative_sample_size,)), subsampling_weight
-
+        self.true_head = true_head
+        self.true_tail = true_tail
+        self.entity_dict = entity_dict
+        if negative_mode == "simple":   
+            self.negative_sample = self._gen_negative_s
+        elif negative_mode == "full":
+            self.negative_sample = self._gen_negative_f
+        
     def __len__(self):
         return self.len
-
+    
+    def _gen_negative_s(self, head, relation, tail, head_type, tail_type):
+        subsampling_weight = self.count[(head, relation)] + self.count[(tail, -relation - 1)]
+        subsampling_weight = torch.sqrt(1 / torch.Tensor([subsampling_weight]))
+        return torch.randint(0, self.nentity, (self.negative_sample_size,)), subsampling_weight    
+    
+    def _gen_negative_f(self, head, relation, tail, head_type, tail_type):
+        subsampling_weight = self.count[(head, relation, head_type)] + self.count[(tail, -relation-1, tail_type)]
+        subsampling_weight = torch.sqrt(1 / torch.Tensor([subsampling_weight]))
+        if self.mode == 'head-batch':
+            negative_sample = torch.randint(self.entity_dict[head_type][0], self.entity_dict[head_type][1], (self.negative_sample_size,))
+        elif self.mode == 'tail-batch':
+            negative_sample = torch.randint(self.entity_dict[tail_type][0], self.entity_dict[tail_type][1], (self.negative_sample_size,))
+        else:
+            raise
+            
+        return negative_sample, subsampling_weight         
+            
     def __getitem__(self, idx):
-        head, relation, tail = self.triples["head"][idx], self.triples["relation"][idx], self.triples["tail"][idx]
-        positive_sample = [head, relation, tail]
-
-        negative_sample, subsampling_weight = self._gen_negative(head, relation, tail)
+        head, relation, tail = self.triples['head'][idx], self.triples['relation'][idx], self.triples['tail'][idx]       
+        if self.entity_dict:
+            head_type, tail_type = self.triples['head_type'][idx], self.triples['tail_type'][idx]
+            positive_sample = [head + self.entity_dict[head_type][0], relation, tail + self.entity_dict[tail_type][0]]      
+        else:
+            positive_sample = [head, relation, tail]
+            head_type, tail_type = None, None
+                    
+        negative_sample, subsampling_weight = self.negative_sample(head, relation, tail, head_type, tail_type)         
+        positive_sample = torch.LongTensor(positive_sample)            
         return positive_sample, negative_sample, subsampling_weight, self.mode
-
+    
     @staticmethod
     def collate_fn(data):
         positive_sample = torch.stack([_[0] for _ in data], dim=0)
@@ -95,8 +129,9 @@ class TrainDataset(Dataset):
         subsample_weight = torch.cat([_[2] for _ in data], dim=0)
         mode = data[0][3]
         return positive_sample, negative_sample, subsample_weight, mode
-
-
+    
+    
+    
 class TestDataset(Dataset):
     def __init__(self, triples, args, mode, random_sampling):
         self.len = len(triples["head"])
