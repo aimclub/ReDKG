@@ -6,7 +6,7 @@ import torch.optim as optim
 from env import Config, Simulator
 from model import GCN_GRU, Net
 
-def train_kge_model(kge_model, train_pars, test_params, info, train_triples, valid_triples, test_triples, max_steps = 10):
+def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, test_triples, max_steps = 10):
     print('Training...')
     optimizer = torch.optim.Adam(
             filter(lambda p: p.requires_grad, kge_model.parameters()), 
@@ -44,8 +44,9 @@ def train_kge_model(kge_model, train_pars, test_params, info, train_triples, val
         log = kge_model.train_step(kge_model, optimizer, train_iterator, train_pars)
         training_logs.append(log)
 
-        metrics = kge_model.test_step(kge_model, valid_triples, test_params, info['entity_dict'])
-        test_logs.append(metrics)
+        if train_pars.do_test:
+            metrics = kge_model.test_step(kge_model, valid_triples, train_pars, info['entity_dict'])
+            test_logs.append(metrics)
     
         return training_logs, test_logs
     
