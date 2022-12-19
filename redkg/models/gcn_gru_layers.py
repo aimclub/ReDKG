@@ -1,58 +1,22 @@
-import math
+from typing import Dict, List
 
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from redkg.kge import KGEModel
+from redkg.config import Config
+from redkg.evaluator import Evaluator
+from redkg.models.graph_convolution import GraphConvolution
+from redkg.models.kge import KGEModel
 from redkg.utils import pickle_load
+from torch import Tensor
 
 
-class GraphConvolution(nn.Module):
-    """
-	GCN graph convolution layer
-	"""
+class GCNGRU(nn.Module):
+    """GCN + GRU layer"""
 
-    def __init__(self, in_features, out_features, bias=True):
-        super(GraphConvolution, self).__init__()
-        self.in_features = in_features
-        self.out_features = out_features
-        self.weight = nn.Linear(in_features, out_features)
-        """
-		self.weight = Parameter(torch.FloatTensor(in_features, out_features))
-		if bias:
-			self.bias = Parameter(torch.FloatTensor(out_features))
-		else:
-			self.register_parameter('bias', None)
-		self.reset_parameters()
-		"""
-        self.adj = torch.FloatTensor(np.load("./data/movie/kg_adj_mat.npy"))
-
-    def reset_parameters(self):
-        stdv = 1.0 / math.sqrt(self.weight.size(1))
-        self.weight.data.uniform_(-stdv, stdv)
-        if self.bias is not None:
-            self.bias.data.uniform_(-stdv, stdv)
-
-    def forward(self, input):
-        # support = torch.mm(input, self.weight)
-        support = self.weight(input)
-        output = torch.spmm(self.adj, support)
-        return output
-        """
-		if self.bias is not None:
-			return output + self.bias
-		else:
-			return output
-		"""
-
-    def __repr__(self):
-        return self.__class__.__name__ + " (" + str(self.in_features) + " -> " + str(self.out_features) + ")"
-
-
-class GCN_GRU(nn.Module):
-    def __init__(self, config, nfeat, entity_vocab, relation_vocab):
-        super(GCN_GRU, self).__init__()
+    def __init__(self, config: Config, nfeat: int, entity_vocab: Dict, relation_vocab: Dict) -> None:
+        super().__init__()
         # self.kge_model.entity_embedding = torch.nn.Embedding(entity_max, nfeat)
         # uniform_range = 6 / np.sqrt(nfeat)
         # self.kge_model.entity_embedding.weight.data.uniform_(-uniform_range, uniform_range)
@@ -73,7 +37,7 @@ class GCN_GRU(nn.Module):
             gamma=12.0,
             double_entity_embedding=True,
             double_relation_embedding=True,
-            evaluator=None,
+            evaluator=Evaluator(),
         )
         self.gc1 = GraphConvolution(nfeat, nfeat)
         self.gc2 = GraphConvolution(nfeat, nfeat)
@@ -83,28 +47,29 @@ class GCN_GRU(nn.Module):
 
         self.criterion = nn.MarginRankingLoss(margin=1.0)
 
-    def get_n_hop(self, entity_id):
+    def get_n_hop(self, entity_id: int) -> Dict[int, List[int]]:
+
         return self.n_hop_kg[entity_id]
 
-    def distance(self, triplets):
+    def distance(self, triplets: Tensor) -> Tensor:
         assert triplets.size()[1] == 3
         heads = triplets[:, 0]
         relations = triplets[:, 1]
         tails = triplets[:, 2]
         return (
-                self.kge_model.entity_embedding.weight[heads]
-                + self.relation_emb.weight[relations]
-                - self.kge_model.entity_embedding.weight[tails]
+            self.kge_model.entity_embedding.weight[heads]
+            + self.relation_emb.weight[relations]
+            - self.kge_model.entity_embedding.weight[tails]
         ).norm(p=1, dim=1)
 
-    def forward_GCN(self, x):
+    def forward_gcn(self, x: Tensor) -> Tensor:
         # GCN
         out = F.relu(self.gc1(self.kge_model.entity_embedding.weight))
         out = self.gc2(out)
         out = F.log_softmax(out, dim=1)[x]
         return out
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         # GCN
         out = F.relu(self.gc1(self.kge_model.entity_embedding.weight))
         out = self.gc2(out)
@@ -117,7 +82,7 @@ class GCN_GRU(nn.Module):
 
 
 class GRU(nn.Module):
-    def __init__(self, config, nfeat, entity_vocab, relation_vocab):
+    def __init__(self, config: Config, nfeat: int, entity_vocab: Dict, relation_vocab: Dict) -> None:
         super(GRU, self).__init__()
 
         entity_max = max(entity_vocab.values())
@@ -137,21 +102,21 @@ class GRU(nn.Module):
 
         self.criterion = nn.MarginRankingLoss(margin=1.0)
 
-    def get_n_hop(self, entity_id):
+    def get_n_hop(self, entity_id: int) -> Dict[int, List[int]]:
         return self.n_hop_kg[entity_id]
 
-    def distance(self, triplets):
+    def distance(self, triplets: Tensor) -> Tensor:
         assert triplets.size()[1] == 3
         heads = triplets[:, 0]
         relations = triplets[:, 1]
         tails = triplets[:, 2]
         return (
-                self.kge_model.entity_embedding.weight[heads]
-                + self.relation_emb.weight[relations]
-                - self.kge_model.entity_embedding.weight[tails]
+            self.kge_model.entity_embedding.weight[heads]
+            + self.relation_emb.weight[relations]
+            - self.kge_model.entity_embedding.weight[tails]
         ).norm(p=1, dim=1)
 
-    def TransE_forward(self, pos_triplet, neg_triplet):
+    def transe_forward(self, pos_triplet: Tensor, neg_triplet: Tensor) -> Tensor:
         # -1 to avoid nan for OOV vector
         self.kge_model.entity_embedding.weight.data[:-1, :].div_(
             self.kge_model.entity_embedding.weight.data[:-1, :].norm(p=2, dim=1, keepdim=True)
@@ -164,14 +129,14 @@ class GRU(nn.Module):
 
         return self.criterion(pos_distance, neg_distance, target)
 
-    def forward_GCN(self, x):
+    def forward_gcn(self, x: Tensor) -> Tensor:
         # GCN
         out = F.relu(self.gc1(self.kge_model.entity_embedding.weight))
         out = self.gc2(out)
         out = F.log_softmax(out, dim=1)[x]
         return out
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         x = self.kge_model.entity_embedding.weight[x]
         x = x.reshape(1, 1, -1)
 
@@ -179,35 +144,3 @@ class GRU(nn.Module):
         out, self.h = self.gru(x, self.h)
         out = out.reshape(-1)
         return out
-
-
-class Net(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.dense1 = nn.Linear(20, 128)
-        self.dense2 = nn.Linear(128, 128)
-        self.dense3 = nn.Linear(128, 3)
-
-    def forward(self, x):
-        x = F.relu(self.dense1(x))
-        x = F.relu(self.dense2(x))
-        x = self.dense3(x)
-        return x
-
-
-class MLP(nn.Module):
-    def __init__(self, input_shape, encoded_size, arch):
-        super().__init__()
-
-        layers = []
-        inputs = input_shape
-        for arc in arch:
-            layers.append(nn.Linear(inputs, arc))
-            layers.append(nn.ReLU())
-            layers.append(nn.BatchNorm1d(arc))
-            inputs = arc
-        layers.append(nn.Linear(arch[-1], encoded_size * 2))
-        self.encoder = nn.Sequential(*layers)
-
-    def forward(self, x):
-        return self.encoder(x)

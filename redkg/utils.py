@@ -1,24 +1,26 @@
 import pickle
+from typing import Any, Callable, Dict
 
 
 class AttributeDict(dict):
-    __getattr__ = dict.__getitem__
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
+    """Attributed dict class"""
+
+    __getattr__: Callable = dict.__getitem__
+    __setattr__: Callable = dict.__setitem__
+    __delattr__: Callable = dict.__delitem__
 
 
-def pickle_dump(file_path, file):
+def pickle_dump(file_path: str, file: Dict[Any, Any]) -> None:
+    """Dump via pickle"""
     with open(file_path, "wb") as f:
         pickle.dump(file, f)
-    # print(f'Logging Info - Saved: {file_path}')
 
 
-def pickle_load(file_path):
+def pickle_load(file_path: str) -> Any:
+    """Load via pickle"""
     try:
         with open(file_path, "rb") as f:
             obj = pickle.load(f)
-        # print(f'Logging Info - Loaded: {file_path}')
     except EOFError:
-        # print(f'Logging Error - Cannot load: {file_path}')
         obj = None
     return obj

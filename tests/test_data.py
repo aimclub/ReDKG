@@ -22,15 +22,7 @@ def test_values():
 
     assert (max(train["subsampling_weight"]) <= 1) == (min(train["subsampling_weight"]) >= 0)
 
-    neg_heads = (
-        set(sum(train["neg_head"], []))
-        | set(sum(test["neg_head"], []))
-        | set(sum(valid["neg_head"], []))
-    )
-    neg_tails = (
-        set(sum(train["neg_tail"], []))
-        | set(sum(test["neg_tail"], []))
-        | set(sum(valid["neg_tail"], []))
-    )
+    neg_heads = set(sum(train["neg_head"], [])) | set(sum(test["neg_head"], [])) | set(sum(valid["neg_head"], []))
+    neg_tails = set(sum(train["neg_tail"], [])) | set(sum(test["neg_tail"], [])) | set(sum(valid["neg_tail"], []))
     assert neg_heads == heads
     assert neg_tails == tails

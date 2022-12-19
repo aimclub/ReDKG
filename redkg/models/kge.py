@@ -2,12 +2,14 @@ from __future__ import absolute_import, division, print_function
 
 import logging
 from collections import defaultdict
+from typing import Callable, Dict
 
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from redkg.dataloader import TestDataset
+from redkg.evaluator import Evaluator
+from torch import Tensor
 from torch.utils.data import DataLoader
 
 
@@ -19,25 +21,25 @@ class KGEModel(nn.Module):
 
     def __init__(
         self,
-        model_name,
-        nentity,
-        nrelation,
-        hidden_dim,
-        gamma,
-        evaluator,
-        double_entity_embedding=False,
-        double_relation_embedding=False,
-    ):
+        model_name: str,
+        nentity: int,
+        nrelation: int,
+        hidden_dim: int,
+        gamma: float,
+        evaluator: Evaluator,
+        double_entity_embedding: bool = False,
+        double_relation_embedding: bool = False,
+    ) -> None:
         super(KGEModel, self).__init__()
         """Initialize KGE model.
 
-        :model_name: model name; only TransE, DistMult, ComplEx, RotatE models are currently available
-        :nentity: The entit
-        :nrelation: The entit
-        :gamma: The entit
-        :evaluator: The entit
-        :double_entity_embedding: The entit
-        :double_relation_embedding: The entit
+        :model_name: model name; only TransE, DistMult, ComplEx, RotatE models are currently unavailable
+        :nentity: The entity
+        :nrelation: The entity
+        :gamma: The entity
+        :evaluator: The entity
+        :double_entity_embedding: The entity
+        :double_relation_embedding: The entity
 
         :raises ValueError: _description_
         :raises ValueError: _description_
@@ -76,13 +78,13 @@ class KGEModel(nn.Module):
 
         self.evaluator = evaluator
 
-    def forward(self, sample, mode="single"):
+    def forward(self, sample: Tensor, mode: str = "single") -> Tensor:
         """Forward function that calculate the score of a batch of triples.
         In the 'single' mode, sample is a batch of triple.
         In the 'head-batch' or 'tail-batch' mode, sample consists two part.
         The first part is usually the positive sample.
         And the second part is the entities in the negative samples.
-        Because negative samples and positive samples usually share two elements 
+        Because negative samples and positive samples usually share two elements
         in their triple ((head, relation) or (relation, tail)).
 
         :param sample: _description_
@@ -94,10 +96,7 @@ class KGEModel(nn.Module):
         :return: _description_
         :rtype: _type_
         """
-
         if mode == "single":
-            batch_size, negative_sample_size = sample.size(0), 1
-
             head = torch.index_select(self.entity_embedding, dim=0, index=sample[:, 0]).unsqueeze(1)
 
             relation = torch.index_select(self.relation_embedding, dim=0, index=sample[:, 1]).unsqueeze(1)
@@ -131,7 +130,7 @@ class KGEModel(nn.Module):
         else:
             raise ValueError("mode %s not supported" % mode)
 
-        model_func = {
+        model_func: Dict[str, Callable] = {
             "TransE": self.TransE,
             "DistMult": self.DistMult,
             "ComplEx": self.ComplEx,
@@ -180,7 +179,8 @@ class KGEModel(nn.Module):
         score = score.sum(dim=2)
         return score
 
-    def RotatE(self, head, relation, tail, mode):
+    def RotatE(self, head: Tensor, relation: Tensor, tail: Tensor, mode: str) -> Tensor:
+        """Calculate RotatE score"""
         pi = 3.14159265358979323846
 
         re_head, im_head = torch.chunk(head, 2, dim=2)
@@ -211,7 +211,7 @@ class KGEModel(nn.Module):
         return score
 
     @staticmethod
-    def train_step(model, optimizer, train_iterator, args):
+    def train_step(model: nn.Module, optimizer, train_iterator, args) -> Dict:
         """A single train step. Apply back-propation and return the loss
 
         :param model: _description_
@@ -279,7 +279,7 @@ class KGEModel(nn.Module):
         return log
 
     @staticmethod
-    def test_step(model, test_triples, args, random_sampling=False):
+    def test_step(model: nn.Module, test_triples, args, random_sampling: bool = False) -> Dict[str, float]:
         """Evaluate the model on tests or valid datasets
 
         :param model: _description_
@@ -293,7 +293,6 @@ class KGEModel(nn.Module):
         :return: _description_
         :rtype: _type_
         """
-
         model.eval()
 
         # Prepare dataloader for evaluation
@@ -325,7 +324,6 @@ class KGEModel(nn.Module):
                         positive_sample = positive_sample.cuda()
                         negative_sample = negative_sample.cuda()
 
-                    batch_size = positive_sample.size(0)
                     score = model((positive_sample, negative_sample), mode)
 
                     batch_results = model.evaluator.eval({"y_pred_pos": score[:, 0], "y_pred_neg": score[:, 1:]})
@@ -342,18 +340,3 @@ class KGEModel(nn.Module):
                 metrics[metric] = torch.cat(test_logs[metric]).mean().item()
 
         return metrics
-
-
-class Evaluator:
-    def eval(self, input_dict):
-        y_pred_pos, y_pred_neg = input_dict["y_pred_pos"], input_dict["y_pred_neg"]
-        y_pred = torch.cat([y_pred_pos.view(-1, 1), y_pred_neg], dim=1)
-        argsort = torch.argsort(y_pred, dim=1, descending=True)
-        ranking_list = torch.nonzero(argsort == 0, as_tuple=False)
-        ranking_list = ranking_list[:, 1] + 1
-        hits1_list = (ranking_list <= 1).to(torch.float)
-        hits3_list = (ranking_list <= 3).to(torch.float)
-        hits10_list = (ranking_list <= 10).to(torch.float)
-        mrr_list = 1.0 / ranking_list.to(torch.float)
-
-        return mrr_list, hits1_list, hits3_list, hits10_list

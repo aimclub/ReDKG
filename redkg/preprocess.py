@@ -1,6 +1,7 @@
 import os
 import random
 from collections import defaultdict
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
@@ -12,14 +13,14 @@ random.seed(14)
 np.random.seed(14)
 
 
-def read_item2entity_file(item2entity_path: str, item_vocab: dict, entity_vocab: dict):
+def read_item2entity_file(item2entity_path: str, item_vocab: dict, entity_vocab: dict) -> None:
     """_summary_
 
-	:param item2entity_path: Path to user and entity files
-	:type item2entity_path: str
-	:param item_vocab: Mapping from attribute file to item index in code
-	:param entity_vocab: Mapping from attribute file to entity index in code
-	"""
+    :param item2entity_path: Path to user and entity files
+    :type item2entity_path: str
+    :param item_vocab: Mapping from attribute file to item index in code
+    :param entity_vocab: Mapping from attribute file to entity index in code
+    """
     print(f"Logging Info - Reading item2entity file: {item2entity_path}")
     assert len(item_vocab) == 0 and len(entity_vocab) == 0
     with open(item2entity_path, encoding="utf8") as reader:
@@ -33,8 +34,8 @@ def read_item2entity_file(item2entity_path: str, item_vocab: dict, entity_vocab:
 
 def read_attribute_file(attribute_path, separator, minimum_interactions, user_vocab, item_vocab, entity_vocab):
     """
-		user_vocab: Change user indicator in attribute to user index in code
-	"""
+    user_vocab: Change user indicator in attribute to user index in code
+    """
     print(f"Logging Info - Reading attribute file: {attribute_path}")
     assert len(user_vocab) == 0 and len(item_vocab) > 0
     user_attribute = defaultdict(list)
@@ -108,13 +109,13 @@ def read_attribute_file(attribute_path, separator, minimum_interactions, user_vo
 def read_kg(kg_path, entity_vocab, relation_vocab, user_vocab, item_vocab):
     """_summary_
 
-	:param kg_path: _description_
-	:param entity_vocab:  Change c indicator in item2entity file to entity index in code
-	:param relation_vocab: _description_
-	:param user_vocab: _description_
-	:param item_vocab: _description_
-	:return: adj_mat adjacency matrix of kg
-	"""
+    :param kg_path: _description_
+    :param entity_vocab:  Change c indicator in item2entity file to entity index in code
+    :param relation_vocab: _description_
+    :param user_vocab: _description_
+    :param item_vocab: _description_
+    :return: adj_mat adjacency matrix of kg
+    """
     print(f"Logging Info - Reading kg file: {kg_path}")
 
     kg = defaultdict(list)
@@ -169,7 +170,7 @@ def read_kg(kg_path, entity_vocab, relation_vocab, user_vocab, item_vocab):
                 adj_mat[entity_vocab[head] - 1][entity_vocab[tail] - 1] = 1
                 adj_mat[entity_vocab[tail] - 1][entity_vocab[head] - 1] = 1
 
-    n_hop_kg = {}
+    n_hop_kg: Dict[Dict[int, List[int]]] = {}
     for entity in entity_vocab.values():
         n_hop_kg[entity] = {1: [], 2: []}
         n_hop_kg[entity][1] = kg[entity]
@@ -214,7 +215,3 @@ def process_data(config):
     pickle_dump(f"{config.preprocess_results_dir}/relation_vocab.pkl", relation_vocab)
     pickle_dump(f"{config.preprocess_results_dir}/n_hop_kg.pkl", n_hop_kg)
     np.save(f"{config.preprocess_results_dir}/kg_adj_mat.npy", adj_mat)
-
-
-# if __name__ == '__main__':
-# 	process_data(Config())

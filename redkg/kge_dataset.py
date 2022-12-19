@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 import numpy as np
 import pandas as pd
 import torch
@@ -5,7 +7,7 @@ from torch.utils.data import Dataset
 
 
 class KGEDataset(Dataset):
-    def __init__(self, table, mode="train"):
+    def __init__(self, table: Dict[str, Any], mode: str = "train") -> None:
 
         self.mode = mode
         self.head = torch.tensor(np.array(table["head"]))
@@ -17,10 +19,10 @@ class KGEDataset(Dataset):
         if mode == "train":
             self.subsampling_weight = torch.tensor(np.array(table["subsampling_weight"]))
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.head)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
         if self.mode == "train":
             return (
                 self.head[idx],

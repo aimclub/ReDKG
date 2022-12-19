@@ -3,54 +3,69 @@ import random
 import numpy as np
 import torch
 import torch.optim as optim
-from env import Config, Simulator
-from model import GCN_GRU, Net
+from env import Simulator
+from redkg.models.gcn_gru_layers import Net
+from torch import Tensor
 
-def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, test_triples, max_steps = 10):
-    print('Training...')
-    optimizer = torch.optim.Adam(
-            filter(lambda p: p.requires_grad, kge_model.parameters()), 
-            lr=train_pars.learning_rate)
-    
+
+def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, max_steps=10):
+    print("Training...")
+    optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, kge_model.parameters()), lr=train_pars.learning_rate)
 
     train_dataloader_head = DataLoader(
-        TrainDataset(train_triples, info['nentity'], info['nrelation'], 
-            train_pars.negative_sample_size, 'head-batch',
-            info['count'], info['true_head'], info['true_tail'],
-            info['entity_dict'], negative_mode = "full"), 
+        TrainDataset(
+            train_triples,
+            info["nentity"],
+            info["nrelation"],
+            train_pars.negative_sample_size,
+            "head-batch",
+            info["count"],
+            info["true_head"],
+            info["true_tail"],
+            info["entity_dict"],
+            negative_mode="full",
+        ),
         batch_size=train_pars.train_batch_size,
-        shuffle=True, 
-        num_workers=max(1, train_pars.cpu_num//2),
-        collate_fn=TrainDataset.collate_fn
+        shuffle=True,
+        num_workers=max(1, train_pars.cpu_num // 2),
+        collate_fn=TrainDataset.collate_fn,
     )
 
     train_dataloader_tail = DataLoader(
-        TrainDataset(train_triples, info['nentity'], info['nrelation'], 
-            train_pars.negative_sample_size, 'tail-batch',
-            info['count'], info['true_head'], info['true_tail'],
-            info['entity_dict'], negative_mode = "full"), 
+        TrainDataset(
+            train_triples,
+            info["nentity"],
+            info["nrelation"],
+            train_pars.negative_sample_size,
+            "tail-batch",
+            info["count"],
+            info["true_head"],
+            info["true_tail"],
+            info["entity_dict"],
+            negative_mode="full",
+        ),
         batch_size=train_pars.train_batch_size,
-        shuffle=True, 
-        num_workers=max(1, train_pars.cpu_num//2),
-        collate_fn=TrainDataset.collate_fn
+        shuffle=True,
+        num_workers=max(1, train_pars.cpu_num // 2),
+        collate_fn=TrainDataset.collate_fn,
     )
     train_iterator = BidirectionalOneShotIterator(train_dataloader_head, train_dataloader_tail)
-        
+
     training_logs = []
     test_logs = []
 
-    #Training Loop
+    # Training Loop
     for step in range(max_steps):
         log = kge_model.train_step(kge_model, optimizer, train_iterator, train_pars)
         training_logs.append(log)
 
         if train_pars.do_test:
-            metrics = kge_model.test_step(kge_model, valid_triples, train_pars, info['entity_dict'])
+            metrics = kge_model.test_step(kge_model, valid_triples, train_pars, info["entity_dict"])
             test_logs.append(metrics)
-    
+
         return training_logs, test_logs
-    
-    
+
+
 def train(config, item_vocab, model, optimizer):
     memory = deque(maxlen=10000)
     policy_net = Net()
@@ -69,7 +84,7 @@ def train(config, item_vocab, model, optimizer):
         else:
             return actions[np.argmax(out)]
 
-    def memory_sampling(memory):
+    def memory_sampling(memory: Tensor):
         mini_batch = random.sample(memory, BATCH_SIZE)
         s_lst, a_lst, r_lst, s_prime_lst, done_mask_lst = [], [], [], [], []
 
@@ -88,7 +103,7 @@ def train(config, item_vocab, model, optimizer):
             torch.tensor(done_mask_lst),
         )
 
-    def optimize_model(memory):
+    def optimize_model(memory: Tensor):
         state_batch, action_batch, reward_batch, next_state_batch, done_batch = memory_sampling(memory)
         state_action_values = policy_net(state_batch)
         next_state_values = target_net(next_state_batch)
@@ -114,7 +129,7 @@ def train(config, item_vocab, model, optimizer):
     total_step_count = 0
     for e in range(config.epochs):
         for u in range(num_users):
-            user_id, item_ids, rates = simulator.get_data(u)
+            user_id, item_ids, rates = simulator.get_user_data(u)
             candidates = []
             done = False
             print("user_id:", user_id)
@@ -125,7 +140,7 @@ def train(config, item_vocab, model, optimizer):
                 # TODO
                 # Embed item using GCN Algorithm1 line 6 ~ 7
                 item_idx = item_id
-                embedded_item_state = model.forward_GCN(item_idx)  # (50)
+                embedded_item_state = model.forward_gcn(item_idx)  # (50)
                 embedded_user_state = model(item_idx)  # (20)
 
                 # TODO
@@ -135,7 +150,7 @@ def train(config, item_vocab, model, optimizer):
                     candidates.extend(n_hop_dict[1])
                     candidates = list(set(candidates))  # Need to get rid of recommended items
 
-                candidates_embeddings = model.forward_GCN(torch.tensor(candidates))
+                candidates_embeddings = model.forward_gcn(torch.tensor(candidates))
                 print("candidate shape:", candidates_embeddings.shape)
                 # candidates_embeddings = item_ids  # Embed each item in n_hop_dict using each item's n_hop_dict
                 # candidates_embeddings' shape = (# of candidates, config.item_embed_dim)
@@ -153,7 +168,7 @@ def train(config, item_vocab, model, optimizer):
                     reward,
                     tmp_state_embed(x.append(recommend_item_id)),
                     done,
-                )  # done을 어떻게 하지?
+                )
                 Tuple = (state, action, reward, next_state, done)
                 memory.append(Tuple)
                 # target update
