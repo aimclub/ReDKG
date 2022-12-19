@@ -31,4 +31,4 @@ jobs:
           pip install .
       - name: Test with pytest
         run: |
-          pytest tests --cov=./stable_gnn --cov-report xml
+          pytest tests --cov=./redkg --cov-report xml

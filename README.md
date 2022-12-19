@@ -1,5 +1,7 @@
-# ReDKG1
-
+# ReDKG
+[![Documentation](https://github.com/ShikovEgor/ReDKG/actions/workflows/gh_pages.yml/badge.svg)](https://shikovegor.github.io/ReDKG/)
+[![Linters](https://github.com/ShikovEgor/ReDKG/actions/workflows/linters.yml/badge.svg)](https://github.com/ShikovEgor/ReDKG/actions/workflows/linters.yml)
+[![Tests](https://github.com/ShikovEgor/ReDKG/actions/workflows/tests.yml/badge.svg)](https://github.com/ShikovEgor/ReDKG/actions/workflows/tests.yml)
 <p align="center">
   <img src="https://github.com/ShikovEgor/ReDKG/blob/main/docs/img/logo.png?raw=true" width="300px"> 
 </p>
@@ -108,7 +110,7 @@ To train KGQR model on your own data ...
 
 Documentation
 =============
-Detailed information and description of ReDKG framework is available in the [`Documentation`](link)
+Detailed information and description of ReDKG framework is available in the [`Documentation`](https://shikovegor.github.io/ReDKG/)
 
 ## Contribution
 To contribute this library, the current [code and documentation convention](wiki/Development.md) should be followed.
