@@ -6,7 +6,50 @@ import torch.optim as optim
 from env import Config, Simulator
 from model import GCN_GRU, Net
 
+def train_kge_model(kge_model, train_pars, test_params, info, train_triples, valid_triples, test_triples, max_steps = 10):
+    print('Training...')
+    optimizer = torch.optim.Adam(
+            filter(lambda p: p.requires_grad, kge_model.parameters()), 
+            lr=train_pars.learning_rate)
+    
 
+    train_dataloader_head = DataLoader(
+        TrainDataset(train_triples, info['nentity'], info['nrelation'], 
+            train_pars.negative_sample_size, 'head-batch',
+            info['count'], info['true_head'], info['true_tail'],
+            info['entity_dict'], negative_mode = "full"), 
+        batch_size=train_pars.train_batch_size,
+        shuffle=True, 
+        num_workers=max(1, train_pars.cpu_num//2),
+        collate_fn=TrainDataset.collate_fn
+    )
+
+    train_dataloader_tail = DataLoader(
+        TrainDataset(train_triples, info['nentity'], info['nrelation'], 
+            train_pars.negative_sample_size, 'tail-batch',
+            info['count'], info['true_head'], info['true_tail'],
+            info['entity_dict'], negative_mode = "full"), 
+        batch_size=train_pars.train_batch_size,
+        shuffle=True, 
+        num_workers=max(1, train_pars.cpu_num//2),
+        collate_fn=TrainDataset.collate_fn
+    )
+    train_iterator = BidirectionalOneShotIterator(train_dataloader_head, train_dataloader_tail)
+        
+    training_logs = []
+    test_logs = []
+
+    #Training Loop
+    for step in range(max_steps):
+        log = kge_model.train_step(kge_model, optimizer, train_iterator, train_pars)
+        training_logs.append(log)
+
+        metrics = kge_model.test_step(kge_model, valid_triples, test_params, info['entity_dict'])
+        test_logs.append(metrics)
+    
+        return training_logs, test_logs
+    
+    
 def train(config, item_vocab, model, optimizer):
     memory = deque(maxlen=10000)
     policy_net = Net()
