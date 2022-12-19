@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from redkg.kge import KGEModel
-from utils import pickle_load
+from redkg.utils import pickle_load
 
 
 class GraphConvolution(nn.Module):
