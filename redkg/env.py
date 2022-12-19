@@ -1,18 +1,17 @@
+from typing import List, Optional, Sequence, Tuple, Type, Union
+
 import numpy as np
-from typing import Union, Sequence, List, Optional, Tuple, Type
-
 import torch
-from torch.utils.data import Dataset
-from torch.utils.data import DataLoader
-
-from redkg.utils import pickle_load
 from redkg.config import Config
+from redkg.utils import pickle_load
+from torch.utils.data import DataLoader, Dataset
 
 
 class Simulator:
     """Custom Environment that follows gym interface"""
+
     def __init__(self, config, mode):
-        self.rating_dict = pickle_load(f'{config.preprocess_results_dir}/{mode}_data_dict.pkl')
+        self.rating_dict = pickle_load(f"{config.preprocess_results_dir}/{mode}_data_dict.pkl")
         self.user_ids = list(self.rating_dict.keys())
         self.num_users = len(self.user_ids)
 
@@ -31,7 +30,7 @@ class Simulator:
         :param user_id: Current agent (user)
         :param recommended_item_id: Action (selected item)
         :return: reward (0 if not interaction, attribute otherwise)
-        """        
+        """
         user_ratings = np.array(self.rating_dict[user_id])
         item_ids, rates = user_ratings[:, 0].astype(np.int), user_ratings[:, 1].astype(np.float)
         try:
@@ -45,15 +44,15 @@ class Graph:
     """Class holding k-hop neighbor information for each vertex"""
 
     def __init__(self, config):
-        self.n_hop_kg = pickle_load(f'{config.preprocess_results_dir}/n_hop_kg.pkl')
+        self.n_hop_kg = pickle_load(f"{config.preprocess_results_dir}/n_hop_kg.pkl")
 
     def get_n_hop(self, entity_id: int):
         return self.n_hop_kg[entity_id]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     conf = Config()
-    simulator = Simulator(conf, 'train')
+    simulator = Simulator(conf, "train")
     print(len(simulator))
     exit()
     graph = Graph(conf)

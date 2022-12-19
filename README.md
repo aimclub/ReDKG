@@ -1,49 +1,75 @@
-**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolkit for deep reinforcement learning on dynamci knowledge graphs.
-==========
-![plot](/docs/img/logo.png)
+# ReDKG
 
-**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) is a toolkit for deep reinforcement learning on dynamic knowledge graphs. it is designed to encode static and dynamic knowledge graphs (KG) by constructing vector representations for the entities and relationships. The reinforcement learning algorithm based on vector representations is designed to train recommendation models or models of decision support systems based on reinforcement learning (RL) using vector representations of graphs.
+<p align="center">
+  <img src="https://github.com/ShikovEgor/ReDKG/blob/main/docs/img/logo.png?raw=true" width="300px"> 
+</p>
 
 
-How to use
-==========
- 1. Clone repository
+**Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) 
+is a toolkit for deep reinforcement learning on dynamic knowledge graphs. 
+It is designed to encode static and dynamic knowledge graphs (KG) by constructing vector representations for the entities and relationships. 
+The reinforcement learning algorithm based on vector representations is designed to train recommendation models or models of decision support systems based on reinforcement learning (RL) using vector representations of graphs.
+
+
+## Installation
+Python >= 3.9 is required
+
+As a first step, [Pytorch Geometric installation](https://github.com/pyg-team/pytorch_geometric/) and Torch 1.1.2 are required.
+
+#### PyTorch 1.12
+
 ```
-git clone ...
+# CUDA 10.2
+conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=10.2 -c pytorch
+# CUDA 11.3
+conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.3 -c pytorch
+# CUDA 11.6
+conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.6 -c pytorch -c conda-forge
+# CPU Only
+conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cpuonly -c pytorch
 ```
-2. Install requirements
-```python
-pip install -r /path/to/requirements.txt
+
+To install the PyTorch Geometric binaries for PyTorch 1.12.0, simply run
+
+
 ```
-3. Donwload test data
+pip install pyg-lib torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-1.12.0+${CUDA}.html
+pip install torch-geometric
+```
+
+where `${CUDA}` should be replaced by either `cpu`, `cu102`, `cu113`, or `cu116` depending on your PyTorch installation.
+
+|             | `cpu` | `cu102` | `cu113` | `cu116` |
+|-------------|-------|---------|---------|---------|
+| **Linux**   | ✅    | ✅      | ✅      | ✅      |
+| **Windows** | ✅    |         | ✅      | ✅      |
+| **macOS**   | ✅    |         |         |         |
+
+
+When Torch and Torch Geometric are installed clone this repo and run inside repo directory:
+
+```
+pip install . 
+```
+
+## Donwload test data
 Download [ratings.csv](https://grouplens.org/datasets/movielens/20m/) to /data/ folder./
 Data folder should be contains three files: 
  - ratings.csv - raw rating file of Movielens-20M dataset;
  -   kg.txt - knowledge graph file;
  -  item_index2enity_id.txt - the mapping from item indices in the raw rating file to entity IDs in the KG file;
-4. Run preprocessing.py
+1. Run preprocessing.py
 ```python
 python preprocess.py
 ```
-5. Run train.py
+2. Run train.py
 ```python train.py
 python preprocess.py
 ```
-\
-![plot](/docs/img/lib_schema.png.png)
-\
+<p align="center">
+  <img src="https://github.com/ShikovEgor/ReDKG/blob/main/docs/img/lib_schema.png.png?raw=true" width="800px"> 
+</p>
 More details about first steps with  might be found in the [quick start guide](qwe.asd) and in the [tutorial for novices](qwe.asd).
-
-
-
- Dependencies
-=========
- - Python >= 3.7.0 
- - numpy >= 1.15.4
- - pandas >= 1.0.0
- - PyTorch >= 1.0.0
- - PyTorch Geometric >= 1.6.0
- - NetworkX >= 2.5.0
 
 Project Structure
 =================
@@ -84,6 +110,20 @@ Documentation
 =============
 Detailed information and description of ReDKG framework is available in the [`Documentation`](link)
 
+## Contribution
+To contribute this library, the current [code and documentation convention](wiki/Development.md) should be followed.
+Project run linters and tests on each pull request, to install linters and testing-packages locally, run 
+
+```
+pip install -r requirements-dev.txt
+```
+To avoid any unnecessary commits please fix any linting and testing errors after running of the each linter:
+- `pflake8 .`
+- `black .`
+- `isort .`
+- `mypy stable_gnn`
+- `pytest tests`
+
 Contacts
 ========
 - [Contact development team](mailto:egorshikov@itmo.ru)
@@ -107,16 +147,3 @@ doi = {https://doi.org/10.1016/j.procs.2022.11.012},
 url = {https://www.sciencedirect.com/science/article/pii/S1877050922017033}
 }
 
-<!---
-.. |docs| image:: https://readthedocs.org/projects/gefest/badge/?version=latest
-   :target: https://gefest.readthedocs.io/en/latest/?badge=latest
-   :alt: Documentation Status
-
-.. |license| image:: https://img.shields.io/github/license/ITMO-NSS-team/GEFEST
-   :alt: Supported Python Versions
-   :target: ./LICENSE.md
-
-.. |tg| image:: https://img.shields.io/badge/Telegram-Group-blue.svg
-   :target: https://t.me/gefest_helpdesk
-   :alt: Telegram Chat
---->
