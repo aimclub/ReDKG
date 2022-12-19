@@ -1,10 +1,12 @@
 import pandas as pd
+import pathlib
 
 
 def read_test_data():
-    train = pd.read_csv(r"data/train.csv")
-    test = pd.read_csv(r"data/test.csv")
-    valid = pd.read_csv(r"data/valid.csv")
+    path = pathlib.Path(__file__).parent.resolve().joinpath("/data/")
+    train = pd.read_csv(path.joinpath("/train.csv"))
+    test = pd.read_csv(path.joinpath("data/test.csv"))
+    valid = pd.read_csv(path.joinpath("data/valid.csv"))
 
     for i in [train, test, valid]:
         i["neg_head"] = [eval(l) for l in i["neg_head"]]
