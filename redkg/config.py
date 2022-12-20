@@ -24,9 +24,11 @@ class Config:
         self.train_proportion = 0.8
         self.test_proportion = 0.1
         self.validation_proportion = 0.1
-        assert sum([self.validation_proportion, self.test_proportion, self.validation_proportion]) == 1
+        assert sum([self.train_proportion, self.test_proportion, self.validation_proportion]) == 1.0
 
         # KGQR train
         self.epochs = 100
         self.item_embed_dim = 50  # Dimension of item embedding
         self.state_embed_dim = 20  # Dimension of user embedding
+
+        
