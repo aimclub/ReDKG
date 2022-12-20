@@ -31,24 +31,7 @@ conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit
 conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cpuonly -c pytorch
 ```
 
-To install the PyTorch Geometric binaries for PyTorch 1.12.0, simply run
-
-
-```
-pip install pyg-lib torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-1.12.0+${CUDA}.html
-pip install torch-geometric
-```
-
-where `${CUDA}` should be replaced by either `cpu`, `cu102`, `cu113`, or `cu116` depending on your PyTorch installation.
-
-|             | `cpu` | `cu102` | `cu113` | `cu116` |
-|-------------|-------|---------|---------|---------|
-| **Linux**   | ✅    | ✅      | ✅      | ✅      |
-| **Windows** | ✅    |         | ✅      | ✅      |
-| **macOS**   | ✅    |         |         |         |
-
-
-When Torch and Torch Geometric are installed clone this repo and run inside repo directory:
+When Torch installed clone this repo and run inside repo directory:
 
 ```
 pip install . 
@@ -56,18 +39,26 @@ pip install .
 
 ## Donwload test data
 Download [ratings.csv](https://grouplens.org/datasets/movielens/20m/) to /data/ folder./
-Data folder should be contains three files: 
- - ratings.csv - raw rating file of Movielens-20M dataset;
- -   kg.txt - knowledge graph file;
- -  item_index2enity_id.txt - the mapping from item indices in the raw rating file to entity IDs in the KG file;
-1. Run preprocessing.py
+Data folder should contain the following files: 
+ - `ratings.csv` - raw rating file;
+ - `attributes.csv` - raw attributes file;
+ - `kg.txt` - knowledge graph file;
+ - `item_index2enity_id.txt` - the mapping from item indices in the raw rating file to entity IDs in the KG file;
+### Preprocess the data
 ```python
-python preprocess.py
+from redkg.config import Config
+from redkg.preprocess import DataPreprocessor
+
+config = Config()
+preprocessor = DataPreprocessor(config)
+preprocessor.process_data()
 ```
-2. Run train.py
-```python train.py
-python preprocess.py
+### Train model
+```python
+....
 ```
+
+---------
 <p align="center">
   <img src="https://github.com/ShikovEgor/ReDKG/blob/main/docs/img/lib_schema.png.png?raw=true" width="800px"> 
 </p>
@@ -93,7 +84,7 @@ To learn representations with default values of arguments from command line, use
 python kg_run
 ```
 
-To learn representations in ypur own project, use:
+To learn representations in your own project, use:
 
 ```python
 from kge import KGEModel

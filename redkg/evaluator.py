@@ -4,6 +4,8 @@ import torch
 
 
 class Evaluator:
+    """Evaluates model results"""
+
     @staticmethod
     def eval(input_dict: Dict[str, Any]) -> Tuple[List[float], List[float], List[float], List[float]]:
         """Evaluate results

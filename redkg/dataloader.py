@@ -1,15 +1,17 @@
 import pickle
 from collections import defaultdict
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Generator, Optional, Tuple
 
 import pandas as pd
 import torch
+from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
 
+
 def get_info(
-    dataset: Dataset, 
     triples: Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]],
-    do_count: bool
+    dataset: Optional[Dataset] = None,
+    do_count: bool = False,
 ) -> Tuple[int, int, int, int, int, str]:
     """Get dataset info
 
@@ -17,7 +19,7 @@ def get_info(
     :param triples: (Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]]) Dicts with triples splitted by train test and validation
     :returns: Tuple[number of entities, numbers of relations, volume train, volume validdation, volume_test, info_log]
     """
-    if not dataset:
+    if dataset is None:
         train, test, valid = triples
         nentity = len(pd.concat([train["head"], valid["head"], test["head"]]).unique()) + len(
             pd.concat([train["tail"], valid["tail"], test["tail"]]).unique()
@@ -51,7 +53,7 @@ def get_info(
             count[(tail, -relation - 1, tail_type)] += 1
         else:
             count[(head, relation)] += 1
-            count[(tail, -relation-1)] += 1
+            count[(tail, -relation - 1)] += 1
         true_head[(relation, tail)].append(head)
         true_tail[(head, relation)].append(tail)
 
@@ -183,7 +185,7 @@ class TestDataset(Dataset):
     def __len__(self):
         return self.len
 
-    def __getitem__(self, idx: int):
+    def __getitem__(self, idx: int) -> Tuple[Tensor, Tensor, str]:
         head, relation, tail = self.triples["head"][idx], self.triples["relation"][idx], self.triples["tail"][idx]
         positive_sample = torch.LongTensor((head, relation, tail))
 
@@ -215,6 +217,8 @@ class TestDataset(Dataset):
 
 
 class BidirectionalOneShotIterator(object):
+    """Iterator over the data"""
+
     def __init__(self, dataloader_head, dataloader_tail):
         self.iterator_head = self.one_shot_iterator(dataloader_head)
         self.iterator_tail = self.one_shot_iterator(dataloader_tail)
@@ -229,8 +233,11 @@ class BidirectionalOneShotIterator(object):
         return data
 
     @staticmethod
-    def one_shot_iterator(dataloader: DataLoader):
+    def one_shot_iterator(dataloader: DataLoader) -> Generator:
         """Transform a PyTorch Dataloader into python iterator
+
+        :param dataloader: Dataloader
+        :returns: Generator of data
         """
         while True:
             for data in dataloader:

@@ -1,4 +1,6 @@
 class Config:
+    """Basic config instance for ReDKG"""
+
     def __init__(self):
         self.dataset_name = "movie"
         self.raw_data_dir = "./raw_data"
@@ -8,6 +10,7 @@ class Config:
         self.kg_path = f"{self.raw_data_dir}/{self.dataset_name}/kg.txt"
         self.item2entity_path = f"{self.raw_data_dir}/{self.dataset_name}/item_index2entity_id.txt"
         self.rating_path = f"{self.raw_data_dir}/{self.dataset_name}/ratings.csv"
+        self.attribute_path = f"{self.raw_data_dir}/{self.dataset_name}/attributes.csv"
 
         # Parameters to preprocess ratings.csv
         self.separator = ","
@@ -16,6 +19,12 @@ class Config:
 
         # Parameters to preprocess kg.txt
         self.hops = 2
+
+        # Parameters to split train test val
+        self.train_proportion = 0.8
+        self.test_proportion = 0.1
+        self.validation_proportion = 0.1
+        assert sum([self.validation_proportion, self.test_proportion, self.validation_proportion]) == 1
 
         # KGQR train
         self.epochs = 100

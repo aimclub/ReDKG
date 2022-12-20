@@ -16,16 +16,14 @@ sys.path.append("../")
 
 from redkg.dataloader import get_info
 from redkg.evaluator import Evaluator
-from redkg.kge_dataset import KGEDataset
 from redkg.models.kge import KGEModel
-
 from tests.utils import read_test_data
 
 train, test, valid = read_test_data()
 
 
 def test_data_info():
-    nentity, nrelation, v_tr, v_val, v_test, info = get_info(None, (train, test, valid))
+    nentity, nrelation, v_tr, v_val, v_test, info = get_info(triples=(train, test, valid))
 
     assert nentity == 20
     assert nrelation == 2

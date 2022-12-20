@@ -2,15 +2,17 @@ from __future__ import absolute_import, division, print_function
 
 import logging
 from collections import defaultdict
-from typing import Callable, Dict
+from typing import Any, Callable, Dict
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from redkg.dataloader import TestDataset
-from redkg.evaluator import Evaluator
 from torch import Tensor
+from torch.optim import Optimizer
 from torch.utils.data import DataLoader
+
+from redkg.dataloader import BidirectionalOneShotIterator, TestDataset
+from redkg.evaluator import Evaluator
 
 
 class KGEModel(nn.Module):
@@ -80,6 +82,7 @@ class KGEModel(nn.Module):
 
     def forward(self, sample: Tensor, mode: str = "single") -> Tensor:
         """Forward function that calculate the score of a batch of triples.
+
         In the 'single' mode, sample is a batch of triple.
         In the 'head-batch' or 'tail-batch' mode, sample consists two part.
         The first part is usually the positive sample.
@@ -144,7 +147,15 @@ class KGEModel(nn.Module):
 
         return score
 
-    def TransE(self, head, relation, tail, mode):
+    def TransE(self, head: Tensor, relation: Tensor, tail: Tensor, mode: str) -> Tensor:
+        """Apply TransE model
+
+        :param head: (Tensor) heads of the triples
+        :param relation: (Tensor) relations of the triples
+        :param tail: (Tensor) heads of the triples
+        :param mode: (str) mode of processing
+        :returns: (Tensor) calculated score
+        """
         if mode == "head-batch":
             score = head + (relation - tail)
         else:
@@ -153,7 +164,15 @@ class KGEModel(nn.Module):
         score = self.gamma.item() - torch.norm(score, p=1, dim=2)
         return score
 
-    def DistMult(self, head, relation, tail, mode):
+    def DistMult(self, head: Tensor, relation: Tensor, tail: Tensor, mode: str) -> Tensor:
+        """Apply DistMult model
+
+        :param head: (Tensor) heads of the triples
+        :param relation: (Tensor) relations of the triples
+        :param tail: (Tensor) heads of the triples
+        :param mode: (str) mode of processing
+        :returns: (Tensor) calculated score
+        """
         if mode == "head-batch":
             score = head * (relation * tail)
         else:
@@ -162,7 +181,15 @@ class KGEModel(nn.Module):
         score = score.sum(dim=2)
         return score
 
-    def ComplEx(self, head, relation, tail, mode):
+    def ComplEx(self, head: Tensor, relation: Tensor, tail: Tensor, mode: str) -> Tensor:
+        """Apply ComplEx model
+
+        :param head: (Tensor) heads of the triples
+        :param relation: (Tensor) relations of the triples
+        :param tail: (Tensor) heads of the triples
+        :param mode: (str) mode of processing
+        :returns: (Tensor) calculated score
+        """
         re_head, im_head = torch.chunk(head, 2, dim=2)
         re_relation, im_relation = torch.chunk(relation, 2, dim=2)
         re_tail, im_tail = torch.chunk(tail, 2, dim=2)
@@ -180,7 +207,14 @@ class KGEModel(nn.Module):
         return score
 
     def RotatE(self, head: Tensor, relation: Tensor, tail: Tensor, mode: str) -> Tensor:
-        """Calculate RotatE score"""
+        """Apply RotatE model
+
+        :param head: (Tensor) heads of the triples
+        :param relation: (Tensor) relations of the triples
+        :param tail: (Tensor) heads of the triples
+        :param mode: (str) mode of processing
+        :returns: (Tensor) calculated score
+        """
         pi = 3.14159265358979323846
 
         re_head, im_head = torch.chunk(head, 2, dim=2)
@@ -211,34 +245,32 @@ class KGEModel(nn.Module):
         return score
 
     @staticmethod
-    def train_step(model: nn.Module, optimizer, train_iterator, args) -> Dict:
+    def train_step(
+        model: nn.Module, optimizer: Optimizer, train_iterator: BidirectionalOneShotIterator, model_parameters: Any
+    ) -> Dict:
         """A single train step. Apply back-propation and return the loss
 
-        :param model: _description_
-        :type model: _type_
+        :param model: model to train
         :param optimizer: _description_
-        :type optimizer: _type_
         :param train_iterator: _description_
-        :type train_iterator: _type_
-        :param args: _description_
-        :type args: _type_
-        :return: _description_
-        :rtype: _type_
+        :param model_parameters: _description_
+        :return: Dict with steps logs
         """
         model.train()
         optimizer.zero_grad()
         positive_sample, negative_sample, subsampling_weight, mode = next(train_iterator)
 
-        if args.cuda:
+        if model_parameters.cuda:
             positive_sample = positive_sample.cuda()
             negative_sample = negative_sample.cuda()
             subsampling_weight = subsampling_weight.cuda()
 
         negative_score = model((positive_sample, negative_sample), mode=mode)
-        if args.negative_adversarial_sampling:
+        if model_parameters.negative_adversarial_sampling:
             # In self-adversarial sampling, we do not apply back-propagation on the sampling weight
             negative_score = (
-                F.softmax(negative_score * args.adversarial_temperature, dim=1).detach() * F.logsigmoid(-negative_score)
+                F.softmax(negative_score * model_parameters.adversarial_temperature, dim=1).detach()
+                * F.logsigmoid(-negative_score)
             ).sum(dim=1)
         else:
             negative_score = F.logsigmoid(-negative_score).mean(dim=1)
@@ -246,7 +278,7 @@ class KGEModel(nn.Module):
         positive_score = model(positive_sample)
         positive_score = F.logsigmoid(positive_score).squeeze(dim=1)
 
-        if args.uni_weight:
+        if model_parameters.uni_weight:
             positive_sample_loss = -positive_score.mean()
             negative_sample_loss = -negative_score.mean()
         else:
@@ -255,9 +287,9 @@ class KGEModel(nn.Module):
 
         loss = (positive_sample_loss + negative_sample_loss) / 2
 
-        if args.regularization != 0.0:
+        if model_parameters.regularization != 0.0:
             # Use L3 regularization for ComplEx and DistMult
-            regularization = args.regularization * (
+            regularization = model_parameters.regularization * (
                 model.entity_embedding.norm(p=3) ** 3 + model.relation_embedding.norm(p=3).norm(p=3) ** 3
             )
             loss = loss + regularization
@@ -279,7 +311,7 @@ class KGEModel(nn.Module):
         return log
 
     @staticmethod
-    def test_step(model: nn.Module, test_triples, args, random_sampling: bool = False) -> Dict[str, float]:
+    def test_step(model: nn.Module, test_triples: Tensor, args: Any, random_sampling: bool = False) -> Dict[str, float]:
         """Evaluate the model on tests or valid datasets
 
         :param model: _description_

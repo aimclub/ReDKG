@@ -1,13 +1,16 @@
 import random
+from collections import deque
 
 import numpy as np
 import torch
 import torch.optim as optim
-from redkg.env import Simulator
-# from redkg.models.gcn_gru_layers import Net
 from torch import Tensor
-from torch.utils.data import DataLoader, Dataset
-from redkg.dataloader import TrainDataset, BidirectionalOneShotIterator
+from torch.utils.data import DataLoader
+
+from redkg.dataloader import BidirectionalOneShotIterator, TrainDataset
+from redkg.env import Simulator
+from redkg.models.basic_models import Net
+
 
 def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, max_steps=10):
     print("Training...")
@@ -24,7 +27,7 @@ def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, m
             info["true_head"],
             info["true_tail"],
             info["entity_dict"],
-            negative_mode=train_pars['negative_mode'],
+            negative_mode=train_pars["negative_mode"],
         ),
         batch_size=train_pars.train_batch_size,
         shuffle=True,
@@ -43,7 +46,7 @@ def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, m
             info["true_head"],
             info["true_tail"],
             info["entity_dict"],
-            negative_mode=train_pars['negative_mode'],
+            negative_mode=train_pars["negative_mode"],
         ),
         batch_size=train_pars.train_batch_size,
         shuffle=True,

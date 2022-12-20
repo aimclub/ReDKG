@@ -17,14 +17,14 @@ force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 120
-src_paths = ["stable_gnn", "tests", "tutorials"]
+src_paths = ["redkg", "tests", "examples"]
 skip = [".mypy_cache", ".pytest_cache" , "venv", "./venv"]
 
 [tool.flake8]
 max-line-length = 120
 rst-roles = "class, func, ref"
 rst-directives = "envvar, exception"
-extend-ignore = "E203,E501,W503,D100,D105,D107,D400,D104,F401,DAR401"
+extend-ignore = "E203,E501,W503,D100,D105,D107,D400,D104,F401,DAR401,D401"
 docstring-convention = "pep257"
 exclude=".git,*tests*,./venv,./build"
 docstring_style = "sphinx"
