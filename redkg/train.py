@@ -18,9 +18,7 @@ from redkg.models.basic_models import Net
 
 
 def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, max_steps=10):
-    """Trainin pipeline for model
-
-    """
+    """Trainin pipeline for model"""
     print("Training...")
     optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, kge_model.parameters()), lr=train_pars.learning_rate)
 
