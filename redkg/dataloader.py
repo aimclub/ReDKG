@@ -6,9 +6,10 @@ import pandas as pd
 import torch
 from torch.utils.data import DataLoader, Dataset
 
-
 def get_info(
-    dataset: Dataset, triples: Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]]
+    dataset: Dataset, 
+    triples: Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]],
+    do_count: bool
 ) -> Tuple[int, int, int, int, int, str]:
     """Get dataset info
 
@@ -28,20 +29,29 @@ def get_info(
         info_log = f" NUMBER OF ENTITY: {nentity} \n NUMBER OF RELETION: {nrelation} \n TRAIN: {volume_train}% \n VALID: {volume_valid}% \n TEST: {volume_test}%"
         return nentity, nrelation, volume_train, volume_valid, volume_test, info_log
 
-    nrelation = int(max(triples["relation"])) + 1
     entity_dict = dict()
-    cur_idx = 0
-    for key in dataset[0]["num_nodes_dict"]:
-        entity_dict[key] = (cur_idx, cur_idx + dataset[0]["num_nodes_dict"][key])
-        cur_idx += dataset[0]["num_nodes_dict"][key]
-    nentity = sum(dataset[0]["num_nodes_dict"].values())
+
+    if do_count:
+        nrelation = int(max(triples["relation"])) + 1
+        cur_idx = 0
+        for key in dataset[0]["num_nodes_dict"]:
+            entity_dict[key] = (cur_idx, cur_idx + dataset[0]["num_nodes_dict"][key])
+            cur_idx += dataset[0]["num_nodes_dict"][key]
+        nentity = sum(dataset[0]["num_nodes_dict"].values())
+    else:
+        nentity = dataset.nentity
+        nrelation = dataset.nrelation
 
     count, true_head, true_tail = defaultdict(lambda: 4), defaultdict(list), defaultdict(list)
     for i in range(len(triples["head"])):
         head, relation, tail = triples["head"][i], triples["relation"][i], triples["tail"][i]
-        head_type, tail_type = triples["head_type"][i], triples["tail_type"][i]
-        count[(head, relation, head_type)] += 1
-        count[(tail, -relation - 1, tail_type)] += 1
+        if do_count:
+            head_type, tail_type = triples["head_type"][i], triples["tail_type"][i]
+            count[(head, relation, head_type)] += 1
+            count[(tail, -relation - 1, tail_type)] += 1
+        else:
+            count[(head, relation)] += 1
+            count[(tail, -relation-1)] += 1
         true_head[(relation, tail)].append(head)
         true_tail[(head, relation)].append(tail)
 
@@ -78,9 +88,9 @@ def read_kg(path, kg_path):
             if local_head in entity_vocab and local_tail in entity_vocab:
                 local_relation = relation_vocab[relation]
 
-                triples["head"].append(local_head)
-                triples["relation"].append(local_relation)
-                triples["tail"].append(local_tail)
+                triples["head"].append(entity_vocab[local_head])
+                triples["relation"].append(entity_vocab[local_relation])
+                triples["tail"].append(entity_vocab[local_tail])
     return triples, entity_vocab, item_vocab, relation_vocab
 
 
@@ -116,7 +126,7 @@ class TrainDataset(Dataset):
     def __len__(self):
         return self.len
 
-    def _gen_negative_s(self, head, relation, tail):
+    def _gen_negative_s(self, head, relation, tail, head_type, tail_type):
         subsampling_weight = self.count[(head, relation)] + self.count[(tail, -relation - 1)]
         subsampling_weight = torch.sqrt(1 / torch.Tensor([subsampling_weight]))
         return torch.randint(0, self.nentity, (self.negative_sample_size,)), subsampling_weight
