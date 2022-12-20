@@ -32,25 +32,6 @@ def test_data_info():
     assert v_val == 14
 
 
-def test_dataset():
-    train_set = KGEDataset(train)
-    test_set = KGEDataset(test, mode="tests")
-    valid_set = KGEDataset(valid, mode="tests")
-
-    assert len(train_set) == 100
-    assert len(test_set) == 20
-    assert len(valid_set) == 20
-
-    train_set_first = (
-        torch.cat([i.view(1) for i in train_set[0][0:3] + (train_set[0][5],)] + list(train_set[0][3:5]))
-    ).tolist()
-    test_set_first = (torch.cat([i.view(1) for i in test_set[0][0:3]] + list(test_set[0][3:]))).tolist()
-    valid_set_first = (torch.cat([i.view(1) for i in valid_set[0][0:3]] + list(valid_set[0][3:]))).tolist()
-    assert round(sum(train_set_first)) == 186
-    assert round(sum(test_set_first)) == 210
-    assert round(sum(valid_set_first)) == 221
-
-
 def test_evaluator():
     evaluator = Evaluator()
     in_dict = {
