@@ -1,32 +1,36 @@
+# type: ignore
 import random
 from collections import deque
+from typing import Deque, Dict, List, Tuple
 
 import numpy as np
 import torch
 import torch.optim as optim
 from torch import Tensor
+from torch.functional import F
 from torch.utils.data import DataLoader
 
 from redkg.dataloader import BidirectionalOneShotIterator, TrainDataset
 from redkg.env import Simulator
 from redkg.models.basic_models import Net
 
+# flake8: noqa
+
 
 def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, max_steps=10):
+    """Trainin pipeline for model"""
     print("Training...")
     optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, kge_model.parameters()), lr=train_pars.learning_rate)
 
     train_dataloader_head = DataLoader(
         TrainDataset(
-            train_triples,
-            info["nentity"],
-            info["nrelation"],
-            train_pars.negative_sample_size,
-            "head-batch",
-            info["count"],
-            info["true_head"],
-            info["true_tail"],
-            info["entity_dict"],
+            triples=train_triples,
+            nentity=info["nentity"],
+            nrelation=info["nrelation"],
+            negative_sample_size=train_pars.negative_sample_size,
+            mode="head-batch",
+            count=info["count"],
+            entity_dict=info["entity_dict"],
             negative_mode=train_pars["negative_mode"],
         ),
         batch_size=train_pars.train_batch_size,
@@ -37,15 +41,13 @@ def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, m
 
     train_dataloader_tail = DataLoader(
         TrainDataset(
-            train_triples,
-            info["nentity"],
-            info["nrelation"],
-            train_pars.negative_sample_size,
-            "tail-batch",
-            info["count"],
-            info["true_head"],
-            info["true_tail"],
-            info["entity_dict"],
+            triples=train_triples,
+            nentity=info["nentity"],
+            nrelation=info["nrelation"],
+            negative_sample_size=train_pars.negative_sample_size,
+            mode="tail-batch",
+            count=info["count"],
+            entity_dict=info["entity_dict"],
             negative_mode=train_pars["negative_mode"],
         ),
         batch_size=train_pars.train_batch_size,
@@ -70,17 +72,19 @@ def train_kge_model(kge_model, train_pars, info, train_triples, valid_triples, m
         return training_logs, test_logs
 
 
-def train(config, item_vocab, model, optimizer):
-    memory = deque(maxlen=10000)
-    policy_net = Net()
-    target_net = Net()
-    TARGET_UPDATE = 100
-    BATCH_SIZE = 10
+class TrainPipeline:
+    def __init__(self, config, item_vocab, model, optimizer):
+        self.config = config
+        self.memory: Deque = deque(maxlen=10000)
+        self.policy_net = Net()
+        self.target_net = Net()
+        self.TARGET_UPDATE = 100
+        self.BATCH_SIZE = 10
 
-    def tmp_Q_eps_greedy(state, actions):
+    def tmp_Q_eps_greedy(self, state, actions):
         epsilon = 0.3
         state = torch.tensor(state, dtype=torch.float)
-        out = policy_net.forward(state)
+        out = self.policy_net.forward(state)
         out = out.detach().numpy()
         coin = random.random()
         if coin < epsilon:
@@ -88,8 +92,8 @@ def train(config, item_vocab, model, optimizer):
         else:
             return actions[np.argmax(out)]
 
-    def memory_sampling(memory: Tensor):
-        mini_batch = random.sample(memory, BATCH_SIZE)
+    def memory_sampling(self, memory: Tensor) -> Tuple[Tensor, Tensor, Tensor, Tensor, Tensor]:
+        mini_batch = random.sample(memory, self.BATCH_SIZE)
         s_lst, a_lst, r_lst, s_prime_lst, done_mask_lst = [], [], [], [], []
 
         for transition in mini_batch:
@@ -107,10 +111,12 @@ def train(config, item_vocab, model, optimizer):
             torch.tensor(done_mask_lst),
         )
 
-    def optimize_model(memory: Tensor):
-        state_batch, action_batch, reward_batch, next_state_batch, done_batch = memory_sampling(memory)
-        state_action_values = policy_net(state_batch)
-        next_state_values = target_net(next_state_batch)
+    def optimize_model(self, memory: Tensor):
+        GAMMA = 0.1
+        state_batch, action_batch, reward_batch, next_state_batch, done_batch = self.memory_sampling(memory)
+        state_action_values = self.policy_net(state_batch)
+        next_state_values = self.target_net(next_state_batch)
+        max_val_list = []
         for next_state_value in next_state_values:
             max_val = max(next_state_value).tolist()
             max_val_list.append(max_val)
@@ -128,56 +134,57 @@ def train(config, item_vocab, model, optimizer):
             param.grad.data.clamp_(-1, 1)
         optimizer.step()
 
-    simulator = Simulator(config=config, mode="train")
-    num_users = len(simulator)
-    total_step_count = 0
-    for e in range(config.epochs):
-        for u in range(num_users):
-            user_id, item_ids, rates = simulator.get_user_data(u)
-            candidates = []
-            done = False
-            print("user_id:", user_id)
-            for t, (item_id, rate) in enumerate(zip(item_ids, rates)):
-                if t == len(item_ids) - 1:
-                    done = True
-                print("t", t, "item_id", item_id, "rate", rate)
-                # TODO
-                # Embed item using GCN Algorithm1 line 6 ~ 7
-                item_idx = item_id
-                embedded_item_state = model.forward_gcn(item_idx)  # (50)
-                embedded_user_state = model(item_idx)  # (20)
+    def run(self):
+        simulator = Simulator(config=self.config, mode="train")
+        num_users = len(simulator)
+        total_step_count = 0
+        for e in range(self.config.epochs):
+            for u in range(num_users):
+                user_id, item_ids, rates = simulator.get_user_data(u)
+                candidates = []
+                done = False
+                print("user_id:", user_id)
+                for t, (item_id, rate) in enumerate(zip(item_ids, rates)):
+                    if t == len(item_ids) - 1:
+                        done = True
+                    print("t", t, "item_id", item_id, "rate", rate)
+                    # TODO
+                    # Embed item using GCN Algorithm1 line 6 ~ 7
+                    item_idx = item_id
+                    embedded_item_state = self.model.forward_gcn(item_idx)  # (50)
+                    embedded_user_state = self.model(item_idx)  # (20)
 
-                # TODO
-                # Candidate selection and embedding
-                if rate > config.threshold:
-                    n_hop_dict = model.get_n_hop(item_id)
-                    candidates.extend(n_hop_dict[1])
-                    candidates = list(set(candidates))  # Need to get rid of recommended items
+                    # TODO
+                    # Candidate selection and embedding
+                    if rate > self.config.threshold:
+                        n_hop_dict = self.model.get_n_hop(item_id)
+                        candidates.extend(n_hop_dict[1])
+                        candidates = list(set(candidates))  # Need to get rid of recommended items
 
-                candidates_embeddings = model.forward_gcn(torch.tensor(candidates))
-                print("candidate shape:", candidates_embeddings.shape)
-                # candidates_embeddings = item_ids  # Embed each item in n_hop_dict using each item's n_hop_dict
-                # candidates_embeddings' shape = (# of candidates, config.item_embed_dim)
+                    candidates_embeddings = self.model.forward_gcn(torch.tensor(candidates))
+                    print("candidate shape:", candidates_embeddings.shape)
+                    # candidates_embeddings = item_ids  # Embed each item in n_hop_dict using each item's n_hop_dict
+                    # candidates_embeddings' shape = (# of candidates, config.item_embed_dim)
 
-                # Recommendation using epsilon greedy policy
-                recommend_item_id = tmp_Q_eps_greedy(state=embedded_user_state, actions=candidates_embeddings)
-                reward = simulator.step(user_id, recommend_item_id)
+                    # Recommendation using epsilon greedy policy
+                    recommend_item_id = self.tmp_Q_eps_greedy(state=embedded_user_state, actions=candidates_embeddings)
+                    reward = simulator.step(user_id, recommend_item_id)
 
-                # TODO
-                # Q learning
-                # Store transition to buffer
-                state, action, reward, next_state, done = (
-                    embedded_state,
-                    recommend_item_id,
-                    reward,
-                    tmp_state_embed(x.append(recommend_item_id)),
-                    done,
-                )
-                Tuple = (state, action, reward, next_state, done)
-                memory.append(Tuple)
-                # target update
-                total_step_count += 1
-                if total_step_count % TARGET_UPDATE == 0:
-                    target_net.load_state_dict(policy_net.state_dict())
-                if len(memory) > 100:
-                    optimize_model(memory)
+                    # TODO
+                    # Q learning
+                    # Store transition to buffer
+                    state, action, reward, next_state, done = (
+                        embedded_state,
+                        recommend_item_id,
+                        reward,
+                        tmp_state_embed(x.append(recommend_item_id)),
+                        done,
+                    )
+                    Tuple = (state, action, reward, next_state, done)
+                    self.memory.append(Tuple)
+                    # target update
+                    total_step_count += 1
+                    if total_step_count % self.TARGET_UPDATE == 0:
+                        self.target_net.load_state_dict(self.policy_net.state_dict())
+                    if len(self.memory) > 100:
+                        self.optimize_model(self.memory)
