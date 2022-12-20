@@ -30,5 +30,3 @@ class Config:
         self.epochs = 100
         self.item_embed_dim = 50  # Dimension of item embedding
         self.state_embed_dim = 20  # Dimension of user embedding
-
-        
