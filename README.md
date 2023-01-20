@@ -53,9 +53,21 @@ config = Config()
 preprocessor = DataPreprocessor(config)
 preprocessor.process_data()
 ```
-### Train model
+### Train KG model
 ```python
-....
+kge_model = KGEModel(
+        model_name="TransE",
+        nentity=info['nentity'],
+        nrelation=info['nrelation'],
+        hidden_dim=128,
+        gamma=12.0,
+        double_entity_embedding=True,
+        double_relation_embedding=True,
+        evaluator=evaluator
+    )
+
+training_logs, test_logs = train_kge_model(kge_model, train_pars, info, train_triples, valid_triples)
+
 ```
 
 ---------
@@ -106,7 +118,28 @@ kge_model = KGEModel(
 ### Train KGQR model
 To train KGQR model on your own data ...
 ```
-training_logs, test_logs = train_kge_model(kge_model, train_pars, info, train_triples, valid_triples)
+negative_sample_size = 128
+nentity = len(entity_vocab.keys())
+train_count = calc_state_kg(triples)
+
+dataset = TrainDavaset (triples,
+                        nentity,
+                        len(zelation_vocab.keys()),
+                        negative_sample_size,
+                        "mode",
+                        train_count)
+
+conf = Config()
+
+#Building Net
+model = GCNGRU(Config(), entity_vocab, relation_vocab, 50)
+
+# Embedding pretrain by TransE
+crain_kge_model (model_kge_model, train pars, info, triples, None)
+
+#Training using RL
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+train(Config(), item_vocab, model, optimizer)
 
 ```
 
