@@ -79,7 +79,8 @@ More details about first steps with  might be found in the [quick start guide](q
 Project Structure
 =================
 
-The latest stable release of ReDKG is in the `main branch`_.
+The latest stable release of ReDKG is in the [`main branch`](https://github.com/aimclub/ReDKG)
+
 The repository includes the following directories:
 * Package `redkg` contains the main classes and scripts;
 * Package `examples` includes several *how-to-use-cases* where you can start to discover how ReDKG works;
