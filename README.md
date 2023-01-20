@@ -124,7 +124,7 @@ train_count = calc_state_kg(triples)
 
 dataset = TrainDavaset (triples,
                         nentity,
-                        len(zelation_vocab.keys()),
+                        len(relation_vocab.keys()),
                         negative_sample_size,
                         "mode",
                         train_count)
