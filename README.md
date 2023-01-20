@@ -90,13 +90,24 @@ To learn representations in your own project, use:
 from kge import KGEModel
 from edge_predict import Evaluator
 evaluator = Evaluator()
-kge_model = KGEModel(model_name = MODEL_NAME, nentity=nentity, nrelation=nrelation, embedding_size=EMBEDDING_SIZE, gamma=GAMMA, evaluator=evaluator)
+
+kge_model = KGEModel(
+        model_name="TransE",
+        nentity=info['nentity'],
+        nrelation=info['nrelation'],
+        hidden_dim=128,
+        gamma=12.0,
+        double_entity_embedding=True,
+        double_relation_embedding=True,
+        evaluator=evaluator
+    )
 ```
 
 ### Train KGQR model
 To train KGQR model on your own data ...
 ```
-...
+training_logs, test_logs = train_kge_model(kge_model, train_pars, info, train_triples, valid_triples)
+
 ```
 
 Documentation
