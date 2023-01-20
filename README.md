@@ -79,8 +79,7 @@ More details about first steps with  might be found in the [quick start guide](q
 Project Structure
 =================
 
-The latest stable release of  is on the
-
+The latest stable release of ReDKG is in the `main branch`_.
 The repository includes the following directories:
 * Package `redkg` contains the main classes and scripts;
 * Package `examples` includes several *how-to-use-cases* where you can start to discover how ReDKG works;
@@ -116,7 +115,7 @@ kge_model = KGEModel(
 ```
 
 ### Train KGQR model
-To train KGQR model on your own data ...
+To train KGQR model on your own data:
 ```
 negative_sample_size = 128
 nentity = len(entity_vocab.keys())
