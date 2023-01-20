@@ -112,7 +112,7 @@ training_logs, test_logs = train_kge_model(kge_model, train_pars, info, train_tr
 
 Documentation
 =============
-Detailed information and description of ReDKG framework is available in the [`Documentation`](https://shikovegor.github.io/ReDKG/)
+Detailed information and description of ReDKG framework is available in the [`Documentation`](https://aimclub.github.io/ReDKG/)
 
 ## Contribution
 To contribute this library, the current [code and documentation convention](wiki/Development.md) should be followed.
