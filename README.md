@@ -166,10 +166,8 @@ Contacts
 - [Contact development team](mailto:egorshikov@itmo.ru)
 - Natural System Simulation Team <https://itmo-nss-team.github.io/>
 
-Supported by
-============
-
-[National Center for Cognitive Research of ITMO University](https://actcognitive.org/) 
+## Suported by
+The study is supported by [Research Center Strong Artificial Intelligence in Industry](https://sai.itmo.ru/) of [ITMO University](https://itmo.ru/) (Saint Petersburg, Russia)
 
 Citation
 ========
