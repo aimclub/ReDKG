@@ -163,13 +163,17 @@ pip install -r requirements-dev.txt
 - `mypy stable_gnn`
 - `pytest tests`
 
-Контактные данные
+Контакты
 ========
 - [Разработчик](mailto:egorshikov@itmo.ru)
 - Natural System Simulation Team <https://itmo-nss-team.github.io/>
 
-## Благодарности
-Разработка поддерживается исследовательским центром [«Сильный искусственный интеллект в промышленности»](https://sai.itmo.ru/) [Университета ИТМО](https://itmo.ru/).
+## Поддержка
+Исследование выполнено при поддержке [Исследовательского центра сильного искусственного интеллекта в промышленности](https://sai.itmo.ru/) [Университета ИТМО](https://itmo.ru/) (Санкт-Петербург, Россия)
+
+<p align="center">
+  <img src="https://github.com/anpolol/StableGNN/blob/main/docs/AIM-logo.svg?raw=true" width="300px"> 
+</p>
 
 Цитирование
 ========
