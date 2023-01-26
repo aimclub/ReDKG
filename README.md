@@ -175,9 +175,10 @@ pip install -r requirements-dev.txt
   <img src="https://github.com/anpolol/StableGNN/blob/main/docs/AIM-logo.svg?raw=true" width="300px"> 
 </p>
 
-Цитирование
-========
-Пожалуйста, используйте следующую BibTeX нотацию для цитирования библиотеки **ReDKG**, если вы используете ее в своих исследованиях или программах.
+
+## Цитирование
+Если используете библиотеку в ваших работах, пожалуйста, процитируйте [статью](https://www.sciencedirect.com/science/article/pii/S1877050922017033) (и другие соответствующие статьи используемых методов):
+
 ```
 @article{EGOROVA2022284,
 title = {Customer transactional behaviour analysis through embedding interpretation},
