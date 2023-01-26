@@ -8,15 +8,15 @@
 
 
 **Re**inforcement learning on **D**ynamic **K**nowledge **G**raphs (**ReDKG**) 
-is a toolkit for deep reinforcement learning on dynamic knowledge graphs. 
-It is designed to encode static and dynamic knowledge graphs (KG) by constructing vector representations for the entities and relationships. 
-The reinforcement learning algorithm based on vector representations is designed to train recommendation models or models of decision support systems based on reinforcement learning (RL) using vector representations of graphs.
+это библиотека глубокого обучения с подкреплением на динамических графах знаний. 
+Библиотека предназначена для кодирования статических и динамических графов знаний (ГЗ) при помощи построения векторных представлений сущностей и отношений.
+Алгоритм обучения с подкреплением на основе векторных представлений предназначен для обучения рекомендательных моделей и моделей систем поддержки принятия решений на основе обучения с подкреплением (RL) на основе векторных представлений графов.
 
 
-## Installation
-Python >= 3.9 is required
+## Установка
+Для работы библиотеки необходим язык программирования Python версии не ниже 3.9 
 
-As a first step, [Pytorch Geometric installation](https://github.com/pyg-team/pytorch_geometric/) and Torch 1.1.2 are required.
+На первом шаге необходимо выполнить установку библиотеки, [Pytorch Geometric](https://github.com/pyg-team/pytorch_geometric/) и Torch 1.1.2.
 
 #### PyTorch 1.12
 
@@ -31,20 +31,20 @@ conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit
 conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cpuonly -c pytorch
 ```
 
-When Torch installed clone this repo and run inside repo directory:
+После установки необходимых библиотек необходимо скопировать репозиторий и выполнить следующую команду, находясь в директории проекта:
 
 ```
 pip install . 
 ```
 
-## Donwload test data
-Download [ratings.csv](https://grouplens.org/datasets/movielens/20m/) to /data/ folder./
-Data folder should contain the following files: 
- - `ratings.csv` - raw rating file;
- - `attributes.csv` - raw attributes file;
- - `kg.txt` - knowledge graph file;
- - `item_index2enity_id.txt` - the mapping from item indices in the raw rating file to entity IDs in the KG file;
-### Preprocess the data
+## Загрузка тестовых данных
+Скачайте набор данных [movielens](https://grouplens.org/datasets/movielens/20m/) и распакуйте в директорию /data/.
+После распаковки директория /data/ должна содержать следующий набор файлов: 
+ - `ratings.csv` - исходный файл оценок пользователей;
+ - `attributes.csv` - исходный файл атрибутов объектов;
+ - `kg.txt` - файл, содержащий граф знаний;
+ - `item_index2enity_id.txt` - сопоставление индексов объектов в исходном файле оценок пользователей с индексами объектов в графе знаний;
+### Предобработка данных
 ```python
 from redkg.config import Config
 from redkg.preprocess import DataPreprocessor
@@ -53,7 +53,7 @@ config = Config()
 preprocessor = DataPreprocessor(config)
 preprocessor.process_data()
 ```
-### Train KG model
+### Обучение модели
 ```python
 kge_model = KGEModel(
         model_name="TransE",
@@ -74,29 +74,31 @@ training_logs, test_logs = train_kge_model(kge_model, train_pars, info, train_tr
 <p align="center">
   <img src="https://github.com/aimclub/ReDKG/blob/main/docs/img/lib_schema.png.png?raw=true" width="800px"> 
 </p>
-More details about first steps with  might be found in the [quick start guide](qwe.asd) and in the [tutorial for novices](qwe.asd).
+Более подробную информацию можно найти в [кратком руководстве](qwe.asd), а также в [учебном пособии](qwe.asd). 
 
-Project Structure
+Структура проекта
 =================
 
-The latest stable release of ReDKG is in the [`main branch`](https://github.com/aimclub/ReDKG)
+Последняя стабильная версия проекта проекта доступна по [ссылке](https://github.com/aimclub/ReDKG)
 
-The repository includes the following directories:
-* Package `redkg` contains the main classes and scripts;
-* Package `examples` includes several *how-to-use-cases* where you can start to discover how ReDKG works;
-* Directory `data` shoul be contains data for modeling;
-* All *unit and integration tests* can be observed in the `test` directory;
-* The sources of the documentation are in the `docs`.
+Репозиторий проекта включает в себя следующие директории:
+* директория `redkg` - содержит основные классы и функции проекта;
+* директория `examples` - содержит несколько примеров использования;
+* директория `data` - должна содержать данные для моделирования;
+* все *модульные и интеграционные тесты* можно посмотреть в директории `test`;
+* исходная документация содержится в директории `docs`.
 
 
-Cases and examples
+Примеры использования
 ==================
-To learn representations with default values of arguments from command line, use:
+
+
+Для обучения векторных представлений с параметрами по умолчанию выполните следующую команду в командной строке:
 ```
 python kg_run
 ```
 
-To learn representations in your own project, use:
+Для обучение векторных представлений в своем проекте используйте:
 
 ```python
 from kge import KGEModel
@@ -115,8 +117,8 @@ kge_model = KGEModel(
     )
 ```
 
-### Train KGQR model
-To train KGQR model on your own data:
+### Обучение модели KGQR
+Для обучения модели KGQR на собственных данных используйте:
 ```
 negative_sample_size = 128
 nentity = len(entity_vocab.keys())
@@ -143,34 +145,36 @@ train(Config(), item_vocab, model, optimizer)
 
 ```
 
-Documentation
+Документация
 =============
-Detailed information and description of ReDKG framework is available in the [`Documentation`](https://aimclub.github.io/ReDKG/)
+Подробная информация и описание библиотеки ReDKG доступно по [`ссылке`](https://aimclub.github.io/ReDKG/)
 
-## Contribution
-To contribute this library, the current [code and documentation convention](wiki/Development.md) should be followed.
-Project run linters and tests on each pull request, to install linters and testing-packages locally, run 
+## Внесение своего вклада в проект
+Для внесения своего вклада в проект необходимо следовать текущему [соглашению о коде и документации](wiki/Development.md).
+Проект запускает линтеры и тесты для каждого реквест-запроса, чтобы установить линтеры и тестовые пакеты локально, запустите
 
 ```
 pip install -r requirements-dev.txt
 ```
-To avoid any unnecessary commits please fix any linting and testing errors after running of the each linter:
+Для избежания лишних коммитов, пожалуйста, исправьте все ошибки после запуска каждого линтера:
 - `pflake8 .`
 - `black .`
 - `isort .`
 - `mypy stable_gnn`
 - `pytest tests`
 
-Contacts
+Контактные данные
 ========
-- [Contact development team](mailto:egorshikov@itmo.ru)
+- [Разработчик](mailto:egorshikov@itmo.ru)
 - Natural System Simulation Team <https://itmo-nss-team.github.io/>
 
-## Suported by
-The study is supported by [Research Center Strong Artificial Intelligence in Industry](https://sai.itmo.ru/) of [ITMO University](https://itmo.ru/) (Saint Petersburg, Russia)
+## Благодарности
+Разработка поддерживается исследовательским центром [«Сильный искусственный интеллект в промышленности»](https://sai.itmo.ru/) [Университета ИТМО](https://itmo.ru/).
 
-Citation
+Цитирование
 ========
+Пожалуйста, используйте следующую BibTeX нотацию для цитирования библиотеки **ReDKG**, если вы используете ее в своих исследованиях или программах.
+```
 @article{EGOROVA2022284,
 title = {Customer transactional behaviour analysis through embedding interpretation},
 author = {Elena Egorova and Gleb Glukhov and Egor Shikov},
@@ -182,3 +186,4 @@ doi = {https://doi.org/10.1016/j.procs.2022.11.012},
 url = {https://www.sciencedirect.com/science/article/pii/S1877050922017033}
 }
 
+```
