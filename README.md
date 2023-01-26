@@ -83,7 +83,7 @@ ReDKG - это фреймворк, реализующий алгоритмы с�
  * модуль Q-обучения (Q-network)  , реализованный классом TrainPipeline в файле redkg.train. 
 
 <p align="center">
-  <img src="https://github.com/aimclub/ReDKG/blob/main/docs/img/lib_schema.png.png?raw=true" width="800px"> 
+  <img src="https://github.com/aimclub/ReDKG/blob/main/docs/img/lib_schema_ru.png?raw=true" width="800px"> 
 </p>
 
 Структура проекта
