@@ -174,6 +174,7 @@ The study is supported by the [Research Center Strong Artificial Intelligence in
 
 Citation
 ========
+```
 @article{EGOROVA2022284,
 title = {Customer transactional behaviour analysis through embedding interpretation},
 author = {Elena Egorova and Gleb Glukhov and Egor Shikov},
@@ -184,4 +185,4 @@ year = {2022},
 doi = {https://doi.org/10.1016/j.procs.2022.11.012},
 url = {https://www.sciencedirect.com/science/article/pii/S1877050922017033}
 }
-
+```
