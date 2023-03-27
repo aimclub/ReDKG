@@ -170,7 +170,7 @@ Contacts
 - Natural System Simulation Team <https://itmo-nss-team.github.io/>
 
 ## Suported by
-The study is supported by the [Research Center Strong Artificial Intelligence in Industry](https://sai.itmo.ru/) of [ITMO University](https://itmo.ru/) as part of the plan of the center's program №1.1.3: Development and testing of an experimental sample of the library of algorithms of strong AI in terms of deep reinforcement learning on dynamic knowledge graphs for decision support tasks
+The study is supported by the [Research Center Strong Artificial Intelligence in Industry](https://sai.itmo.ru/) of [ITMO University](https://itmo.ru/) as part of the plan of the center's program: Development and testing of an experimental sample of the library of algorithms of strong AI in terms of deep reinforcement learning on dynamic knowledge graphs for decision support tasks
 
 Citation
 ========
