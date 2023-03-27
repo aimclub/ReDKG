@@ -1,7 +1,10 @@
 # ReDKG
+[![SAI](https://github.com/ITMO-NSS-team/open-source-ops/blob/master/badges/SAI_badge_flat.svg)](https://sai.itmo.ru/)
+[![ITMO](https://github.com/ITMO-NSS-team/open-source-ops/blob/master/badges/ITMO_badge_flat.svg)](https://en.itmo.ru/en/)
 [![Documentation](https://github.com/aimclub/ReDKG/actions/workflows/gh_pages.yml/badge.svg)](https://aimclub.github.io/ReDKG/)
 [![Linters](https://github.com/aimclub/ReDKG/actions/workflows/linters.yml/badge.svg)](https://github.com/aimclub/ReDKG/actions/workflows/linters.yml)
 [![Tests](https://github.com/aimclub/ReDKG/actions/workflows/tests.yml/badge.svg)](https://github.com/aimclub/ReDKG/actions/workflows/tests.yml)
+[![Mirror](https://camo.githubusercontent.com/9bd7b8c5b418f1364e72110a83629772729b29e8f3393b6c86bff237a6b784f6/68747470733a2f2f62616467656e2e6e65742f62616467652f6769746c61622f6d6972726f722f6f72616e67653f69636f6e3d6769746c6162)](https://gitlab.actcognitive.org/itmo-sai-code/ReDKG)
 <p align="center">
   <img src="https://github.com/aimclub/ReDKG/blob/main/docs/img/logo.png?raw=true" width="300px"> 
 </p>
@@ -167,10 +170,11 @@ Contacts
 - Natural System Simulation Team <https://itmo-nss-team.github.io/>
 
 ## Suported by
-The study is supported by [Research Center Strong Artificial Intelligence in Industry](https://sai.itmo.ru/) of [ITMO University](https://itmo.ru/) (Saint Petersburg, Russia)
+The study is supported by the [Research Center Strong Artificial Intelligence in Industry](https://sai.itmo.ru/) of [ITMO University](https://itmo.ru/) as part of the plan of the center's program №1.1.3: Development and testing of an experimental sample of the library of algorithms of strong AI in terms of deep reinforcement learning on dynamic knowledge graphs for decision support tasks
 
 Citation
 ========
+```
 @article{EGOROVA2022284,
 title = {Customer transactional behaviour analysis through embedding interpretation},
 author = {Elena Egorova and Gleb Glukhov and Egor Shikov},
@@ -181,4 +185,4 @@ year = {2022},
 doi = {https://doi.org/10.1016/j.procs.2022.11.012},
 url = {https://www.sciencedirect.com/science/article/pii/S1877050922017033}
 }
-
+```
