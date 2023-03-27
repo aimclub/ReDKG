@@ -170,7 +170,7 @@ Contacts
 - Natural System Simulation Team <https://itmo-nss-team.github.io/>
 
 ## Suported by
-The study is supported by [Research Center Strong Artificial Intelligence in Industry](https://sai.itmo.ru/) of [ITMO University](https://itmo.ru/) (Saint Petersburg, Russia)
+The study is supported by the [Research Center Strong Artificial Intelligence in Industry](https://sai.itmo.ru/) of [ITMO University](https://itmo.ru/) as part of the plan of the center's program №1.1.3:
 
 Citation
 ========
