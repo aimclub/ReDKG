@@ -9,4 +9,3 @@ from redkg.visualization.contracts.hypergraph_contract import HypergraphContract
 class HypergraphVisualizationContract(BaseVisualizationContract):
     graph: HypergraphContract = None
     edge_style: str = EdgeStyles.circle
-

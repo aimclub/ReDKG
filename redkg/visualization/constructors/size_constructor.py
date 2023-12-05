@@ -10,6 +10,7 @@ class SizeConstructor:
     """
     Constructor (one action controller) for Graph sizes.
     """
+
     def __call__(self, contract: SizeConstructorContract) -> tuple:
         edge_list_length = len(contract.edge_list)
         _vertex_size = calculate_vertex_size(contract.vertex_num)

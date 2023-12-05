@@ -5,6 +5,7 @@ class EnumMetaClass(EnumMeta):
     """
     Enum metaclass for values / list ability.
     """
+
     def __contains__(cls, item):
         try:
             cls(item)

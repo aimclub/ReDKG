@@ -4,7 +4,6 @@ from redkg.visualization.exceptions.exceptions_classes import ParamsValidationEx
 
 
 class GraphGenerator:
-
     def __init__(self, vertex_num: int, edge_num: int):
         self.vertex_num = vertex_num
         self.edge_num = edge_num

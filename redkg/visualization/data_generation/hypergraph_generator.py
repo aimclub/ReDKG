@@ -1,16 +1,18 @@
 import random
+
 from redkg.visualization.config.parameters.generator_methods import GeneratorMethods
 from redkg.visualization.equations.c_log_function import c_log_function
 from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
 class HypergraphGenerator:
-
-    def __init__(self,
-                 vertex_num: int,
-                 edge_num: int,
-                 generation_method: str = GeneratorMethods.uniform,
-                 probability_k_list: list[float] | None = None):
+    def __init__(
+        self,
+        vertex_num: int,
+        edge_num: int,
+        generation_method: str = GeneratorMethods.uniform,
+        probability_k_list: list[float] | None = None,
+    ):
         self.vertex_num = vertex_num
         self.edge_num = edge_num
         self.method = generation_method
@@ -19,7 +21,7 @@ class HypergraphGenerator:
         self._validate()
 
     def __generate_uniform(self, edge_degree_list: list):
-        return [c_log_function(self.vertex_num, k) / (2 ** self.vertex_num - 1) for k in edge_degree_list]
+        return [c_log_function(self.vertex_num, k) / (2**self.vertex_num - 1) for k in edge_degree_list]
 
     @staticmethod
     def __generate_low_order_first(edge_degree_list: list):
