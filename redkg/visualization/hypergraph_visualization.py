@@ -1,3 +1,5 @@
+"""Hypergraph visualization main module."""
+
 from copy import deepcopy
 
 import matplotlib.pyplot as plt
