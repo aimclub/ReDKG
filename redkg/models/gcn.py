@@ -7,7 +7,9 @@ from torch_geometric.nn import GCNConv
 class GCN(torch.nn.Module):
     """Graph Convolutional Network with customizable layers and activation"""
 
-    def __init__(self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5):
+    def __init__(
+            self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5
+    ):
         super(GCN, self).__init__()
         self.activation = activation
         self.dropout_rate = dropout_rate
@@ -22,12 +24,10 @@ class GCN(torch.nn.Module):
         self.edge_predictor = nn.Sequential(
             # Input size - doubled, because we combine pairs of nodes
             nn.Linear(2 * out_channels, hidden_channels),
-
             nn.ReLU(),
             nn.Dropout(p=dropout_rate),
-
             # Output size - 1, for predicting the probability of a link
-            nn.Linear(hidden_channels, 1)
+            nn.Linear(hidden_channels, 1),
         )
 
     def forward(self, x, edge_index):

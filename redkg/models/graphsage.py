@@ -6,7 +6,9 @@ from torch_geometric.nn import SAGEConv
 class GraphSAGE(torch.nn.Module):
     """Graph SAmple and aggreGatE"""
 
-    def __init__(self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5):
+    def __init__(
+            self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5
+    ):
         super(GraphSAGE, self).__init__()
         self.activation = activation
         self.dropout = torch.nn.Dropout(p=dropout_rate)
@@ -21,12 +23,10 @@ class GraphSAGE(torch.nn.Module):
         self.edge_predictor = nn.Sequential(
             # Input size - doubled, because we combine pairs of nodes
             nn.Linear(2 * out_channels, hidden_channels),
-
             nn.ReLU(),
             nn.Dropout(p=dropout_rate),
-
             # Output size - 1, for predicting the probability of a link
-            nn.Linear(hidden_channels, 1)
+            nn.Linear(hidden_channels, 1),
         )
 
     def forward(self, x, edge_index):
