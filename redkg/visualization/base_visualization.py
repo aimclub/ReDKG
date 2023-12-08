@@ -10,9 +10,15 @@ from matplotlib.path import Path
 from scipy.spatial import ConvexHull
 
 from redkg.visualization.config.parameters.defaults import Defaults
-from redkg.visualization.contracts.draw_circle_edges_contract import DrawEdgesContract
-from redkg.visualization.contracts.draw_vertex_contract import DrawVertexContract
-from redkg.visualization.equations.calc_common_tangent_radian import common_tangent_radian
+from redkg.visualization.contracts.draw_circle_edges_contract import (
+    DrawEdgesContract
+)
+from redkg.visualization.contracts.draw_vertex_contract import (
+    DrawVertexContract
+)
+from redkg.visualization.equations.calc_common_tangent_radian import (
+    common_tangent_radian
+)
 from redkg.visualization.equations.calc_polar_position import polar_position
 from redkg.visualization.equations.calc_rad_to_deg import rad_to_deg
 from redkg.visualization.equations.calc_vector_length import vector_length
@@ -20,24 +26,18 @@ from redkg.visualization.equations.radian_from_atan import radian_from_atan
 
 
 class BaseVisualization(ABC):
-    """
-    Base visualization class with common functions.
-    """
+    """Base visualization class with common functions."""
 
     contract = None
 
     @abstractmethod
     def draw(self):
-        """
-        Draw method to redefine.
-        """
+        """Draw method to redefine."""
         raise NotImplementedError
 
     @abstractmethod
     def validate(self):
-        """
-        Base validator to redefine.
-        """
+        """Validate."""
         raise NotImplementedError
 
     @staticmethod
@@ -62,7 +62,9 @@ class BaseVisualization(ABC):
 
         # Create vertexes
         for coordinates, label, size, width in zip(
-            contract.vertex_coordinates.tolist(), vertex_label, contract.vertex_size, contract.vertex_line_width  # noqa
+                contract.vertex_coordinates.tolist(),   # noqa
+                vertex_label, contract.vertex_size,
+                contract.vertex_line_width
         ):
             circle = Circle(coordinates, size)
             circle.lineWidth = width
@@ -75,13 +77,20 @@ class BaseVisualization(ABC):
                 y += offset[1]
                 # Apply to plot exes
                 axes.text(
-                    x, y, label, fontsize=contract.font_size, fontfamily=contract.font_family, ha="center", va="top"
+                    x, y, label,
+                    fontsize=contract.font_size,
+                    fontfamily=contract.font_family,
+                    ha="center", va="top"
                 )
 
             patches.append(circle)
 
         # Make paths
-        p = PatchCollection(patches, facecolors=contract.vertex_color, edgecolors="black")
+        p = PatchCollection(
+            patches,
+            facecolors=contract.vertex_color,
+            edgecolors="black"
+        )
 
         axes.add_collection(p)
 
@@ -99,7 +108,10 @@ class BaseVisualization(ABC):
         num_vertex = len(contract.vertex_coordinates)
 
         line_paths, arc_paths, vertices = self.hull_layout(
-            num_vertex, contract.edge_list, contract.vertex_coordinates, contract.vertex_size
+            num_vertex,
+            contract.edge_list,
+            contract.vertex_coordinates,
+            contract.vertex_size
         )
 
         # For every edge line
@@ -174,7 +186,9 @@ class BaseVisualization(ABC):
             arc_path_for_edges = []
 
             if len(edge) == 1:
-                arc_path_for_edges.append([position[edge[0]], 0, 360, vertices_radius[edge[0]]])
+                arc_path_for_edges.append(
+                    [position[edge[0]], 0, 360, vertices_radius[edge[0]]]
+                )
 
                 vertices_radius[edge] += vertices_increased_radius[edge]
 
@@ -193,7 +207,10 @@ class BaseVisualization(ABC):
 
             number_of_vertices = vertices_index.shape[0]
 
-            vertices_index = np.append(vertices_index, vertices_index[0])  # close the loop
+            vertices_index = np.append(
+                vertices_index,
+                vertices_index[0]
+            )  # close the loop
 
             thetas = []
 
@@ -231,7 +248,9 @@ class BaseVisualization(ABC):
                 radius = vertices_radius[edge[vertices_index[i]]]
 
                 theta_1, theta_2 = rad_to_deg(theta_1), rad_to_deg(theta_2)
-                arc_path_for_edges.append((arc_center, theta_1, theta_2, radius))
+                arc_path_for_edges.append(
+                    (arc_center, theta_1, theta_2, radius)
+                )
 
             vertices_radius[edge] += vertices_increased_radius[edge]
 

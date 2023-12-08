@@ -3,12 +3,17 @@
 from dataclasses import dataclass
 
 from redkg.visualization.config.parameters.edge_styles import EdgeStyles
-from redkg.visualization.contracts.base_visualization_contract import BaseVisualizationContract
-from redkg.visualization.contracts.hypergraph_contract import HypergraphContract
+from redkg.visualization.contracts.base_visualization_contract import (
+    BaseVisualizationContract
+)
+from redkg.visualization.contracts.hypergraph_contract import (
+    HypergraphContract
+)
 
 
 @dataclass
 class HypergraphVisualizationContract(BaseVisualizationContract):
-    """HypergraphVisualizationContract base class."""
+    """Hypergraph  visualization contract base class."""
+
     graph: HypergraphContract = None
     edge_style: str = EdgeStyles.circle

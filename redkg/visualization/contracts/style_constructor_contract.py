@@ -7,7 +7,8 @@ from redkg.visualization.config.parameters.defaults import Defaults
 
 @dataclass
 class GraphStyleConstructorContract:
-    """GraphStyleConstructorContract base class."""
+    """GraphStyle сonstructor сontract base class."""
+
     vertex_num: int
     edges_num: int
     vertex_color: str | list = Defaults.vertex_color

@@ -7,7 +7,8 @@ from redkg.visualization.config.parameters.defaults import Defaults
 
 @dataclass
 class CoreModelContract:
-    """CoreModelContract base class."""
+    """Core model contract base class."""
+
     nums: int | list
     forces: dict
     centers: list

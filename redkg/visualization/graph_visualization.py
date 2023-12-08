@@ -263,12 +263,7 @@ class GraphVisualizer(BaseVisualization):
             )
 
     def validate(self):
-        """Validate parameters.
-
-            - graph type
-            - edge style
-            - vertex number
-        """
+        """Validate parameters."""
         graph_type_is_correct = isinstance(self.contract.graph, GraphContract)
 
         edge_style_are_valid = self.contract.edge_style in EdgeStyles().values

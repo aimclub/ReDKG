@@ -5,7 +5,8 @@ from dataclasses import dataclass
 
 @dataclass
 class LayoutContract:
-    """LayoutContract base class."""
+    """Layout сontract base class."""
+
     vertex_num: int
     edge_list: list[tuple] | list[list[int]]
     push_vertex_strength: float | None

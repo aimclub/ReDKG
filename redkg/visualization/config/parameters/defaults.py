@@ -10,6 +10,7 @@ from redkg.visualization.utils.reference_base import ReferenceBase
 @reference
 class Defaults(ReferenceBase):
     """Main Defaults parameters class."""
+
     edge_style: str = EdgeStyles.line
     edge_color: str = Colors.gray
     edge_fill_color: str = Colors.whitesmoke

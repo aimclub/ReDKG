@@ -9,7 +9,8 @@ from redkg.visualization.contracts.size_constructor_contract import TEdgeList
 
 @dataclass
 class DrawLineEdgesContract:
-    """DrawLineEdgesContract base class."""
+    """Draw line edges contract base class."""
+
     vertex_coordinates: np.array
     vertex_size: list
     edge_list: TEdgeList

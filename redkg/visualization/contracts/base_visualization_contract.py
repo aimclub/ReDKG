@@ -7,7 +7,8 @@ from redkg.visualization.config.parameters.defaults import Defaults
 
 @dataclass
 class BaseVisualizationContract:
-    """BaseVisualizationContract base class."""
+    """Base visualization contract base class."""
+
     edge_style: str = Defaults.edge_style
     edge_color: str | list = Defaults.edge_color
     edge_fill_color: str | list = Defaults.edge_fill_color

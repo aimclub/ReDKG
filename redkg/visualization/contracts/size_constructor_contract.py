@@ -8,7 +8,8 @@ from redkg.visualization.config.types import TEdgeList
 
 @dataclass
 class SizeConstructorContract:
-    """SizeConstructorContract base class."""
+    """Size сonstructor сontract base class."""
+
     vertex_num: int
     edge_list: TEdgeList | None = None
     vertex_size: float | list = Defaults.vertex_size

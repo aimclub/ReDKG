@@ -7,7 +7,8 @@ from redkg.visualization.config.types import TVectorCoordinates
 
 @dataclass
 class DrawVertexContract:
-    """DrawVertexContract base class."""
+    """Draw vertex contract base class."""
+
     vertex_coordinates: TVectorCoordinates
     vertex_label: list[str] | None
     font_size: int

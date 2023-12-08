@@ -7,5 +7,6 @@ from redkg.visualization.utils.reference_base import ReferenceBase
 @reference
 class EdgeStyles(ReferenceBase):
     """Main EdgeStyles parameters class."""
+
     line: str = "line"
     circle: str = "circle"

@@ -7,7 +7,8 @@ from redkg.visualization.config.types import TVectorCoordinates
 
 @dataclass
 class DrawEdgesContract:
-    """DrawEdgesContract base class."""
+    """Draw edges contract base class."""
+
     vertex_coordinates: TVectorCoordinates
     vertex_size: list
     edge_list: list[tuple] | list[list[int]]

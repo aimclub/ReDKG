@@ -1,24 +1,45 @@
 """HypergraphStrengthConstructor module."""
 
 from redkg.visualization.config.parameters.defaults import Defaults
-from redkg.visualization.contracts.strength_constructor_contract import StrengthConstructorContract
+from redkg.visualization.contracts.strength_constructor_contract import (
+    StrengthConstructorContract
+)
 from redkg.visualization.utils.fill_strength import fill_strength
 
 
 class HypergraphStrengthConstructor:
-    """
-    Constructor (one action controller) for Hypergraph strengths.
-    """
+    """Constructor (one action controller) for Hypergraph strengths."""
 
     def __call__(self, contract: StrengthConstructorContract) -> tuple:
+        """Class entrypoint."""
         _push_vertex_strength = Defaults.push_vertex_strength_hg
         _push_edge_strength = Defaults.push_edge_strength_hg
         _pull_edge_strength = Defaults.pull_edge_strength_hg
         _pull_center_strength = Defaults.pull_center_strength_hg
 
-        push_vertex_strength = fill_strength(contract.push_vertex_strength, _push_vertex_strength)
-        push_edge_strength = fill_strength(contract.push_edge_strength, _push_edge_strength)
-        pull_edge_strength = fill_strength(contract.pull_edge_strength, _pull_edge_strength)
-        pull_center_strength = fill_strength(contract.pull_center_strength, _pull_center_strength)
+        push_vertex_strength = fill_strength(
+            contract.push_vertex_strength,
+            _push_vertex_strength
+        )
 
-        return push_vertex_strength, push_edge_strength, pull_edge_strength, pull_center_strength
+        push_edge_strength = fill_strength(
+            contract.push_edge_strength,
+            _push_edge_strength
+        )
+
+        pull_edge_strength = fill_strength(
+            contract.pull_edge_strength,
+            _pull_edge_strength
+        )
+
+        pull_center_strength = fill_strength(
+            contract.pull_center_strength,
+            _pull_center_strength
+        )
+
+        return (
+            push_vertex_strength,
+            push_edge_strength,
+            pull_edge_strength,
+            pull_center_strength
+        )
