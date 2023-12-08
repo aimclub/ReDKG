@@ -7,7 +7,7 @@ class GraphSAGE(torch.nn.Module):
     """Graph SAmple and aggreGatE"""
 
     def __init__(
-            self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5
+        self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5
     ):
         super(GraphSAGE, self).__init__()
         self.activation = activation

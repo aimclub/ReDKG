@@ -8,7 +8,7 @@ class GAT(torch.nn.Module):
     """Graph Attention Network with customizable layers and activation"""
 
     def __init__(
-            self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5, heads=1
+        self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5, heads=1
     ):
         super(GAT, self).__init__()
         self.activation = activation

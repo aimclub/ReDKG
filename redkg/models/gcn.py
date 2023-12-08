@@ -8,7 +8,7 @@ class GCN(torch.nn.Module):
     """Graph Convolutional Network with customizable layers and activation"""
 
     def __init__(
-            self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5
+        self, in_channels, hidden_channels, out_channels, num_layers=5, activation=torch.relu, dropout_rate=0.5
     ):
         super(GCN, self).__init__()
         self.activation = activation
