@@ -31,6 +31,7 @@ class GCN(torch.nn.Module):
         )
 
     def forward(self, x, edge_index):
+        """Forward pass through the model"""
         for i in range(len(self.convs) - 1):
             x = self.convs[i](x, edge_index)
             x = self.activation(x)
