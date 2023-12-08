@@ -1,10 +1,13 @@
+"""Calculate c-log function module."""
+
 import math
 
 
 def c_log_function(n, m):
-    """
-    Compute the C(n, m) function:
-        log(C(n, m)) = log(n!/(n-m)!) - log m! = log(n-m+1) + log(n-m+2) + ... - (log 1 + log 2 + ...)
+    """Compute the C(n, m) function.
+
+    log(C(n, m)) = log(n!/(n-m)!) - log m! = log(n-m+1) + log(n-m+2) + ...
+    - (log 1 + log 2 + ...)
     """
     log_value = 0
     m = min(m, n - m)

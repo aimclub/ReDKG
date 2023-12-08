@@ -1,3 +1,5 @@
+"""LayoutConstructor module."""
+
 import numpy as np
 
 from redkg.visualization.config.parameters.defaults import Defaults

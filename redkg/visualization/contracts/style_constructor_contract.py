@@ -1,3 +1,5 @@
+"""GraphStyleConstructorContract module."""
+
 from dataclasses import dataclass
 
 from redkg.visualization.config.parameters.defaults import Defaults
@@ -5,6 +7,7 @@ from redkg.visualization.config.parameters.defaults import Defaults
 
 @dataclass
 class GraphStyleConstructorContract:
+    """GraphStyleConstructorContract base class."""
     vertex_num: int
     edges_num: int
     vertex_color: str | list = Defaults.vertex_color

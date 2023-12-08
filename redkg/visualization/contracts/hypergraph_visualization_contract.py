@@ -1,3 +1,5 @@
+"""HypergraphVisualizationContract module."""
+
 from dataclasses import dataclass
 
 from redkg.visualization.config.parameters.edge_styles import EdgeStyles
@@ -7,5 +9,6 @@ from redkg.visualization.contracts.hypergraph_contract import HypergraphContract
 
 @dataclass
 class HypergraphVisualizationContract(BaseVisualizationContract):
+    """HypergraphVisualizationContract base class."""
     graph: HypergraphContract = None
     edge_style: str = EdgeStyles.circle

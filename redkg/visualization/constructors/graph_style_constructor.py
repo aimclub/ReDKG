@@ -1,3 +1,5 @@
+"""GraphStyleConstructor module."""
+
 from redkg.visualization.contracts.style_constructor_contract import GraphStyleConstructorContract
 from redkg.visualization.utils.fill_color import fill_color
 

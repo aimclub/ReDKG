@@ -1,3 +1,5 @@
+"""Base visualization module."""
+
 from abc import ABC, abstractmethod
 
 import matplotlib
@@ -40,8 +42,8 @@ class BaseVisualization(ABC):
 
     @staticmethod
     def draw_vertex(axes, contract: DrawVertexContract):
-        """
-        Draw vertex based on contract DrawVertexContract
+        """Draw vertex based on contract DrawVertexContract.
+
         DrawVertexContract:
             - vertex_coordinates - Coordinates of the vertexes
             - vertex_label - Labels for vertexes
@@ -84,8 +86,8 @@ class BaseVisualization(ABC):
         axes.add_collection(p)
 
     def draw_circle_edges(self, axes, contract: DrawEdgesContract):
-        """
-        Draw circled edge based on contract DrawEdgesContract
+        """Draw circled edge based on contract DrawEdgesContract.
+
         DrawEdgesContract:
             - vertex_coordinates - Vertexes coordinates
             - vertex_size - Sizes for vertexes

@@ -1,3 +1,5 @@
+"""SizeConstructor module."""
+
 from redkg.visualization.contracts.size_constructor_contract import SizeConstructorContract
 from redkg.visualization.equations.calc_edge_line_width import calculate_edge_line_width
 from redkg.visualization.equations.calc_font_size import calculate_font_size

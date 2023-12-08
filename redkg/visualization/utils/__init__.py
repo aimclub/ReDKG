@@ -1,1 +1,1 @@
-"""Local init."""
+"""Utils package."""

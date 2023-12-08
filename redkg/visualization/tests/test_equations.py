@@ -2,26 +2,28 @@
 
 import numpy as np
 
-from redkg.visualization.equations import c_log_function
-from redkg.visualization.equations import calc_arrow_head_width
-from redkg.visualization.equations import common_tangent_radian
-from redkg.visualization.equations import calc_direction
-from redkg.visualization.equations import calc_edge_center
-from redkg.visualization.equations import calculate_edge_line_width
-from redkg.visualization.equations import calculate_font_size
-from redkg.visualization.equations import init_position
-from redkg.visualization.equations import polar_position
-from redkg.visualization.equations import rad_to_deg
-from redkg.visualization.equations import safe_div
-from redkg.visualization.equations import vector_length
-from redkg.visualization.equations import calculate_vertex_line_width
-from redkg.visualization.equations import calculate_vertex_size
-from redkg.visualization.equations import edge_list_to_incidence_matrix
-from redkg.visualization.equations import radian_from_atan
+from redkg.visualization.equations import (
+    c_log_function,
+    calc_arrow_head_width,
+    calc_direction,
+    calc_edge_center,
+    calculate_edge_line_width,
+    calculate_font_size,
+    calculate_vertex_line_width,
+    calculate_vertex_size,
+    common_tangent_radian,
+    edge_list_to_incidence_matrix,
+    init_position,
+    polar_position,
+    rad_to_deg,
+    radian_from_atan,
+    safe_div,
+    vector_length,
+)
 
 edge_line_width = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-edge_list = ([(0, 7), (2, 7), (4, 9), (3, 7), (1, 8), (5, 7),
-              (2, 3), (4, 5), (5, 6), (4, 8), (6, 9), (4, 7)],)
+edge_list = ([(0, 7), (2, 7), (4, 9), (3, 7), (1, 8), (5, 7), (2, 3), (4, 5),
+              (5, 6), (4, 8), (6, 9), (4, 7)],)
 vertex_num = 10
 
 
@@ -36,8 +38,8 @@ def test__c_log_function() -> None:
 def test__calc_arrow_head_width__show_arrow__true() -> None:
     """Calculate Arrow head with showed arrow symbol."""
     result = calc_arrow_head_width(edge_line_width, True, edge_list[0])  # noqa
-    expected_result = [0.015, 0.015, 0.015, 0.015, 0.015, 0.015,
-                       0.015, 0.015, 0.015, 0.015, 0.015, 0.015]
+    expected_result = [0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015,
+                       0.015, 0.015, 0.015, 0.015, 0.015]
     assert result == expected_result
 
 

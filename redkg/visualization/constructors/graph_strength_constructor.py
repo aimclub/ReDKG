@@ -1,3 +1,5 @@
+"""GraphStrengthConstructor module."""
+
 from redkg.visualization.config.parameters.defaults import Defaults
 from redkg.visualization.contracts.strength_constructor_contract import StrengthConstructorContract
 from redkg.visualization.utils.fill_strength import fill_strength

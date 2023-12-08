@@ -2,12 +2,14 @@
 
 from typing import Any
 
-from redkg.visualization.exceptions.exceptions_classes \
-    import (ParamsValidationException)
+from redkg.visualization.exceptions.exceptions_classes import (
+    ParamsValidationException
+)
 
 
 def fill_sizes(custom_scales: float | list | None,
-               default_value: Any, length: int):
+               default_value: Any,
+               length: int):
     """Fill sizes function."""
     if custom_scales is None:
         return [default_value] * length

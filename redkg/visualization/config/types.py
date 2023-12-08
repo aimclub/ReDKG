@@ -1,3 +1,5 @@
+"""Type parameters."""
+
 import typing as t
 
 TEdgeList = t.NewType("TEdgeList", list[tuple[int, int]])

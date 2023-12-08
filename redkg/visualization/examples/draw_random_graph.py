@@ -1,12 +1,16 @@
+"""Draw random graph module."""
+
 from torch import tensor
 
 from redkg.visualization.contracts.graph_contract import GraphContract
-from redkg.visualization.contracts.graph_visualization_contract import GraphVisualizationContract
+from redkg.visualization.contracts.graph_visualization_contract import (
+    GraphVisualizationContract
+)
 from redkg.visualization.data_generation.graph_generator import GraphGenerator
 from redkg.visualization.graph_visualization import GraphVisualizer
 
-VERTEX_NUM = 1000
-EDGE_NUM = 1200
+VERTEX_NUM = 10
+EDGE_NUM = 12
 
 
 generator = GraphGenerator(vertex_num=VERTEX_NUM, edge_num=EDGE_NUM)
@@ -21,7 +25,10 @@ graph_contract: GraphContract = GraphContract(
     edge_num=EDGE_NUM,
     edge_weights=tensor(generated_edge_weights * 2),  # noqa
 )
-vis_contract: GraphVisualizationContract = GraphVisualizationContract(graph=graph_contract)
+
+vis_contract: GraphVisualizationContract = (
+    GraphVisualizationContract(graph=graph_contract)
+)
 
 vis: GraphVisualizer = GraphVisualizer(vis_contract)
 fig = vis.draw()

@@ -1,3 +1,5 @@
+"""BaseGraphContract module."""
+
 from dataclasses import dataclass
 
 from redkg.visualization.config.types import TGraphEdgeList
@@ -5,6 +7,7 @@ from redkg.visualization.config.types import TGraphEdgeList
 
 @dataclass
 class BaseGraphContract:
+    """Base BaseGraphContract class."""
     vertex_num: int
     edge_list: TGraphEdgeList | None = None
     edge_weights: float | list[float] | None = None

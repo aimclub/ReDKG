@@ -1,3 +1,5 @@
+"""StrengthConstructorContract module."""
+
 from dataclasses import dataclass
 
 from redkg.visualization.config.parameters.defaults import Defaults
@@ -5,6 +7,7 @@ from redkg.visualization.config.parameters.defaults import Defaults
 
 @dataclass
 class StrengthConstructorContract:
+    """StrengthConstructorContract base class."""
     push_vertex_strength: float = Defaults.push_vertex_strength_vis
     push_edge_strength: float = Defaults.push_edge_strength_vis
     pull_edge_strength: float = Defaults.pull_edge_strength_vis

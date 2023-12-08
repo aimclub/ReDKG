@@ -1,3 +1,5 @@
+"""CoreModelContract module."""
+
 from dataclasses import dataclass
 
 from redkg.visualization.config.parameters.defaults import Defaults
@@ -5,6 +7,7 @@ from redkg.visualization.config.parameters.defaults import Defaults
 
 @dataclass
 class CoreModelContract:
+    """CoreModelContract base class."""
     nums: int | list
     forces: dict
     centers: list
