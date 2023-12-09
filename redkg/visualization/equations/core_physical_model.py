@@ -6,9 +6,7 @@ import numpy as np
 from sklearn.metrics import euclidean_distances
 
 from redkg.visualization.config.parameters.defaults import Defaults
-from redkg.visualization.contracts.core_model_contract import (
-    CoreModelContract
-)
+from redkg.visualization.contracts.core_model_contract import CoreModelContract
 from redkg.visualization.equations.calc_edge_center import calc_edge_center
 from redkg.visualization.equations.calc_safe_div import safe_div
 

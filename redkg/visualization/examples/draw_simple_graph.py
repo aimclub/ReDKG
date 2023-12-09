@@ -3,9 +3,7 @@
 from torch import tensor
 
 from redkg.visualization.contracts.graph_contract import GraphContract
-from redkg.visualization.contracts.graph_visualization_contract import (
-    GraphVisualizationContract
-)
+from redkg.visualization.contracts.graph_visualization_contract import GraphVisualizationContract
 from redkg.visualization.graph_visualization import GraphVisualizer
 from visualization.mock_data.mock_data import SIMPLE_EDGE_LIST
 

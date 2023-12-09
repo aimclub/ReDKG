@@ -3,9 +3,7 @@
 from torch import tensor
 
 from redkg.visualization.contracts.graph_contract import GraphContract
-from redkg.visualization.contracts.graph_visualization_contract import (
-    GraphVisualizationContract
-)
+from redkg.visualization.contracts.graph_visualization_contract import GraphVisualizationContract
 from redkg.visualization.data_generation.graph_generator import GraphGenerator
 from redkg.visualization.graph_visualization import GraphVisualizer
 

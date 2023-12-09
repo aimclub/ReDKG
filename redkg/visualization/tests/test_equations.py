@@ -5,20 +5,20 @@ import numpy as np
 from redkg.visualization.equations import (
     c_log_function,
     calc_arrow_head_width,
+    calc_common_tangent_radian,
     calc_direction,
     calc_edge_center,
     calc_edge_line_width,
     calc_font_size,
-    calc_vertex_line_width,
-    calc_vertex_size,
-    calc_common_tangent_radian,
-    edge_list_to_incidence_matrix,
     calc_init_position,
     calc_polar_position,
     calc_rad_to_deg,
-    radian_from_atan,
     calc_safe_div,
     calc_vector_length,
+    calc_vertex_line_width,
+    calc_vertex_size,
+    edge_list_to_incidence_matrix,
+    radian_from_atan,
 )
 from redkg.visualization.mock_data.mock_data import SIMPLE_EDGE_LIST
 

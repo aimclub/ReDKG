@@ -10,15 +10,9 @@ from matplotlib.path import Path
 from scipy.spatial import ConvexHull
 
 from redkg.visualization.config.parameters.defaults import Defaults
-from redkg.visualization.contracts.draw_circle_edges_contract import (
-    DrawEdgesContract
-)
-from redkg.visualization.contracts.draw_vertex_contract import (
-    DrawVertexContract
-)
-from redkg.visualization.equations.calc_common_tangent_radian import (
-    common_tangent_radian
-)
+from redkg.visualization.contracts.draw_circle_edges_contract import DrawEdgesContract
+from redkg.visualization.contracts.draw_vertex_contract import DrawVertexContract
+from redkg.visualization.equations.calc_common_tangent_radian import common_tangent_radian
 from redkg.visualization.equations.calc_polar_position import polar_position
 from redkg.visualization.equations.calc_rad_to_deg import rad_to_deg
 from redkg.visualization.equations.calc_vector_length import vector_length

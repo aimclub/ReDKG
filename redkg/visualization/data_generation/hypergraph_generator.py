@@ -2,13 +2,9 @@
 
 import random
 
-from redkg.visualization.config.parameters.generator_methods import (
-    GeneratorMethods
-)
+from redkg.visualization.config.parameters.generator_methods import GeneratorMethods
 from redkg.visualization.equations.c_log_function import c_log_function
-from redkg.visualization.exceptions.exceptions_classes import (
-    ParamsValidationException
-)
+from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
 class HypergraphGenerator:

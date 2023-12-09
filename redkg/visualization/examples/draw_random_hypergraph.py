@@ -2,18 +2,10 @@
 
 from torch import tensor
 
-from redkg.visualization.config.parameters.generator_methods import (
-    GeneratorMethods
-)
-from redkg.visualization.contracts.hypergraph_contract import (
-    HypergraphContract
-)
-from redkg.visualization.contracts.hypergraph_visualization_contract import (
-    HypergraphVisualizationContract
-)
-from redkg.visualization.data_generation.hypergraph_generator import (
-    HypergraphGenerator
-)
+from redkg.visualization.config.parameters.generator_methods import GeneratorMethods
+from redkg.visualization.contracts.hypergraph_contract import HypergraphContract
+from redkg.visualization.contracts.hypergraph_visualization_contract import HypergraphVisualizationContract
+from redkg.visualization.data_generation.hypergraph_generator import HypergraphGenerator
 from redkg.visualization.hypergraph_visualization import HypergraphVisualizer
 
 VERTEX_NUM = 50

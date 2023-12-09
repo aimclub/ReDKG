@@ -7,48 +7,22 @@ import matplotlib.pyplot as plt
 from redkg.visualization.base_visualization import BaseVisualization
 from redkg.visualization.config.parameters.defaults import Defaults
 from redkg.visualization.config.parameters.edge_styles import EdgeStyles
-from redkg.visualization.constructors.graph_strength_constructor import (
-    GraphStrengthConstructor
-)
-from redkg.visualization.constructors.graph_style_constructor import (
-    GraphStyleConstructor
-)
-from redkg.visualization.constructors.layout_constructor import (
-    LayoutConstructor
-)
-from redkg.visualization.constructors.size_constructor import (
-    SizeConstructor
-)
-from redkg.visualization.contracts.draw_circle_edges_contract import (
-    DrawEdgesContract
-)
-from redkg.visualization.contracts.draw_line_edges_contract import (
-    DrawLineEdgesContract
-)
-from redkg.visualization.contracts.draw_vertex_contract import (
-    DrawVertexContract
-)
+from redkg.visualization.constructors.graph_strength_constructor import GraphStrengthConstructor
+from redkg.visualization.constructors.graph_style_constructor import GraphStyleConstructor
+from redkg.visualization.constructors.layout_constructor import LayoutConstructor
+from redkg.visualization.constructors.size_constructor import SizeConstructor
+from redkg.visualization.contracts.draw_circle_edges_contract import DrawEdgesContract
+from redkg.visualization.contracts.draw_line_edges_contract import DrawLineEdgesContract
+from redkg.visualization.contracts.draw_vertex_contract import DrawVertexContract
 from redkg.visualization.contracts.graph_contract import GraphContract
-from redkg.visualization.contracts.graph_visualization_contract import (
-    GraphVisualizationContract
-)
+from redkg.visualization.contracts.graph_visualization_contract import GraphVisualizationContract
 from redkg.visualization.contracts.layout_contract import LayoutContract
-from redkg.visualization.contracts.size_constructor_contract import (
-    SizeConstructorContract
-)
-from redkg.visualization.contracts.strength_constructor_contract import (
-    StrengthConstructorContract
-)
-from redkg.visualization.contracts.style_constructor_contract import (
-    GraphStyleConstructorContract
-)
-from redkg.visualization.equations.calc_arrow_head_width import (
-    calc_arrow_head_width
-)
+from redkg.visualization.contracts.size_constructor_contract import SizeConstructorContract
+from redkg.visualization.contracts.strength_constructor_contract import StrengthConstructorContract
+from redkg.visualization.contracts.style_constructor_contract import GraphStyleConstructorContract
+from redkg.visualization.equations.calc_arrow_head_width import calc_arrow_head_width
 from redkg.visualization.equations.calc_direction import calc_direction
-from redkg.visualization.exceptions.exceptions_classes import (
-    ParamsValidationException
-)
+from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
 class GraphVisualizer(BaseVisualization):

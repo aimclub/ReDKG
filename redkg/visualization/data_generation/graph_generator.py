@@ -2,9 +2,7 @@
 
 import random
 
-from redkg.visualization.exceptions.exceptions_classes import (
-    ParamsValidationException
-)
+from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
 class GraphGenerator:

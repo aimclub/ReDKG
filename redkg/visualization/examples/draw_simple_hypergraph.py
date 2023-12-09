@@ -2,14 +2,9 @@
 
 from torch import tensor
 
-from redkg.visualization.contracts.hypergraph_contract import (
-    HypergraphContract
-)
-from redkg.visualization.contracts.hypergraph_visualization_contract import (
-    HypergraphVisualizationContract)
-from redkg.visualization.hypergraph_visualization import (
-    HypergraphVisualizer
-)
+from redkg.visualization.contracts.hypergraph_contract import HypergraphContract
+from redkg.visualization.contracts.hypergraph_visualization_contract import HypergraphVisualizationContract
+from redkg.visualization.hypergraph_visualization import HypergraphVisualizer
 from redkg.visualization.mock_data.mock_data import SIMPLE_HEDGE_LIST
 
 graph_contract: HypergraphContract = HypergraphContract(

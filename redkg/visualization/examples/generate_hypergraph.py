@@ -1,11 +1,7 @@
 """Generate hypergraph module."""
 
-from redkg.visualization.config.parameters.generator_methods import (
-    GeneratorMethods
-)
-from redkg.visualization.data_generation.hypergraph_generator import (
-    HypergraphGenerator
-)
+from redkg.visualization.config.parameters.generator_methods import GeneratorMethods
+from redkg.visualization.data_generation.hypergraph_generator import HypergraphGenerator
 
 print("Generate random Hypergraph 'uniform'")
 generator = HypergraphGenerator(

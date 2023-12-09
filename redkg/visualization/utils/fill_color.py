@@ -2,9 +2,7 @@
 
 from typing import Any
 
-from redkg.visualization.exceptions.exceptions_classes import (
-    ParamsValidationException
-)
+from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
 def fill_color(custom_color: str | list, default_color: Any, length: int):
