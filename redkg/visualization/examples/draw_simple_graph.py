@@ -7,45 +7,16 @@ from redkg.visualization.contracts.graph_visualization_contract import (
     GraphVisualizationContract
 )
 from redkg.visualization.graph_visualization import GraphVisualizer
+from visualization.mock_data.mock_data import SIMPLE_EDGE_LIST
 
 graph_contract: GraphContract = GraphContract(
     vertex_num=10,
     edge_list=(  # noqa
-        [
-            (0, 7), (2, 7), (4, 9), (3, 7), (1, 8), (5, 7), (2, 3), (4, 5),
-            (5, 6), (4, 8), (6, 9), (4, 7)
-        ],
-        [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        SIMPLE_EDGE_LIST,
+        [1.0] * 12,
     ),
     edge_num=12,
-    edge_weights=tensor(  # noqa
-        [
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-        ]
-    ),
+    edge_weights=tensor([1.0] * 24),  # noqa
 )
 
 vis_contract: GraphVisualizationContract = GraphVisualizationContract(

@@ -7,23 +7,23 @@ from redkg.visualization.equations import (
     calc_arrow_head_width,
     calc_direction,
     calc_edge_center,
-    calculate_edge_line_width,
-    calculate_font_size,
-    calculate_vertex_line_width,
-    calculate_vertex_size,
-    common_tangent_radian,
+    calc_edge_line_width,
+    calc_font_size,
+    calc_vertex_line_width,
+    calc_vertex_size,
+    calc_common_tangent_radian,
     edge_list_to_incidence_matrix,
-    init_position,
-    polar_position,
-    rad_to_deg,
+    calc_init_position,
+    calc_polar_position,
+    calc_rad_to_deg,
     radian_from_atan,
-    safe_div,
-    vector_length,
+    calc_safe_div,
+    calc_vector_length,
 )
+from redkg.visualization.mock_data.mock_data import SIMPLE_EDGE_LIST
 
-edge_line_width = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-edge_list = ([(0, 7), (2, 7), (4, 9), (3, 7), (1, 8), (5, 7), (2, 3), (4, 5),
-              (5, 6), (4, 8), (6, 9), (4, 7)],)
+edge_line_width = [1.0] * 12
+edge_list = (SIMPLE_EDGE_LIST,)
 vertex_num = 10
 
 
@@ -105,28 +105,28 @@ def test__calc_edge_center():
 def test__calculate_edge_line_width():
     """Calculate Edge line width."""
     edge_list_length = 10
-    result = calculate_edge_line_width(edge_list_length)
+    result = calc_edge_line_width(edge_list_length)
     expected_result = 0.9200444146293233
     assert result == expected_result
 
 
 def test__calculate_font_size():
     """Calculate Font Size."""
-    result = calculate_font_size(vertex_num)
+    result = calc_font_size(vertex_num)
     expected_result = 18.09674836071919
     assert result == expected_result
 
 
 def test__calculate_vertex_line_width():
     """Calculate Vertex line."""
-    result = calculate_vertex_line_width(vertex_num)
+    result = calc_vertex_line_width(vertex_num)
     expected_result = 0.8187307530779818
     assert result == expected_result
 
 
 def test__calculate_vertex_size():
     """Calculate Vertex size."""
-    result = calculate_vertex_size(vertex_num)
+    result = calc_vertex_size(vertex_num)
     expected_result = 0.022360679774997897
     assert result == expected_result
 
@@ -136,7 +136,7 @@ def test__common_tangent_radian():
     r1 = 10
     r2 = 10
     d = 10
-    result = common_tangent_radian(r1, r2, d)
+    result = calc_common_tangent_radian(r1, r2, d)
     expected_result = 1.5707963267948966
     assert result == expected_result
 
@@ -145,7 +145,7 @@ def test__init_position():
     """Calculate init position."""
     center = (10, 10)
     scale = 1.0
-    result = init_position(vertex_num, center, scale)
+    result = calc_init_position(vertex_num, center, scale)
     expected_result = np.array(
         [
             [10.317033666788971, 10.473209403635629],
@@ -168,7 +168,7 @@ def test__polar_position():
     r = 10
     theta = 10
     start_point = np.array([0.617829638655483, 0.42093185430294533])
-    result = polar_position(r, theta, start_point)
+    result = calc_polar_position(r, theta, start_point)
     expected_result = np.array([-7.772885652109041, -5.019279254590752])
     assert np.array_equal(result, expected_result)
 
@@ -176,7 +176,7 @@ def test__polar_position():
 def test__rad_to_deg():
     """Convert radians to degrees."""
     rad = 10
-    result = rad_to_deg(rad)
+    result = calc_rad_to_deg(rad)
     expected_result = 572.9577951308232
     assert result == expected_result
 
@@ -216,7 +216,7 @@ def test__safe_div():
         ]
     )
     jitter = 0.000001
-    result = safe_div(a, b, jitter)
+    result = calc_safe_div(a, b, jitter)
     expected_result = np.array(
         [
             [-0.629799927240966, 0.7767573956180102],
@@ -239,7 +239,7 @@ def test__safe_div():
 def test__vector_length():
     """Calculate Vector length."""
     vector = np.array([0.05005852883380579, 0.5053637631489841])
-    result = vector_length(vector)
+    result = calc_vector_length(vector)
     expected_result = 0.5078369712940438
     assert result == expected_result
 
