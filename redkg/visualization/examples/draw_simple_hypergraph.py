@@ -14,7 +14,7 @@ graph_contract: HypergraphContract = HypergraphContract(
         [1.0] * 8,
     ),
     edge_num=8,
-    edge_weights=tensor([1.0] * 10),  # noqa
+    edge_weights=list(tensor([1.0] * 10)),
 )
 
 vis_contract: HypergraphVisualizationContract = HypergraphVisualizationContract(graph=graph_contract)

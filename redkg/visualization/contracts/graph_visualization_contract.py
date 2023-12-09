@@ -10,4 +10,4 @@ from redkg.visualization.contracts.graph_contract import GraphContract
 class GraphVisualizationContract(BaseVisualizationContract):
     """Graph visualization contract base class."""
 
-    graph: GraphContract = None
+    graph: GraphContract | None = None

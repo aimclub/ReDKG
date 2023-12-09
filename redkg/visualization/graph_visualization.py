@@ -20,8 +20,8 @@ from redkg.visualization.contracts.layout_contract import LayoutContract
 from redkg.visualization.contracts.size_constructor_contract import SizeConstructorContract
 from redkg.visualization.contracts.strength_constructor_contract import StrengthConstructorContract
 from redkg.visualization.contracts.style_constructor_contract import GraphStyleConstructorContract
-from redkg.visualization.equations.calc_arrow_head_width import calc_arrow_head_width
-from redkg.visualization.equations.calc_direction import calc_direction
+from redkg.visualization.equations.calculate_arrow_head_width import calculate_arrow_head_width
+from redkg.visualization.equations.calculate_direction import calculate_direction
 from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
@@ -185,7 +185,7 @@ class GraphVisualizer(BaseVisualization):
             edge_line_width - Line width for edge drawing
         """
         # Define arrow sizes
-        arrow_head_width = calc_arrow_head_width(contract.edge_line_width, contract.show_arrow, contract.edge_list)
+        arrow_head_width = calculate_arrow_head_width(contract.edge_line_width, contract.show_arrow, contract.edge_list)
 
         for edge_index, e in enumerate(contract.edge_list):
             # For every edge in list
@@ -194,7 +194,7 @@ class GraphVisualizer(BaseVisualization):
             end_position = contract.vertex_coordinates[e[1]]
             # Define direction
             direction = end_position - start_position
-            direction = calc_direction(direction)
+            direction = calculate_direction(direction)
             # Define positions for arrow
             start_position = start_position + direction * contract.vertex_size[e[0]]
             end_position = end_position - direction * contract.vertex_size[e[1]]

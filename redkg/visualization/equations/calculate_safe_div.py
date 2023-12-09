@@ -5,7 +5,7 @@ import numpy as np
 from redkg.visualization.config.parameters.defaults import Defaults
 
 
-def safe_div(a: np.ndarray, b: np.ndarray, jitter_scale: float = Defaults.jitter_scale):
+def calculate_safe_div(a: np.ndarray, b: np.ndarray, jitter_scale: float = Defaults.jitter_scale):
     """Calculate safe div function."""
     mask = b == 0
     b[mask] = 1

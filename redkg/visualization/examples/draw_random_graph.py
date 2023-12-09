@@ -19,9 +19,9 @@ generated_edge_weights = [1.0 for _ in range(len(generated_data))]
 
 graph_contract: GraphContract = GraphContract(
     vertex_num=VERTEX_NUM,
-    edge_list=(generated_data, generated_edge_weights),  # noqa
+    edge_list=(generated_data, generated_edge_weights),
     edge_num=EDGE_NUM,
-    edge_weights=tensor(generated_edge_weights * 2),  # noqa
+    edge_weights=list(tensor(generated_edge_weights * 2)),
 )
 
 vis_contract: GraphVisualizationContract = GraphVisualizationContract(graph=graph_contract)

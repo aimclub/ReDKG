@@ -22,7 +22,7 @@ graph_contract: HypergraphContract = HypergraphContract(
     vertex_num=VERTEX_NUM,
     edge_list=(generated_data, generated_edge_weights),  # noqa
     edge_num=EDGE_NUM,
-    edge_weights=tensor(generated_edge_weights * 2),  # noqa
+    edge_weights=list(tensor(generated_edge_weights * 2)),  # noqa
 )
 
 vis_contract: HypergraphVisualizationContract = HypergraphVisualizationContract(graph=graph_contract)

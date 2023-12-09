@@ -1,6 +1,7 @@
 """Base visualization module."""
 
 from abc import ABC, abstractmethod
+from typing import Iterable
 
 import matplotlib
 import numpy as np
@@ -12,11 +13,11 @@ from scipy.spatial import ConvexHull
 from redkg.visualization.config.parameters.defaults import Defaults
 from redkg.visualization.contracts.draw_circle_edges_contract import DrawEdgesContract
 from redkg.visualization.contracts.draw_vertex_contract import DrawVertexContract
-from redkg.visualization.equations.calc_common_tangent_radian import common_tangent_radian
-from redkg.visualization.equations.calc_polar_position import polar_position
-from redkg.visualization.equations.calc_rad_to_deg import rad_to_deg
-from redkg.visualization.equations.calc_vector_length import vector_length
-from redkg.visualization.equations.radian_from_atan import radian_from_atan
+from redkg.visualization.equations.calculate_common_tangent_radian import calculate_common_tangent_radian
+from redkg.visualization.equations.calculate_polar_position import calculate_polar_position
+from redkg.visualization.equations.calculate_rad_to_deg import calculate_rad_to_deg
+from redkg.visualization.equations.calculate_radian_from_atan import calculate_radian_from_atan
+from redkg.visualization.equations.calculate_vector_length import calculate_vector_length
 
 
 class BaseVisualization(ABC):
@@ -49,7 +50,7 @@ class BaseVisualization(ABC):
         """
         patches = []
 
-        vertex_label = contract.vertex_label
+        vertex_label: Iterable[str] = contract.vertex_label
 
         if contract.vertex_label is None:
             vertex_label = [""] * contract.vertex_coordinates.shape[0]  # noqa
@@ -204,14 +205,14 @@ class BaseVisualization(ABC):
                 p2 = position[i2]
 
                 dp = p2 - p1
-                dp_len = vector_length(dp)
+                dp_len = calculate_vector_length(dp)
 
-                beta = radian_from_atan(dp[0], dp[1])
-                alpha = common_tangent_radian(r1, r2, dp_len)
+                beta = calculate_radian_from_atan(dp[0], dp[1])
+                alpha = calculate_common_tangent_radian(r1, r2, dp_len)
 
                 theta = beta - alpha
-                start_point = polar_position(r1, theta, p1)
-                end_point = polar_position(r2, theta, p2)
+                start_point = calculate_polar_position(r1, theta, p1)
+                end_point = calculate_polar_position(r2, theta, p2)
 
                 line_path_for_edges.append((start_point, end_point))
                 thetas.append(theta)
@@ -224,7 +225,7 @@ class BaseVisualization(ABC):
                 arc_center = position[edge[vertices_index[i]]]
                 radius = vertices_radius[edge[vertices_index[i]]]
 
-                theta_1, theta_2 = rad_to_deg(theta_1), rad_to_deg(theta_2)
+                theta_1, theta_2 = calculate_rad_to_deg(theta_1), calculate_rad_to_deg(theta_2)
                 arc_path_for_edges.append((arc_center, theta_1, theta_2, radius))
 
             vertices_radius[edge] += vertices_increased_radius[edge]

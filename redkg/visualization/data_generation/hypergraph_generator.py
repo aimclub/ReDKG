@@ -3,7 +3,7 @@
 import random
 
 from redkg.visualization.config.parameters.generator_methods import GeneratorMethods
-from redkg.visualization.equations.c_log_function import c_log_function
+from redkg.visualization.equations.calculate_c_log_function import calculate_c_log_function
 from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
@@ -26,7 +26,7 @@ class HypergraphGenerator:
         self._validate()
 
     def __generate_uniform(self, edge_degree_list: list):
-        return [c_log_function(self.vertex_num, k) / (2**self.vertex_num - 1) for k in edge_degree_list]
+        return [calculate_c_log_function(self.vertex_num, k) / (2**self.vertex_num - 1) for k in edge_degree_list]
 
     @staticmethod
     def __generate_low_order_first(edge_degree_list: list):

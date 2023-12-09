@@ -11,5 +11,5 @@ from redkg.visualization.contracts.hypergraph_contract import HypergraphContract
 class HypergraphVisualizationContract(BaseVisualizationContract):
     """Hypergraph  visualization contract base class."""
 
-    graph: HypergraphContract = None
+    graph: HypergraphContract | None = None
     edge_style: str = EdgeStyles.circle

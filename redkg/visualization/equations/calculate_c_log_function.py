@@ -3,7 +3,7 @@
 import math
 
 
-def c_log_function(n, m):
+def calculate_c_log_function(n, m):
     """Compute the C(n, m) function.
 
     log(C(n, m)) = log(n!/(n-m)!) - log m! = log(n-m+1) + log(n-m+2) + ...

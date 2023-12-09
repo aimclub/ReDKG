@@ -11,8 +11,8 @@ class BaseVisualizationContract:
 
     edge_style: str = Defaults.edge_style
     edge_color: str | list = Defaults.edge_color
-    edge_fill_color: str | list = Defaults.edge_fill_color
-    edge_line_width: str | list = Defaults.edge_line_width
+    edge_fill_color: str | float | list = Defaults.edge_fill_color
+    edge_line_width: str | float | list = Defaults.edge_line_width
     vertex_label: list | None = None
     vertex_size: float | list = Defaults.vertex_size
     vertex_color: str | list = Defaults.vertex_color

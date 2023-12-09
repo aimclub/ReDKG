@@ -7,8 +7,8 @@ from sklearn.metrics import euclidean_distances
 
 from redkg.visualization.config.parameters.defaults import Defaults
 from redkg.visualization.contracts.core_model_contract import CoreModelContract
-from redkg.visualization.equations.calc_edge_center import calc_edge_center
-from redkg.visualization.equations.calc_safe_div import safe_div
+from redkg.visualization.equations.calculate_edge_center import calculate_edge_center
+from redkg.visualization.equations.calculate_safe_div import calculate_safe_div
 
 
 class CorePhysicalModel:
@@ -62,7 +62,7 @@ class CorePhysicalModel:
         return position
 
     def __make_one_step(self, position, velocity, H, epsilon, damping, delta):
-        edge_center = calc_edge_center(H, position)
+        edge_center = calculate_edge_center(H, position)
 
         vertex_to_vertex_distance = euclidean_distances(position)
         vertex_to_edge_distance = euclidean_distances(position, edge_center) * H
@@ -119,7 +119,7 @@ class CorePhysicalModel:
 
         force_direction = e_center[np.newaxis, :, :] - position[:, np.newaxis, :]
         force_direction_length = np.linalg.norm(force_direction, axis=2)
-        force_direction = safe_div(force_direction, force_direction_length[:, :, np.newaxis])
+        force_direction = calculate_safe_div(force_direction, force_direction_length[:, :, np.newaxis])
 
         f = f_scale[:, :, np.newaxis] * force_direction
         f = f.sum(axis=1)
@@ -138,7 +138,7 @@ class CorePhysicalModel:
         force_direction = position[:, np.newaxis, :] - position[np.newaxis, :, :]
         force_direction_length = np.linalg.norm(force_direction, axis=2)
         force_direction_length[r, c] = np.inf
-        force_direction = safe_div(force_direction, force_direction_length[:, :, np.newaxis])
+        force_direction = calculate_safe_div(force_direction, force_direction_length[:, :, np.newaxis])
 
         force = force_scale[:, :, np.newaxis] * force_direction
         force[r, c] = 0
@@ -158,7 +158,7 @@ class CorePhysicalModel:
         force_direction = edge_center[:, np.newaxis, :] - edge_center[np.newaxis, :, :]
         force_direction_length = np.linalg.norm(force_direction, axis=2)
         force_direction_length[r, c] = np.inf
-        force_direction = safe_div(force_direction, force_direction_length[:, :, np.newaxis])
+        force_direction = calculate_safe_div(force_direction, force_direction_length[:, :, np.newaxis])
 
         force = force_scale[:, :, np.newaxis] * force_direction
         force[r, c] = 0
@@ -171,7 +171,7 @@ class CorePhysicalModel:
         force_scale = vertex_to_vertex_distance
         force_direction = center[np.newaxis, np.newaxis, :] - position[:, np.newaxis, :]
         force_direction_length = np.linalg.norm(force_direction, axis=2)
-        force_direction = safe_div(force_direction, force_direction_length[:, :, np.newaxis])
+        force_direction = calculate_safe_div(force_direction, force_direction_length[:, :, np.newaxis])
 
         force = force_scale[:, :, np.newaxis] * force_direction
         force = force.sum(axis=1) * k

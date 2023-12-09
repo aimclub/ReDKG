@@ -2,24 +2,22 @@
 
 import numpy as np
 
-from redkg.visualization.equations import (
-    c_log_function,
-    calc_arrow_head_width,
-    calc_common_tangent_radian,
-    calc_direction,
-    calc_edge_center,
-    calc_edge_line_width,
-    calc_font_size,
-    calc_init_position,
-    calc_polar_position,
-    calc_rad_to_deg,
-    calc_safe_div,
-    calc_vector_length,
-    calc_vertex_line_width,
-    calc_vertex_size,
-    edge_list_to_incidence_matrix,
-    radian_from_atan,
-)
+from redkg.visualization.equations.calculate_arrow_head_width import calculate_arrow_head_width
+from redkg.visualization.equations.calculate_c_log_function import calculate_c_log_function
+from redkg.visualization.equations.calculate_common_tangent_radian import calculate_common_tangent_radian
+from redkg.visualization.equations.calculate_direction import calculate_direction
+from redkg.visualization.equations.calculate_edge_center import calculate_edge_center
+from redkg.visualization.equations.calculate_edge_line_width import calculate_edge_line_width
+from redkg.visualization.equations.calculate_font_size import calculate_font_size
+from redkg.visualization.equations.calculate_init_position import calculate_init_position
+from redkg.visualization.equations.calculate_polar_position import calculate_polar_position
+from redkg.visualization.equations.calculate_rad_to_deg import calculate_rad_to_deg
+from redkg.visualization.equations.calculate_radian_from_atan import calculate_radian_from_atan
+from redkg.visualization.equations.calculate_safe_div import calculate_safe_div
+from redkg.visualization.equations.calculate_vector_length import calculate_vector_length
+from redkg.visualization.equations.calculate_vertex_line_width import calculate_vertex_line_width
+from redkg.visualization.equations.calculate_vertex_size import calculate_vertex_size
+from redkg.visualization.equations.edge_list_to_incidence_matrix import edge_list_to_incidence_matrix
 from redkg.visualization.mock_data.mock_data import SIMPLE_EDGE_LIST
 
 edge_line_width = [1.0] * 12
@@ -31,20 +29,20 @@ def test__c_log_function() -> None:
     """Calculate C-log function."""
     n = 10
     m = 10
-    result = c_log_function(n, m)
+    result = calculate_c_log_function(n, m)
     assert result == 1
 
 
 def test__calc_arrow_head_width__show_arrow__true() -> None:
     """Calculate Arrow head with showed arrow symbol."""
-    result = calc_arrow_head_width(edge_line_width, True, edge_list[0])  # noqa
+    result = calculate_arrow_head_width(edge_line_width, True, edge_list[0])  # noqa
     expected_result = [0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015]
     assert result == expected_result
 
 
 def test__calc_arrow_head_width__show_arrow__false() -> None:
     """Calculate Arrow head without showed arrow symbol."""
-    result = calc_arrow_head_width(edge_line_width, False, edge_list[0])  # noqa
+    result = calculate_arrow_head_width(edge_line_width, False, edge_list[0])  # noqa
     expected_result = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     assert result == expected_result
 
@@ -54,7 +52,7 @@ def test__calc_direction():
     x = 20
     y = 30
     direction = y - x
-    result = calc_direction(direction)
+    result = calculate_direction(direction)
     expected_result = 1.0
     assert result == expected_result
 
@@ -89,7 +87,7 @@ def test__calc_edge_center():
             [2.787323470033595, -3.620255068345841],
         ]
     )
-    result = calc_edge_center(h, position)
+    result = calculate_edge_center(h, position)
     expected_result = np.array(
         [
             [-1.4624317891290635, 2.2560803967181116],
@@ -104,28 +102,28 @@ def test__calc_edge_center():
 def test__calculate_edge_line_width():
     """Calculate Edge line width."""
     edge_list_length = 10
-    result = calc_edge_line_width(edge_list_length)
+    result = calculate_edge_line_width(edge_list_length)
     expected_result = 0.9200444146293233
     assert result == expected_result
 
 
 def test__calculate_font_size():
     """Calculate Font Size."""
-    result = calc_font_size(vertex_num)
+    result = calculate_font_size(vertex_num)
     expected_result = 18.09674836071919
     assert result == expected_result
 
 
 def test__calculate_vertex_line_width():
     """Calculate Vertex line."""
-    result = calc_vertex_line_width(vertex_num)
+    result = calculate_vertex_line_width(vertex_num)
     expected_result = 0.8187307530779818
     assert result == expected_result
 
 
 def test__calculate_vertex_size():
     """Calculate Vertex size."""
-    result = calc_vertex_size(vertex_num)
+    result = calculate_vertex_size(vertex_num)
     expected_result = 0.022360679774997897
     assert result == expected_result
 
@@ -135,7 +133,7 @@ def test__common_tangent_radian():
     r1 = 10
     r2 = 10
     d = 10
-    result = calc_common_tangent_radian(r1, r2, d)
+    result = calculate_common_tangent_radian(r1, r2, d)
     expected_result = 1.5707963267948966
     assert result == expected_result
 
@@ -144,7 +142,7 @@ def test__init_position():
     """Calculate init position."""
     center = (10, 10)
     scale = 1.0
-    result = calc_init_position(vertex_num, center, scale)
+    result = calculate_init_position(vertex_num, center, scale)
     expected_result = np.array(
         [
             [10.317033666788971, 10.473209403635629],
@@ -167,7 +165,7 @@ def test__polar_position():
     r = 10
     theta = 10
     start_point = np.array([0.617829638655483, 0.42093185430294533])
-    result = calc_polar_position(r, theta, start_point)
+    result = calculate_polar_position(r, theta, start_point)
     expected_result = np.array([-7.772885652109041, -5.019279254590752])
     assert np.array_equal(result, expected_result)
 
@@ -175,7 +173,7 @@ def test__polar_position():
 def test__rad_to_deg():
     """Convert radians to degrees."""
     rad = 10
-    result = calc_rad_to_deg(rad)
+    result = calculate_rad_to_deg(rad)
     expected_result = 572.9577951308232
     assert result == expected_result
 
@@ -215,7 +213,7 @@ def test__safe_div():
         ]
     )
     jitter = 0.000001
-    result = calc_safe_div(a, b, jitter)
+    result = calculate_safe_div(a, b, jitter)
     expected_result = np.array(
         [
             [-0.629799927240966, 0.7767573956180102],
@@ -238,7 +236,7 @@ def test__safe_div():
 def test__vector_length():
     """Calculate Vector length."""
     vector = np.array([0.05005852883380579, 0.5053637631489841])
-    result = calc_vector_length(vector)
+    result = calculate_vector_length(vector)
     expected_result = 0.5078369712940438
     assert result == expected_result
 
@@ -265,41 +263,41 @@ def test__edge_list_to_incidence_matrix():
 
 def test__radian_from_atan__x_0_y_0():
     """Calculate radians from atan."""
-    result = radian_from_atan(0, 0)
+    result = calculate_radian_from_atan(0, 0)
     expected_result = 4.71238898038469
     assert result == expected_result
 
 
 def test__radian_from_atan__x_0_y_gt_0():
     """Calculate radians from atan."""
-    result = radian_from_atan(0, 10)
+    result = calculate_radian_from_atan(0, 10)
     expected_result = 1.5707963267948966
     assert result == expected_result
 
 
 def test__radian_from_atan__x_gt_0_y_0():
     """Calculate radians from atan."""
-    result = radian_from_atan(10, 10)
+    result = calculate_radian_from_atan(10, 10)
     expected_result = 0.7853981633974483
     assert result == expected_result
 
 
 def test__radian_from_atan__x_gt_0_y_gt_0():
     """Calculate radians from atan."""
-    result = radian_from_atan(10, 10)
+    result = calculate_radian_from_atan(10, 10)
     expected_result = 0.7853981633974483
     assert result == expected_result
 
 
 def test__radian_from_atan__x_gt_0_gt_y():
     """Calculate radians from atan."""
-    result = radian_from_atan(20, 10)
+    result = calculate_radian_from_atan(20, 10)
     expected_result = 0.4636476090008061
     assert result == expected_result
 
 
 def test__radian_from_atan__x_lt_0_lt_y():
     """Calculate radians from atan."""
-    result = radian_from_atan(-10, 10)
+    result = calculate_radian_from_atan(-10, 10)
     expected_result = 2.356194490192345
     assert result == expected_result

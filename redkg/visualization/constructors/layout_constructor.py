@@ -5,7 +5,7 @@ import numpy as np
 from redkg.visualization.config.parameters.defaults import Defaults
 from redkg.visualization.contracts.core_model_contract import CoreModelContract
 from redkg.visualization.contracts.layout_contract import LayoutContract
-from redkg.visualization.equations.calc_init_position import init_position
+from redkg.visualization.equations.calculate_init_position import calculate_init_position
 from redkg.visualization.equations.core_physical_model import CorePhysicalModel
 from redkg.visualization.equations.edge_list_to_incidence_matrix import edge_list_to_incidence_matrix
 from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
@@ -16,7 +16,7 @@ class LayoutConstructor:
 
     def __call__(self, contract: LayoutContract):
         """Class entrypoint."""
-        vertex_coord = init_position(contract.vertex_num, scale=Defaults.layout_scale_initial)
+        vertex_coord = calculate_init_position(contract.vertex_num, scale=Defaults.layout_scale_initial)
 
         self._validate(vertex_coord)
 

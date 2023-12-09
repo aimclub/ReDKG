@@ -1,6 +1,7 @@
 """DrawVertexContract module."""
 
 from dataclasses import dataclass
+from typing import Iterable
 
 from redkg.visualization.config.types import TVectorCoordinates
 
@@ -10,9 +11,9 @@ class DrawVertexContract:
     """Draw vertex contract base class."""
 
     vertex_coordinates: TVectorCoordinates
-    vertex_label: list[str] | None
+    vertex_label: list[str] | Iterable[str]
     font_size: int
     font_family: str
-    vertex_size: list
+    vertex_size: list | Iterable[str]
     vertex_color: list
     vertex_line_width: list
