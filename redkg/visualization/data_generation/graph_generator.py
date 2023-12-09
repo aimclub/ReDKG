@@ -38,9 +38,7 @@ class GraphGenerator:
 
     def _validate(self):
         vertex_num_gt_1 = self.vertex_num > 1
-        numbers_are_proportional = self.edge_num < self.vertex_num * (
-                self.vertex_num - 1
-        ) // 2
+        numbers_are_proportional = self.edge_num < self.vertex_num * (self.vertex_num - 1) // 2
 
         if not vertex_num_gt_1 or not numbers_are_proportional:
             raise ParamsValidationException("Parameters are not valid")

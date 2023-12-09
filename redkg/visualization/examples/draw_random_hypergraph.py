@@ -11,11 +11,7 @@ from redkg.visualization.hypergraph_visualization import HypergraphVisualizer
 VERTEX_NUM = 50
 EDGE_NUM = 30
 
-generator = HypergraphGenerator(
-    vertex_num=VERTEX_NUM,
-    edge_num=EDGE_NUM,
-    generation_method=GeneratorMethods.uniform
-)
+generator = HypergraphGenerator(vertex_num=VERTEX_NUM, edge_num=EDGE_NUM, generation_method=GeneratorMethods.uniform)
 
 generated_data = generator()
 
@@ -29,9 +25,7 @@ graph_contract: HypergraphContract = HypergraphContract(
     edge_weights=tensor(generated_edge_weights * 2),  # noqa
 )
 
-vis_contract: HypergraphVisualizationContract = (
-    HypergraphVisualizationContract(graph=graph_contract)
-)
+vis_contract: HypergraphVisualizationContract = HypergraphVisualizationContract(graph=graph_contract)
 
 vis: HypergraphVisualizer = HypergraphVisualizer(vis_contract)
 fig = vis.draw()

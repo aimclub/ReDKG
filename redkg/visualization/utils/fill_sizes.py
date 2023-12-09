@@ -5,18 +5,14 @@ from typing import Any
 from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
-def fill_sizes(custom_scales: float | list | None,
-               default_value: Any,
-               length: int):
+def fill_sizes(custom_scales: float | list | None, default_value: Any, length: int):
     """Fill sizes function."""
     if custom_scales is None:
         return [default_value] * length
 
     elif isinstance(custom_scales, list):
         if len(custom_scales) != length:
-            raise ParamsValidationException(
-                "The specified value list has the wrong length."
-            )
+            raise ParamsValidationException("The specified value list has the wrong length.")
         return [default_value * scale for scale in custom_scales]
 
     elif isinstance(custom_scales, float):
@@ -26,6 +22,4 @@ def fill_sizes(custom_scales: float | list | None,
         return [default_value * float(custom_scales)] * length
 
     else:
-        raise ParamsValidationException(
-            "The specified value is not a valid type."
-        )
+        raise ParamsValidationException("The specified value is not a valid type.")

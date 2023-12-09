@@ -38,8 +38,7 @@ def test__c_log_function() -> None:
 def test__calc_arrow_head_width__show_arrow__true() -> None:
     """Calculate Arrow head with showed arrow symbol."""
     result = calc_arrow_head_width(edge_line_width, True, edge_list[0])  # noqa
-    expected_result = [0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015,
-                       0.015, 0.015, 0.015, 0.015, 0.015]
+    expected_result = [0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015]
     assert result == expected_result
 
 

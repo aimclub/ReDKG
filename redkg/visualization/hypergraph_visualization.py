@@ -66,58 +66,44 @@ class HypergraphVisualizer(BaseVisualization):
         fig, axes = plt.subplots(figsize=Defaults.figure_size)
 
         # Copy data from source
-        vertex_num, edge_list = self.contract.graph.vertex_num, deepcopy(
-            self.contract.graph.edge_list[0])
+        vertex_num, edge_list = self.contract.graph.vertex_num, deepcopy(self.contract.graph.edge_list[0])
 
         # Define style contract
-        default_style_contract: GraphStyleConstructorContract = (
-            GraphStyleConstructorContract(
-                vertex_num=self.contract.graph.vertex_num,
-                edges_num=self.contract.graph.edge_num,
-                vertex_color=self.contract.vertex_color,
-                edge_color=self.contract.edge_color,
-                edge_fill_color=self.contract.edge_fill_color,
-            )
+        default_style_contract: GraphStyleConstructorContract = GraphStyleConstructorContract(
+            vertex_num=self.contract.graph.vertex_num,
+            edges_num=self.contract.graph.edge_num,
+            vertex_color=self.contract.vertex_color,
+            edge_color=self.contract.edge_color,
+            edge_fill_color=self.contract.edge_fill_color,
         )
 
         # Construct styles
-        default_style_constructor: GraphStyleConstructor = (
-            GraphStyleConstructor()
-        )
-        (
-            vertex_color, edge_color, edge_fill_color
-        ) = default_style_constructor(default_style_contract)
+        default_style_constructor: GraphStyleConstructor = GraphStyleConstructor()
+        (vertex_color, edge_color, edge_fill_color) = default_style_constructor(default_style_contract)
 
         # # Define size contract
-        default_size_contract: SizeConstructorContract = (
-            SizeConstructorContract(
-                vertex_num=vertex_num,
-                edge_list=edge_list,
-                vertex_size=self.contract.vertex_size,
-                vertex_line_width=self.contract.vertex_line_width,
-                edge_line_width=self.contract.edge_line_width,
-                font_size=self.contract.font_size,
-            )
+        default_size_contract: SizeConstructorContract = SizeConstructorContract(
+            vertex_num=vertex_num,
+            edge_list=edge_list,
+            vertex_size=self.contract.vertex_size,
+            vertex_line_width=self.contract.vertex_line_width,
+            edge_line_width=self.contract.edge_line_width,
+            font_size=self.contract.font_size,
         )
         # Construct element sizes
         default_size_constructor: SizeConstructor = SizeConstructor()
-        (
-            vertex_size, vertex_line_width, edge_line_width, font_size
-        ) = default_size_constructor(default_size_contract)
+        (vertex_size, vertex_line_width, edge_line_width, font_size) = default_size_constructor(default_size_contract)
 
         # Define strength contract
-        default_strength_contract: StrengthConstructorContract = (
-            StrengthConstructorContract(
-                self.contract.push_vertex_strength,
-                self.contract.push_edge_strength,
-                self.contract.pull_edge_strength,
-                self.contract.pull_center_strength,
-            )
+        default_strength_contract: StrengthConstructorContract = StrengthConstructorContract(
+            self.contract.push_vertex_strength,
+            self.contract.push_edge_strength,
+            self.contract.pull_edge_strength,
+            self.contract.pull_center_strength,
         )
 
         # Construct strengths
-        default_strength_constructor: HypergraphStrengthConstructor = (
-            HypergraphStrengthConstructor())
+        default_strength_constructor: HypergraphStrengthConstructor = HypergraphStrengthConstructor()
         (
             push_vertex_strength,
             push_edge_strength,
@@ -179,15 +165,10 @@ class HypergraphVisualizer(BaseVisualization):
         - edge style (circle)
         - vertex number
         """
-        hypergraph_type_is_correct = isinstance(
-            self.contract.graph,
-            HypergraphContract
-        )
+        hypergraph_type_is_correct = isinstance(self.contract.graph, HypergraphContract)
 
         edge_style_are_valid = self.contract.edge_style == EdgeStyles.circle
         node_quantity_is_positive = self.contract.graph.vertex_num > 0
 
-        if (not hypergraph_type_is_correct
-                or not edge_style_are_valid
-                or not node_quantity_is_positive):
+        if not hypergraph_type_is_correct or not edge_style_are_valid or not node_quantity_is_positive:
             raise ParamsValidationException("Parameters are not valid")

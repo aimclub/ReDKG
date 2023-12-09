@@ -15,29 +15,12 @@ class GraphStrengthConstructor:
         _pull_edge_strength = Defaults.pull_edge_strength_g
         _pull_center_strength = Defaults.pull_center_strength_g
 
-        push_vertex_strength = fill_strength(
-            contract.push_vertex_strength,
-            _push_vertex_strength
-        )
+        push_vertex_strength = fill_strength(contract.push_vertex_strength, _push_vertex_strength)
 
-        push_edge_strength = fill_strength(
-            contract.push_edge_strength,
-            _push_edge_strength
-        )
+        push_edge_strength = fill_strength(contract.push_edge_strength, _push_edge_strength)
 
-        pull_edge_strength = fill_strength(
-            contract.pull_edge_strength,
-            _pull_edge_strength
-        )
+        pull_edge_strength = fill_strength(contract.pull_edge_strength, _pull_edge_strength)
 
-        pull_center_strength = fill_strength(
-            contract.pull_center_strength,
-            _pull_center_strength
-        )
+        pull_center_strength = fill_strength(contract.pull_center_strength, _pull_center_strength)
 
-        return (
-            push_vertex_strength,
-            push_edge_strength,
-            pull_edge_strength,
-            pull_center_strength
-        )
+        return (push_vertex_strength, push_edge_strength, pull_edge_strength, pull_center_strength)

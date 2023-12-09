@@ -17,9 +17,7 @@ graph_contract: GraphContract = GraphContract(
     edge_weights=tensor([1.0] * 24),  # noqa
 )
 
-vis_contract: GraphVisualizationContract = GraphVisualizationContract(
-    graph=graph_contract
-)
+vis_contract: GraphVisualizationContract = GraphVisualizationContract(graph=graph_contract)
 
 vis: GraphVisualizer = GraphVisualizer(vis_contract)
 fig = vis.draw()

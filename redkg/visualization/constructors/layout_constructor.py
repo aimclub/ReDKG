@@ -16,10 +16,7 @@ class LayoutConstructor:
 
     def __call__(self, contract: LayoutContract):
         """Class entrypoint."""
-        vertex_coord = init_position(
-            contract.vertex_num,
-            scale=Defaults.layout_scale_initial
-        )
+        vertex_coord = init_position(contract.vertex_num, scale=Defaults.layout_scale_initial)
 
         self._validate(vertex_coord)
 
@@ -37,10 +34,7 @@ class LayoutConstructor:
         )
         model: CorePhysicalModel = CorePhysicalModel(core_model_contract)
 
-        vertex_coord = model.build(vertex_coord, edge_list_to_incidence_matrix(
-            contract.vertex_num,
-            contract.edge_list
-        ))
+        vertex_coord = model.build(vertex_coord, edge_list_to_incidence_matrix(contract.vertex_num, contract.edge_list))
 
         vertex_coord = (vertex_coord - vertex_coord.min(0)) / (
             vertex_coord.max(0) - vertex_coord.min(0)
@@ -50,9 +44,7 @@ class LayoutConstructor:
 
     @staticmethod
     def _validate(vertex_coord):
-        is_valid = (vertex_coord.max() <=
-                    Defaults.vertex_coord_max and vertex_coord.min() >=
-                    Defaults.vertex_coord_min)
+        is_valid = vertex_coord.max() <= Defaults.vertex_coord_max and vertex_coord.min() >= Defaults.vertex_coord_min
 
         if not is_valid:
             raise ParamsValidationException("Parameters are not valid")

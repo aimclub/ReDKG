@@ -56,9 +56,7 @@ class BaseVisualization(ABC):
 
         # Create vertexes
         for coordinates, label, size, width in zip(
-                contract.vertex_coordinates.tolist(),   # noqa
-                vertex_label, contract.vertex_size,
-                contract.vertex_line_width
+            contract.vertex_coordinates.tolist(), vertex_label, contract.vertex_size, contract.vertex_line_width  # noqa
         ):
             circle = Circle(coordinates, size)
             circle.lineWidth = width
@@ -71,20 +69,13 @@ class BaseVisualization(ABC):
                 y += offset[1]
                 # Apply to plot exes
                 axes.text(
-                    x, y, label,
-                    fontsize=contract.font_size,
-                    fontfamily=contract.font_family,
-                    ha="center", va="top"
+                    x, y, label, fontsize=contract.font_size, fontfamily=contract.font_family, ha="center", va="top"
                 )
 
             patches.append(circle)
 
         # Make paths
-        p = PatchCollection(
-            patches,
-            facecolors=contract.vertex_color,
-            edgecolors="black"
-        )
+        p = PatchCollection(patches, facecolors=contract.vertex_color, edgecolors="black")
 
         axes.add_collection(p)
 
@@ -102,10 +93,7 @@ class BaseVisualization(ABC):
         num_vertex = len(contract.vertex_coordinates)
 
         line_paths, arc_paths, vertices = self.hull_layout(
-            num_vertex,
-            contract.edge_list,
-            contract.vertex_coordinates,
-            contract.vertex_size
+            num_vertex, contract.edge_list, contract.vertex_coordinates, contract.vertex_size
         )
 
         # For every edge line
@@ -180,9 +168,7 @@ class BaseVisualization(ABC):
             arc_path_for_edges = []
 
             if len(edge) == 1:
-                arc_path_for_edges.append(
-                    [position[edge[0]], 0, 360, vertices_radius[edge[0]]]
-                )
+                arc_path_for_edges.append([position[edge[0]], 0, 360, vertices_radius[edge[0]]])
 
                 vertices_radius[edge] += vertices_increased_radius[edge]
 
@@ -201,10 +187,7 @@ class BaseVisualization(ABC):
 
             number_of_vertices = vertices_index.shape[0]
 
-            vertices_index = np.append(
-                vertices_index,
-                vertices_index[0]
-            )  # close the loop
+            vertices_index = np.append(vertices_index, vertices_index[0])  # close the loop
 
             thetas = []
 
@@ -242,9 +225,7 @@ class BaseVisualization(ABC):
                 radius = vertices_radius[edge[vertices_index[i]]]
 
                 theta_1, theta_2 = rad_to_deg(theta_1), rad_to_deg(theta_2)
-                arc_path_for_edges.append(
-                    (arc_center, theta_1, theta_2, radius)
-                )
+                arc_path_for_edges.append((arc_center, theta_1, theta_2, radius))
 
             vertices_radius[edge] += vertices_increased_radius[edge]
 
