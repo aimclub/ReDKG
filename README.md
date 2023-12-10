@@ -18,11 +18,12 @@
 
 
 ## Установка
+
 Для работы библиотеки необходим интерпретатор языка программирования Python версии не ниже 3.9 
 
 На первом шаге необходимо выполнить установку библиотеки, [Pytorch Geometric](https://github.com/pyg-team/pytorch_geometric/) и Torch 1.1.2.
 
-#### PyTorch 1.12
+### PyTorch 1.12
 
 ```
 # CUDA 10.2
@@ -35,20 +36,30 @@ conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit
 conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cpuonly -c pytorch
 ```
 
-После установки необходимых библиотек необходимо скопировать репозиторий и выполнить следующую команду, находясь в директории проекта:
+После установки необходимых библиотек необходимо скопировать репозиторий и выполнить следующую команду, находясь в
+директории проекта:
 
 ```
 pip install . 
 ```
 
-## Загрузка тестовых данных
-Тестовый набор данных может быть получен по ссылке [movielens](https://grouplens.org/datasets/movielens/20m/) и распакован в директорию /data/.
-После распаковки директория /data/ должна содержать следующий набор файлов: 
- - `ratings.csv` - исходный файл оценок пользователей;
- - `attributes.csv` - исходный файл атрибутов объектов;
- - `kg.txt` - файл, содержащий граф знаний;
- - `item_index2enity_id.txt` - сопоставление индексов объектов в исходном файле оценок пользователей с индексами объектов в графе знаний;
+## Пример использования модели KGE
+
+### Загрузка тестовых данных
+
+Тестовый набор данных может быть получен по ссылке [movielens](https://grouplens.org/datasets/movielens/20m/) и
+распакован в директорию `/data/`.
+
+После распаковки директория /data/ должна содержать следующий набор файлов:
+
+- `ratings.csv` - исходный файл оценок пользователей;
+- `attributes.csv` - исходный файл атрибутов объектов;
+- `kg.txt` - файл, содержащий граф знаний;
+- `item_index2enity_id.txt` - сопоставление индексов объектов в исходном файле оценок пользователей с индексами объектов
+  в графе знаний;
+
 ### Предобработка данных
+
 ```python
 from redkg.config import Config
 from redkg.preprocess import DataPreprocessor
@@ -57,33 +68,142 @@ config = Config()
 preprocessor = DataPreprocessor(config)
 preprocessor.process_data()
 ```
+
 ### Обучение модели
+
 ```python
 kge_model = KGEModel(
-        model_name="TransE",
-        nentity=info['nentity'],
-        nrelation=info['nrelation'],
-        hidden_dim=128,
-        gamma=12.0,
-        double_entity_embedding=True,
-        double_relation_embedding=True,
-        evaluator=evaluator
-    )
+    model_name="TransE",
+    nentity=info['nentity'],
+    nrelation=info['nrelation'],
+    hidden_dim=128,
+    gamma=12.0,
+    double_entity_embedding=True,
+    double_relation_embedding=True,
+    evaluator=evaluator
+)
 
 training_logs, test_logs = train_kge_model(kge_model, train_pars, info, train_triples, valid_triples)
-
 ```
 
+## Пример использования моделей GCN, GAT, GraphSAGE
 
+Данные модели реализуют алгоритм предсказания связей в графе знаний.
 
-Обзор Архитектуры 
-=================
+Дополнительную информацию о шагах обучения можно найти в примере [basic_link_prediction.ipynb](https://github.com/aimclub/ReDKG/blob/main/examples/basic_link_prediction.ipynb).
 
-ReDKG - это фреймворк, реализующий алгоритмы сильного ИИ в части глубокого обучения с подкреплением на динамических графах знаний для задач поддержки принятия решений. На рисунке ниже приведена общая структура компонента. Она включает в себя четыре основных модуля: 
- * модуль кодирования графа в векторные представления (кодировщик), реализованный с помощью класса KGEModel в файлу redkg.models;
- * модуль представления состояния (представление состояния), реализованный с помощью класса GCNGRU в файлу redkg.models;
- * модуль выбора объектов-кандидатов (отбор возможных действий);
- * модуль Q-обучения (Q-network)  , реализованный классом TrainPipeline в файле redkg.train. 
+### Загрузка тестовых данных
+
+Тестовый набор данных может быть получен по ссылке [jd_data2.json](https://github.com/ZhongTr0n/JD_Analysis/blob/main/jd_data2.json)
+и положен в директорию `/data/`.
+
+### Предобработка данных
+
+Для предобработки потребуется выполнить чтение данных из файла и преобразование их в формат PyTorch Geometric.
+
+```python
+import json
+import torch
+from torch_geometric.data import Data
+
+# Прочтём данные из файла
+with open('jd_data2.json', 'r') as f:
+    graph_data = json.load(f)
+
+# Извлечём список узлов и преобразуем его в словарь для быстрого поиска
+node_list = [node['id'] for node in graph_data['nodes']]
+node_mapping = {node_id: i for i, node_id in enumerate(node_list)}
+node_index = {index: node for node, index in node_mapping.items()}
+
+# Создадим список рёбер в формате PyTorch Geometric
+edge_index = [[node_mapping[link['source']], node_mapping[link['target']]] for link in graph_data['links']]
+edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
+features = torch.randn(len(node_list), 1)
+labels = torch.tensor(list(range(len(graph_data['nodes']))), dtype=torch.long)
+
+large_dataset = Data(x=features, edge_index=edge_index, y=labels, node_mapping=node_mapping, node_index=node_index)
+torch.save(large_dataset, 'large_dataset.pth')
+large_dataset.cuda()
+```
+
+Далее необходимо сгенерировать подграфы для обучения модели. Для этого можно использовать следующий код:
+
+```python
+import json
+import os
+from redkg.generate_subgraphs import generate_subgraphs
+
+# Сгенерируем датасет на 1000 подграфов, каждый из которых будет содержать от 3 до 15 узлов
+if not os.path.isfile('subgraphs.json'):
+    subgraphs = generate_subgraphs(graph_data, num_subgraphs=1000, min_nodes=3, max_nodes=15)
+    with open('subgraphs.json', 'w') as f:
+        json.dump(subgraphs, f)
+else:
+    with open('subgraphs.json', 'r') as f:
+        subgraphs = json.load(f)
+```
+
+Далее необходимо выполнить преобразование подграфов в формат PyTorch Geometric:
+
+```python
+from redkg.generate_subgraphs import generate_subgraphs_dataset
+
+dataset = generate_subgraphs_dataset(subgraphs, large_dataset)
+```
+
+### Обучение модели
+
+Выполним инициализацию оптимизатора и модели в режиме обучения:
+
+```python
+from redkg.models.graphsage import GraphSAGE
+from torch.optim import Adam
+
+# Обучим модель GraphSAGE (так же можно использовать GCN или GAT)
+#   количество входных и выходных признаков совпадает с количеством узлов в большом графе - 177
+#   количество слоёв - 64
+model = GraphSAGE(large_dataset.num_node_features, 64, large_dataset.num_node_features)
+model.train()
+
+# Используем оптимизатор Adam
+#   скорость обучения - 0.0001
+#   весовой коэффициент - 1e-5
+optimizer = Adam(model.parameters(), lr=0.0001, weight_decay=1e-5)
+```
+
+Запустим обучение модели в 2 эпохи:
+
+```python
+from redkg.train import train_gnn_model
+from redkg.negative_samples import generate_negative_samples
+
+# Model training
+loss_values = []
+for epoch in range(2):
+    for subgraph in dataset:
+        positive_edges = subgraph.edge_index.t().tolist()
+        negative_edges = generate_negative_samples(subgraph.edge_index, subgraph.num_nodes, len(positive_edges))
+        if len(negative_edges) == 0:
+            continue
+        loss = train_gnn_model(model, optimizer, subgraph, positive_edges, negative_edges)
+        loss_values.append(loss)
+        print(f"Epoch: {epoch}, Loss: {loss}")
+```
+
+## Обзор Архитектуры 
+
+ReDKG - это фреймворк, реализующий алгоритмы сильного ИИ в части глубокого обучения с подкреплением на динамических
+графах знаний для задач поддержки принятия решений. На рисунке ниже приведена общая структура компонента. Она включает в
+себя четыре основных модуля:
+
+* модули кодирования графа в векторные представления (кодировщик):
+  * KGE, реализованный с помощью класса KGEModel в `redkg.models.kge`
+  * GCN, реализованный с помощью класса GCN в `redkg.models.gcn`
+  * GAT, реализованный с помощью класса GAT в `redkg.models.gat`
+  * GraphSAGE, реализованный с помощью класса GraphSAGE в `redkg.models.graphsage`
+* модуль представления состояния (представление состояния), реализованный с помощью класса GCNGRU в `redkg.models.gcn_gru_layers`
+* модуль выбора объектов-кандидатов (отбор возможных действий)
+* модуль Q-обучения (Q-network), реализованный классом TrainPipeline в `redkg.train`
 
 <p align="center">
   <img src="https://github.com/aimclub/ReDKG/blob/main/docs/img/lib_schema_ru.png?raw=true" width="700px"> 
