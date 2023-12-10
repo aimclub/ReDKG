@@ -1,6 +1,6 @@
 """BaseVisualizationContract module."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Iterable, Optional, Union
 
 from redkg.visualization.config.parameters.defaults import Defaults
@@ -14,7 +14,7 @@ class BaseVisualizationContract:
     edge_color: Union[str, list] = Defaults.edge_color
     edge_fill_color: Union[str, list[Any]] = Defaults.edge_fill_color
     edge_line_width: Union[float, list[Any]] = Defaults.edge_line_width
-    vertex_label: Union[list[str], Iterable[str]] = []
+    vertex_label: Union[list[str], Iterable[str]] = field(default_factory=list)
     vertex_size: Union[float, list] = Defaults.vertex_size
     vertex_color: Union[str, list] = Defaults.vertex_color
     vertex_line_width: Union[float, list] = Defaults.vertex_line_width

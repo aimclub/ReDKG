@@ -1,6 +1,6 @@
 """BaseGraphContract module."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Optional, Union
 
 from redkg.visualization.config.types import TGraphEdgeList
@@ -12,4 +12,4 @@ class BaseGraphContract:
 
     vertex_num: int
     edge_list: tuple[Any, list[float]]
-    edge_weights: Optional[Union[float, list[float]]]
+    edge_weights: Optional[Union[float, list[float]]] = field(default_factory=list)
