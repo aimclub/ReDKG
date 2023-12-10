@@ -17,11 +17,12 @@ The reinforcement learning algorithm based on vector representations is designed
 
 
 ## Installation
+
 Python >= 3.9 is required
 
 As a first step, [Pytorch Geometric installation](https://github.com/pyg-team/pytorch_geometric/) and Torch 1.1.2 are required.
 
-#### PyTorch 1.12
+### PyTorch 1.12
 
 ```
 # CUDA 10.2
@@ -40,14 +41,20 @@ When Torch installed clone this repo and run inside repo directory:
 pip install . 
 ```
 
-## Donwload test data
+## Download test data
+
 Download [ratings.csv](https://grouplens.org/datasets/movielens/20m/) to /data/ folder./
 Data folder should contain the following files: 
+
  - `ratings.csv` - raw rating file;
  - `attributes.csv` - raw attributes file;
  - `kg.txt` - knowledge graph file;
  - `item_index2enity_id.txt` - the mapping from item indices in the raw rating file to entity IDs in the KG file;
+
+## Example of Using KGE Models
+
 ### Preprocess the data
+
 ```python
 from redkg.config import Config
 from redkg.preprocess import DataPreprocessor
@@ -56,28 +63,139 @@ config = Config()
 preprocessor = DataPreprocessor(config)
 preprocessor.process_data()
 ```
+
 ### Train KG model
+
 ```python
 kge_model = KGEModel(
-        model_name="TransE",
-        nentity=info['nentity'],
-        nrelation=info['nrelation'],
-        hidden_dim=128,
-        gamma=12.0,
-        double_entity_embedding=True,
-        double_relation_embedding=True,
-        evaluator=evaluator
-    )
+    model_name="TransE",
+    nentity=info['nentity'],
+    nrelation=info['nrelation'],
+    hidden_dim=128,
+    gamma=12.0,
+    double_entity_embedding=True,
+    double_relation_embedding=True,
+    evaluator=evaluator
+)
 
 training_logs, test_logs = train_kge_model(kge_model, train_pars, info, train_triples, valid_triples)
-
 ```
 
----------
-<p align="center">
-  <img src="https://github.com/aimclub/ReDKG/blob/main/docs/img/lib_schema.png.png?raw=true" width="800px"> 
-</p>
-More details about first steps with  might be found in the [quick start guide](qwe.asd) and in the [tutorial for novices](qwe.asd).
+## Example of Using GCN, GAT, GraphSAGE Models
+
+These models implement an algorithm for predicting links in a knowledge graph.
+
+Additional information about training steps can be found in [basic_link_prediction.ipynb](https://github.com/aimclub/ReDKG/blob/main/examples/basic_link_prediction.ipynb) example.
+
+### Loading Test Data
+
+The test dataset can be obtained from the link [jd_data2.json](https://github.com/ZhongTr0n/JD_Analysis/blob/main/jd_data2.json)
+and placed in the `/data/` directory.
+
+### Data Preprocessing
+
+For preprocessing, it is necessary to read data from the file and convert it into PyTorch Geometric format.
+
+```python
+import json
+import torch
+from torch_geometric.data import Data
+
+# Read data from the file
+with open('jd_data2.json', 'r') as f:
+    graph_data = json.load(f)
+
+# Extract the list of nodes and convert it to a dictionary for quick lookup
+node_list = [node['id'] for node in graph_data['nodes']]
+node_mapping = {node_id: i for i, node_id in enumerate(node_list)}
+node_index = {index: node for node, index in node_mapping.items()}
+
+# Create a list of edges in PyTorch Geometric format
+edge_index = [[node_mapping[link['source']], node_mapping[link['target']]] for link in graph_data['links']]
+edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
+features = torch.randn(len(node_list), 1)
+labels = torch.tensor(list(range(len(graph_data['nodes']))), dtype=torch.long)
+
+large_dataset = Data(x=features, edge_index=edge_index, y=labels, node_mapping=node_mapping, node_index=node_index)
+torch.save(large_dataset, 'large_dataset.pth')
+large_dataset.cuda()
+```
+
+Next, it is necessary to generate subgraphs for training the model. This can be done using the following code:
+
+```python
+import json
+import os
+from redkg.generate_subgraphs import generate_subgraphs
+
+# Generate a dataset of 1000 subgraphs, each containing between 3 and 15 nodes
+if not os.path.isfile('subgraphs.json'):
+    subgraphs = generate_subgraphs(graph_data, num_subgraphs=1000, min_nodes=3, max_nodes=15)
+    with open('subgraphs.json', 'w') as f:
+        json.dump(subgraphs, f)
+else:
+    with open('subgraphs.json', 'r') as f:
+        subgraphs = json.load(f)
+```
+
+Next, convert the subgraphs into PyTorch Geometric format:
+
+```python
+from redkg.generate_subgraphs import generate_subgraphs_dataset
+
+dataset = generate_subgraphs_dataset(subgraphs, large_dataset)
+```
+
+### Model Training
+
+Let's initialize the optimizer and the model in training mode:
+
+```python
+from redkg.models.graphsage import GraphSAGE
+from torch.optim import Adam
+
+# Train the GraphSAGE model (GCN or GAT can also be used)
+#   number of input and output features matches the number of nodes in the large graph - 177
+#   number of layers - 64
+model = GraphSAGE(large_dataset.num_node_features, 64, large_dataset.num_node_features)
+model.train()
+
+# Use the Adam optimizer
+#   learning rate - 0.0001
+#   weight decay - 1e-5
+optimizer = Adam(model.parameters(), lr=0.0001, weight_decay=1e-5)
+```
+
+Start training the model for 2 epochs:
+
+```python
+from redkg.train import train_gnn_model
+from redkg.negative_samples import generate_negative_samples
+
+# Model training
+loss_values = []
+for epoch in range(2):
+    for subgraph in dataset:
+        positive_edges = subgraph.edge_index.t().tolist()
+        negative_edges = generate_negative_samples(subgraph.edge_index, subgraph.num_nodes, len(positive_edges))
+        if len(negative_edges) == 0:
+            continue
+        loss = train_gnn_model(model, optimizer, subgraph, positive_edges, negative_edges)
+        loss_values.append(loss)
+        print(f"Epoch: {epoch}, Loss: {loss}")
+```
+
+## Architecture Overview
+
+ReDKG is a framework implementing strong AI algorithms for deep learning with reinforcement on dynamic knowledge graphs for decision support tasks. The figure below shows the general structure of the component. It includes four main modules:
+
+* Graph encoding modules into vector representations (encoder):
+  * KGE, implemented using the KGEModel class in `redkg.models.kge`
+  * GCN, implemented using the GCN class in `redkg.models.gcn`
+  * GAT, implemented using the GAT class in `redkg.models.gat`
+  * GraphSAGE, implemented using the GraphSAGE class in `redkg.models.graphsage`
+* State representation module (state representation), implemented using the GCNGRU class in `redkg.models.gcn_gru_layers`
+* Candidate object selection module (action selection)
 
 Project Structure
 =================
