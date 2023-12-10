@@ -3,7 +3,7 @@
 import math
 
 
-def calculate_radian_from_atan(x, y):
+def calculate_radian_from_atan(x: int, y: int) -> float:
     """Convert radians from atan function."""
     if x == 0:
         return math.pi / 2 if y > 0 else 3 * math.pi / 2

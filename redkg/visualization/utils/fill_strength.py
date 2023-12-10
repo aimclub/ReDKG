@@ -1,7 +1,7 @@
 """Fill strength function."""
 
 
-def fill_strength(custom_scale: float, default_value: float):
+def fill_strength(custom_scale: float, default_value: float) -> float:
     """Fill strength function."""
     if custom_scale is None:
         return default_value

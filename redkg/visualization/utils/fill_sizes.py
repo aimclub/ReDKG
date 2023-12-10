@@ -5,7 +5,7 @@ from typing import Any, Optional, Union
 from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
-def fill_sizes(custom_scales: Optional[Union[float, list]], default_value: Any, length: int):
+def fill_sizes(custom_scales: Optional[Union[float, list]], default_value: Any, length: int) -> list:
     """Fill sizes function."""
     if custom_scales is None:
         return [default_value] * length

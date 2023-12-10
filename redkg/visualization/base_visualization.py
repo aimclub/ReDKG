@@ -1,7 +1,7 @@
 """Base visualization module."""
 
 from abc import ABC, abstractmethod
-from typing import Iterable
+from typing import Any, Iterable, Union
 
 import matplotlib
 import numpy as np
@@ -36,7 +36,7 @@ class BaseVisualization(ABC):
         raise NotImplementedError
 
     @staticmethod
-    def draw_vertex(axes, contract: DrawVertexContract):
+    def draw_vertex(axes: Any, contract: DrawVertexContract) -> None:
         """Draw vertex based on contract DrawVertexContract.
 
         DrawVertexContract:
@@ -80,7 +80,7 @@ class BaseVisualization(ABC):
 
         axes.add_collection(p)
 
-    def draw_circle_edges(self, axes, contract: DrawEdgesContract):
+    def draw_circle_edges(self, axes: Any, contract: DrawEdgesContract) -> None:
         """Draw circled edge based on contract DrawEdgesContract.
 
         DrawEdgesContract:
@@ -146,7 +146,13 @@ class BaseVisualization(ABC):
                 )
 
     @staticmethod
-    def hull_layout(num_vertex, edge_list, position, vertex_size, radius_increment=Defaults.radius_increment):  # noqa
+    def hull_layout(
+        num_vertex: int,
+        edge_list: Any,
+        position: Any,
+        vertex_size: Any,
+        radius_increment: float = Defaults.radius_increment,
+    ) -> tuple:  # noqa
         # Make paths
         line_paths = [None] * len(edge_list)
         arc_paths = [None] * len(edge_list)
@@ -165,8 +171,8 @@ class BaseVisualization(ABC):
         for edge_index in edge_indexes:
             edge = list(edge_list[edge_index])
 
-            line_path_for_edges = []
-            arc_path_for_edges = []
+            line_path_for_edges: list = []
+            arc_path_for_edges: list = []
 
             if len(edge) == 1:
                 arc_path_for_edges.append([position[edge[0]], 0, 360, vertices_radius[edge[0]]])

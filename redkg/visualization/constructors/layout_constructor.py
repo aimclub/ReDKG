@@ -1,4 +1,5 @@
 """LayoutConstructor module."""
+from typing import Any
 
 import numpy as np
 
@@ -14,7 +15,7 @@ from redkg.visualization.exceptions.exceptions_classes import ParamsValidationEx
 class LayoutConstructor:
     """Constructor (one action controller) for Graph layout."""
 
-    def __call__(self, contract: LayoutContract):
+    def __call__(self, contract: LayoutContract) -> np.ndarray[Any, np.dtype[np.floating]]:
         """Class entrypoint."""
         vertex_coord = calculate_init_position(contract.vertex_num, scale=Defaults.layout_scale_initial)
 
@@ -43,7 +44,7 @@ class LayoutConstructor:
         return vertex_coord
 
     @staticmethod
-    def _validate(vertex_coord):
+    def _validate(vertex_coord: Any) -> None:
         is_valid = vertex_coord.max() <= Defaults.vertex_coord_max and vertex_coord.min() >= Defaults.vertex_coord_min
 
         if not is_valid:

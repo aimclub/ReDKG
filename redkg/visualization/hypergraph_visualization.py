@@ -1,6 +1,7 @@
 """Hypergraph visualization main module."""
 
 from copy import deepcopy
+from typing import Any
 
 import matplotlib.pyplot as plt
 
@@ -60,7 +61,7 @@ class HypergraphVisualizer(BaseVisualization):
 
         self.validate()
 
-    def draw(self):
+    def draw(self) -> Any:
         """Draw hypergraph interface based on Contract."""
         # Define base matplotlib Plot with axes (mutable object)
         fig, axes = plt.subplots(figsize=Defaults.figure_size)
@@ -158,7 +159,7 @@ class HypergraphVisualizer(BaseVisualization):
 
         return fig
 
-    def validate(self):
+    def validate(self) -> None:
         """Validate parameters.
 
         - graph type

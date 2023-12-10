@@ -1,7 +1,7 @@
 """HypergraphGenerator module."""
 
 import random
-from typing import Optional
+from typing import Any, Optional, Set
 
 from redkg.visualization.config.parameters.generator_methods import GeneratorMethods
 from redkg.visualization.equations.calculate_c_log_function import calculate_c_log_function
@@ -22,22 +22,22 @@ class HypergraphGenerator:
         self.vertex_num = vertex_num
         self.edge_num = edge_num
         self.method = generation_method
-        self.probability_k_list = probability_k_list
+        self.probability_k_list: list[Any] = probability_k_list if probability_k_list is not None else []
 
         self._validate()
 
-    def __generate_uniform(self, edge_degree_list: list):
+    def __generate_uniform(self, edge_degree_list: list) -> list:
         return [calculate_c_log_function(self.vertex_num, k) / (2**self.vertex_num - 1) for k in edge_degree_list]
 
     @staticmethod
-    def __generate_low_order_first(edge_degree_list: list):
+    def __generate_low_order_first(edge_degree_list: list) -> list:
         probability_k_list = [3 ** (-k) for k in range(len(edge_degree_list))]
         sum_of_prob_k_list = sum(probability_k_list)
         probability_k_list = [probability_k / sum_of_prob_k_list for probability_k in probability_k_list]
         return probability_k_list
 
     @staticmethod
-    def __generate_high_order_first(edge_degree_list: list):
+    def __generate_high_order_first(edge_degree_list: list) -> list:
         probability_k_list = [3 ** (-k) for k in range(len(edge_degree_list))]
         probability_k_list.reverse()
         sum_of_prob_k_list = sum(probability_k_list)
@@ -45,7 +45,7 @@ class HypergraphGenerator:
         return probability_k_list
 
     @staticmethod
-    def __generate_custom(probability_k_list):
+    def __generate_custom(probability_k_list: list) -> list:
         probability_k_list_sum = sum(probability_k_list)
         probability_k_list = [probability_k / probability_k_list_sum for probability_k in probability_k_list]
         return probability_k_list
@@ -69,7 +69,7 @@ class HypergraphGenerator:
 
             probability_k_list = self.__generate_custom(probability_k_list)
 
-        edges = set()
+        edges: Set[tuple] = set()
 
         while len(edges) < self.edge_num:
             k = random.choices(degree_edge_list, weights=probability_k_list)[0]
@@ -81,7 +81,7 @@ class HypergraphGenerator:
 
         return list(edges)
 
-    def _validate(self):
+    def _validate(self) -> None:
         vertex_num_gt_1 = self.vertex_num > 1
         edge_num_is_positive = self.edge_num > 0
         method_is_valid = self.method in GeneratorMethods().values
@@ -89,7 +89,7 @@ class HypergraphGenerator:
         if not vertex_num_gt_1 or not edge_num_is_positive or not method_is_valid:
             raise ParamsValidationException("Parameters are not valid")
 
-    def _validate_custom_generation_method(self):
+    def _validate_custom_generation_method(self) -> None:
         prob_k_list_is_not_none = self.probability_k_list is not None
         prob_k_list_len_is_valid = len(self.probability_k_list) == self.vertex_num - 1
 

@@ -5,7 +5,7 @@ from typing import Any, Union
 from redkg.visualization.exceptions.exceptions_classes import ParamsValidationException
 
 
-def fill_color(custom_color: Union[str, list], default_color: Any, length: int):
+def fill_color(custom_color: Union[str, list], default_color: Any, length: int) -> list:
     """Fill color function."""
     if custom_color is None:
         return [default_color] * length

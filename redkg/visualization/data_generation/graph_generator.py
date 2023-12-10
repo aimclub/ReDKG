@@ -15,7 +15,7 @@ class GraphGenerator:
 
         self._validate()
 
-    def __call__(self):
+    def __call__(self) -> list:
         """Graph generator start point."""
         vertex_list = list(range(self.vertex_num))
         current_edge_num, edge_set = 0, set()
@@ -36,7 +36,7 @@ class GraphGenerator:
 
         return list(edge_set)
 
-    def _validate(self):
+    def _validate(self) -> None:
         vertex_num_gt_1 = self.vertex_num > 1
         numbers_are_proportional = self.edge_num < self.vertex_num * (self.vertex_num - 1) // 2
 

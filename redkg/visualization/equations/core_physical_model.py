@@ -1,6 +1,7 @@
 """CorePhysicalModel module."""
 
 from copy import deepcopy
+from typing import Any, Union
 
 import numpy as np
 from sklearn.metrics import euclidean_distances
@@ -42,10 +43,17 @@ class CorePhysicalModel:
 
         self.damping_factor = contract.damping_factor
 
-    def __get_nums(self):
+    def __get_nums(self) -> Union[int, list]:
         return [self.contract.nums] if isinstance(self.contract.nums, int) else self.contract.nums
 
-    def build(self, init_position, H, max_iter=Defaults.max_iterations, epsilon=Defaults.epsilon, delta=Defaults.delta):
+    def build(
+        self,
+        init_position: Any,
+        H: Any,
+        max_iter: int = Defaults.max_iterations,
+        epsilon: float = Defaults.epsilon,
+        delta: float = Defaults.delta,
+    ) -> Any:
         """Build model."""
         position = init_position.copy()
         velocity = np.zeros_like(position)
@@ -61,7 +69,9 @@ class CorePhysicalModel:
 
         return position
 
-    def __make_one_step(self, position, velocity, H, epsilon, damping, delta):
+    def __make_one_step(
+        self, position: Any, velocity: float, H: Any, epsilon: float, damping: float, delta: float
+    ) -> tuple:
         edge_center = calculate_edge_center(H, position)
 
         vertex_to_vertex_distance = euclidean_distances(position)
@@ -111,7 +121,9 @@ class CorePhysicalModel:
         return position, velocity, self._stop_condition(velocity, epsilon)
 
     @staticmethod
-    def __node_attraction(position, e_center, vertex_to_edge_dist, x0=0.1, k=1.0):
+    def __node_attraction(
+        position: Any, e_center: list, vertex_to_edge_dist: Any, x0: float = 0.1, k: float = 1.0
+    ) -> Any:
         x = deepcopy(vertex_to_edge_dist)
         x[vertex_to_edge_dist > 0] -= x0
 
@@ -127,7 +139,7 @@ class CorePhysicalModel:
         return f
 
     @staticmethod
-    def __node_repulsion(position, vertex_to_vertex_distance, k=1.0):
+    def __node_repulsion(position: list, vertex_to_vertex_distance: Any, k: float = 1.0) -> Any:
         distance = vertex_to_vertex_distance.copy()
 
         r, c = np.diag_indices_from(distance)
@@ -147,7 +159,7 @@ class CorePhysicalModel:
         return force
 
     @staticmethod
-    def __edge_repulsion(edge_center, H, edge_to_edge_dist, k=1.0):
+    def __edge_repulsion(edge_center: list, H: Any, edge_to_edge_dist: Any, k: float = 1.0) -> Any:
         distance = edge_to_edge_dist.copy()
 
         r, c = np.diag_indices_from(distance)
@@ -167,7 +179,7 @@ class CorePhysicalModel:
         return np.matmul(H, force)
 
     @staticmethod
-    def __center_gravity(position, center, vertex_to_vertex_distance, k=1):
+    def __center_gravity(position: Any, center: list, vertex_to_vertex_distance: Any, k: float = 1) -> Any:
         force_scale = vertex_to_vertex_distance
         force_direction = center[np.newaxis, np.newaxis, :] - position[:, np.newaxis, :]
         force_direction_length = np.linalg.norm(force_direction, axis=2)
@@ -179,5 +191,5 @@ class CorePhysicalModel:
         return force
 
     @staticmethod
-    def _stop_condition(velocity, epsilon):
+    def _stop_condition(velocity: float, epsilon: float) -> bool:
         return np.linalg.norm(velocity) < epsilon

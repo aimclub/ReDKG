@@ -1,6 +1,7 @@
 """Graph visualization module."""
 
 from copy import deepcopy
+from typing import Any
 
 import matplotlib.pyplot as plt
 
@@ -62,7 +63,7 @@ class GraphVisualizer(BaseVisualization):
 
         self.validate()
 
-    def draw(self):
+    def draw(self) -> Any:
         """Draw graph interface based on Contract."""
         # Define base matplotlib Plot with axes (mutable object)
         fig, axes = plt.subplots(figsize=Defaults.figure_size)
@@ -173,7 +174,7 @@ class GraphVisualizer(BaseVisualization):
         return fig
 
     @staticmethod
-    def draw_line_edges(axes, contract: DrawLineEdgesContract):
+    def draw_line_edges(axes: Any, contract: DrawLineEdgesContract) -> None:
         """Draw edges based on contract DrawLineEdgesContract.
 
         DrawLineEdgesContract:
@@ -210,7 +211,7 @@ class GraphVisualizer(BaseVisualization):
                 length_includes_head=True,
             )
 
-    def validate(self):
+    def validate(self) -> None:
         """Validate parameters."""
         graph_type_is_correct = isinstance(self.contract.graph, GraphContract)
 

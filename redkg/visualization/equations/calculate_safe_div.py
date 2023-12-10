@@ -1,11 +1,14 @@
 """Calculate safe div module."""
+from typing import Any
 
 import numpy as np
 
 from redkg.visualization.config.parameters.defaults import Defaults
 
 
-def calculate_safe_div(a: np.ndarray, b: np.ndarray, jitter_scale: float = Defaults.jitter_scale):
+def calculate_safe_div(
+    a: np.ndarray, b: np.ndarray, jitter_scale: float = Defaults.jitter_scale
+) -> np.ndarray[Any, np.dtype[np.unsignedinteger]]:
     """Calculate safe div function."""
     mask = b == 0
     b[mask] = 1
