@@ -1,7 +1,7 @@
 """LayoutContract module."""
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 
 
 @dataclass
@@ -10,7 +10,7 @@ class LayoutContract:
 
     vertex_num: int
     edge_list: list[tuple[Any, ...]]
-    push_vertex_strength: float | None
-    push_edge_strength: float | None
-    pull_edge_strength: float | None
-    pull_center_strength: float | None
+    push_vertex_strength: Optional[float]
+    push_edge_strength: Optional[float]
+    pull_edge_strength: Optional[float]
+    pull_center_strength: Optional[float]

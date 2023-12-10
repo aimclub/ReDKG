@@ -23,4 +23,4 @@ class HypergraphStrengthConstructor:
 
         pull_center_strength = fill_strength(contract.pull_center_strength, _pull_center_strength)
 
-        return (push_vertex_strength, push_edge_strength, pull_edge_strength, pull_center_strength)
+        return push_vertex_strength, push_edge_strength, pull_edge_strength, pull_center_strength

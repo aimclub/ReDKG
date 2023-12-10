@@ -1,6 +1,7 @@
 """CoreModelContract module."""
 
 from dataclasses import dataclass
+from typing import Union
 
 from redkg.visualization.config.parameters.defaults import Defaults
 
@@ -9,7 +10,7 @@ from redkg.visualization.config.parameters.defaults import Defaults
 class CoreModelContract:
     """Core model contract base class."""
 
-    nums: int | list
+    nums: Union[int, list]
     forces: dict
     centers: list
     damping_factor: float = Defaults.damping_factor

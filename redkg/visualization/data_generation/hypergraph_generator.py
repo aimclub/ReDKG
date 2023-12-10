@@ -1,6 +1,7 @@
 """HypergraphGenerator module."""
 
 import random
+from typing import Optional
 
 from redkg.visualization.config.parameters.generator_methods import GeneratorMethods
 from redkg.visualization.equations.calculate_c_log_function import calculate_c_log_function
@@ -15,7 +16,7 @@ class HypergraphGenerator:
         vertex_num: int,
         edge_num: int,
         generation_method: str = GeneratorMethods.uniform,
-        probability_k_list: list[float] | None = None,
+        probability_k_list: Optional[list[float]] = None,
     ):
         """Hypergraph generator constructor."""
         self.vertex_num = vertex_num

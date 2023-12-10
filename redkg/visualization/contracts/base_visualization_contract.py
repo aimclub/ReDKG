@@ -1,6 +1,7 @@
 """BaseVisualizationContract module."""
 
 from dataclasses import dataclass
+from typing import Optional, Union
 
 from redkg.visualization.config.parameters.defaults import Defaults
 
@@ -10,13 +11,13 @@ class BaseVisualizationContract:
     """Base visualization contract base class."""
 
     edge_style: str = Defaults.edge_style
-    edge_color: str | list = Defaults.edge_color
-    edge_fill_color: str | float | list = Defaults.edge_fill_color
-    edge_line_width: str | float | list = Defaults.edge_line_width
-    vertex_label: list | None = None
-    vertex_size: float | list = Defaults.vertex_size
-    vertex_color: str | list = Defaults.vertex_color
-    vertex_line_width: float | list = Defaults.vertex_line_width
+    edge_color: Union[str, list] = Defaults.edge_color
+    edge_fill_color: Union[str, float, list] = Defaults.edge_fill_color
+    edge_line_width: Union[str, float, list] = Defaults.edge_line_width
+    vertex_label: Optional[list] = None
+    vertex_size: Union[float, list] = Defaults.vertex_size
+    vertex_color: Union[str, list] = Defaults.vertex_color
+    vertex_line_width: Union[float, list] = Defaults.vertex_line_width
     font_size: float = Defaults.font_size
     font_family: str = Defaults.font_family
     push_vertex_strength: float = Defaults.push_vertex_strength_vis
