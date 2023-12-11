@@ -305,13 +305,48 @@ fig = vis.draw()
 fig.show()
 ```
 
-Documentation
-=============
-Detailed information and description of ReDKG framework is available in the [`Documentation`](https://aimclub.github.io/ReDKG/)
+### Visualization of graphs and hypergraphs
+The [`reference books`](./redkg/visualization/config/parameters/) system is used to visualize graphs and hypergraphs to set visualization parameters, as well as the [`contracts`](./redkg/visualization/contracts/) system to install graphic elements.
 
-# BellmanFordLayerModified and HypergraphCoverageSolver
+Graph visualization example:
+```python
+graph_contract: GraphContract = GraphContract(
+    vertex_num=10,
+    edge_list=(
+        [(0, 7), (2, 7), (4, 9), (3, 7), (1, 8), (5, 7), (2, 3), (4, 5), (5, 6), (4, 8), (6, 9), (4, 7)],
+        [1.0] * 12,
+    ),
+    edge_num=12,
+    edge_weights=list(tensor([1.0] * 24)),
+)
 
-## BellmanFordLayerModified
+vis_contract: GraphVisualizationContract = GraphVisualizationContract(graph=graph_contract)
+
+vis: GraphVisualizer = GraphVisualizer(vis_contract)
+fig = vis.draw()
+fig.show()
+```
+
+Hypergraph visualization example:
+```python
+graph_contract: HypergraphContract = HypergraphContract(
+    vertex_num=10,
+    edge_list=(
+        [(3, 4, 5, 9), (0, 4, 7), (4, 6), (0, 1, 2, 4), (3, 6), (0, 3, 9), (2, 5), (4, 7)],
+        [1.0] * 8,
+    ),
+    edge_num=8,
+    edge_weights=list(tensor([1.0] * 10)),
+)
+
+vis_contract: HypergraphVisualizationContract = HypergraphVisualizationContract(graph=graph_contract)
+
+vis: HypergraphVisualizer = HypergraphVisualizer(vis_contract)
+fig = vis.draw()
+fig.show()
+```
+
+### BellmanFordLayerModified
 
 `BellmanFordLayerModified` is a PyTorch layer implementing a modified Bellman-Ford algorithm for analyzing graph properties and extracting features from graph structures. This layer can be used in graph machine learning tasks such as path prediction and graph structure analysis.
 
@@ -353,7 +388,7 @@ print("Graph Eccentricity:", eccentricity)
 
 - `BellmanFordLayerModified` is useful when additional graph characteristics, such as diameter and eccentricity, are of interest along with paths.
 
-## HypergraphCoverageSolver
+### HypergraphCoverageSolver
 
 `HypergraphCoverageSolver` is a Python class representing an algorithm to solve the coverage problem for a hypergraph. The problem is to determine whether an Unmanned Aerial Vehicle (UAV) can cover all objects in the hypergraph, taking into account the UAV's radius of action.
 
@@ -390,6 +425,10 @@ else:
 ### How It Works
 
 The algorithm for solving the hypergraph coverage problem first calculates the minimum radius required to cover all objects. It considers both regular edges and hyperedges, taking into account their weights. Then, the algorithm compares the computed minimum radius with the UAV's radius of action. If the UAV's radius is not less than the minimum radius, it is considered that the UAV can cover all objects in the hypergraph.
+
+Documentation
+=============
+Detailed information and description of ReDKG framework is available in the [`Documentation`](https://aimclub.github.io/ReDKG/)
 
 ## Contribution
 To contribute this library, the current [code and documentation convention](/wiki/Development.md) should be followed.
