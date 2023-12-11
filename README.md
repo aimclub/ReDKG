@@ -278,6 +278,47 @@ train(Config(), item_vocab, model, optimizer)
 
 ```
 
+### Визуализация графов и гиперграфов
+Для визуализации графов и гиперграфов используется система [`справочников`](./redkg/visualization/config/parameters/) для установки параметров визуализации, а также система [`контрактов`](./redkg/visualization/contracts/) для установки графических элементов.
+
+Пример визуализации графа:
+```python
+graph_contract: GraphContract = GraphContract(
+    vertex_num=10,
+    edge_list=(
+        [(0, 7), (2, 7), (4, 9), (3, 7), (1, 8), (5, 7), (2, 3), (4, 5), (5, 6), (4, 8), (6, 9), (4, 7)],
+        [1.0] * 12,
+    ),
+    edge_num=12,
+    edge_weights=list(tensor([1.0] * 24)),
+)
+
+vis_contract: GraphVisualizationContract = GraphVisualizationContract(graph=graph_contract)
+
+vis: GraphVisualizer = GraphVisualizer(vis_contract)
+fig = vis.draw()
+fig.show()
+```
+
+Пример визуализации гиперграфа:
+```python
+graph_contract: HypergraphContract = HypergraphContract(
+    vertex_num=10,
+    edge_list=(
+        [(3, 4, 5, 9), (0, 4, 7), (4, 6), (0, 1, 2, 4), (3, 6), (0, 3, 9), (2, 5), (4, 7)],
+        [1.0] * 8,
+    ),
+    edge_num=8,
+    edge_weights=list(tensor([1.0] * 10)),
+)
+
+vis_contract: HypergraphVisualizationContract = HypergraphVisualizationContract(graph=graph_contract)
+
+vis: HypergraphVisualizer = HypergraphVisualizer(vis_contract)
+fig = vis.draw()
+fig.show()
+```
+
 Документация
 =============
 Подробная информация и описание библиотеки ReDKG доступны по [`ссылке`](https://aimclub.github.io/ReDKG/)
