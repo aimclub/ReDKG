@@ -1,3 +1,5 @@
+"""Module containing graph path prediction GNN example."""
+
 import torch
 import torch.nn as nn
 import torch.optim as optim

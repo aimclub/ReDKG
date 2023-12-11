@@ -1,3 +1,5 @@
+"""Module containing node classification GNN example."""
+
 import torch
 import torch.nn as nn
 import torch.optim as optim

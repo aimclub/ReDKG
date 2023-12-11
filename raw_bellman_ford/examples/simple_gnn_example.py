@@ -1,3 +1,5 @@
+"""Module containing Bellman-Ford layer for node classification GNN example."""
+
 import torch
 import torch.nn as nn
 from raw_bellman_ford.layers.bellman_ford_orig import BellmanFordLayer

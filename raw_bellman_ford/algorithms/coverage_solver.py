@@ -1,3 +1,5 @@
+"""Module containing the algorithm to solve the coverage problem for a hypergraph."""
+
 import numpy as np
 
 class HypergraphCoverageSolver:

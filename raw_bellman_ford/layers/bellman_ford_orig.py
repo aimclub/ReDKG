@@ -1,3 +1,5 @@
+"""Module containing the Bellman-Ford original layer."""
+
 import torch
 import torch.nn as nn
 

@@ -1,1 +1,1 @@
-"__init__.py file for algorithms"
+"""__init__.py file for algorithms"""
