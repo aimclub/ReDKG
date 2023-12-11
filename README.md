@@ -191,7 +191,7 @@ pip install -r requirements-dev.txt
 
 ```python
 import torch
-from layers.bellman_ford_modified import BellmanFordLayerModified
+from raw_bellman_ford.layers.bellman_ford_modified import BellmanFordLayerModified
 
 # Инициализация слоя с указанием количества узлов и числа признаков
 num_nodes = 4
@@ -232,7 +232,7 @@ print("Graph Eccentricity:", eccentricity)
 ### Использование
 
 ```python
-from hypergraphcoveragesolver import HypergraphCoverageSolver
+from raw_bellman_ford.algorithms.coverage_solver import HypergraphCoverageSolver
 
 # Задайте узлы, ребра, гиперребра, типы узлов, типы ребер и типы гиперребер
 nodes = [1, 2, 3, 4, 5]
