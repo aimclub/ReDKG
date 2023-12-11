@@ -146,13 +146,7 @@ train(Config(), item_vocab, model, optimizer)
 
 ```
 
-Documentation
-=============
-Detailed information and description of ReDKG framework is available in the [`Documentation`](https://aimclub.github.io/ReDKG/)
-
-# BellmanFordLayerModified and HypergraphCoverageSolver
-
-## BellmanFordLayerModified
+### BellmanFordLayerModified
 
 `BellmanFordLayerModified` is a PyTorch layer implementing a modified Bellman-Ford algorithm for analyzing graph properties and extracting features from graph structures. This layer can be used in graph machine learning tasks such as path prediction and graph structure analysis.
 
@@ -194,7 +188,7 @@ print("Graph Eccentricity:", eccentricity)
 
 - `BellmanFordLayerModified` is useful when additional graph characteristics, such as diameter and eccentricity, are of interest along with paths.
 
-## HypergraphCoverageSolver
+### HypergraphCoverageSolver
 
 `HypergraphCoverageSolver` is a Python class representing an algorithm to solve the coverage problem for a hypergraph. The problem is to determine whether an Unmanned Aerial Vehicle (UAV) can cover all objects in the hypergraph, taking into account the UAV's radius of action.
 
@@ -231,6 +225,10 @@ else:
 ### How It Works
 
 The algorithm for solving the hypergraph coverage problem first calculates the minimum radius required to cover all objects. It considers both regular edges and hyperedges, taking into account their weights. Then, the algorithm compares the computed minimum radius with the UAV's radius of action. If the UAV's radius is not less than the minimum radius, it is considered that the UAV can cover all objects in the hypergraph.
+
+Documentation
+=============
+Detailed information and description of ReDKG framework is available in the [`Documentation`](https://aimclub.github.io/ReDKG/)
 
 ## Contribution
 To contribute this library, the current [code and documentation convention](/wiki/Development.md) should be followed.
