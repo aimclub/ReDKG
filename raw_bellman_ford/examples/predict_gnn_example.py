@@ -4,13 +4,39 @@ import torch.optim as optim
 from raw_bellman_ford.layers.bellman_ford_modified import BellmanFordLayerModified
 
 class GraphPathPredictionModel(nn.Module):
+    """
+    GraphPathPredictionModel is a neural network model for graph path prediction.
+
+    Parameters:
+    - num_nodes: Number of nodes in the graph.
+    - num_features: Dimensionality of node features.
+    - hidden_dim: Dimensionality of the hidden layer in the linear transformation.
+    """
     def __init__(self, num_nodes, num_features, hidden_dim):
+        """
+        Initialize the GraphPathPredictionModel.
+
+        Parameters:
+        - num_nodes: Number of nodes in the graph.
+        - num_features: Dimensionality of node features.
+        - hidden_dim: Dimensionality of the hidden layer in the linear transformation.
+        """
         super(GraphPathPredictionModel, self).__init__()
         
         self.bellman_ford_layer = BellmanFordLayerModified(num_nodes, num_features)        
         self.linear = nn.Linear(num_features + 1, hidden_dim)
         
     def forward(self, adj_matrix, source_node):
+        """
+        Forward pass of the GraphPathPredictionModel.
+
+        Parameters:
+        - adj_matrix: Adjacency matrix of the graph.
+        - source_node: Source node for the Bellman-Ford algorithm.
+
+        Returns:
+        - predictions: Output predictions from the model.
+        """
         node_features, _, _ = self.bellman_ford_layer(adj_matrix, source_node)
         
         predictions = self.linear(node_features)

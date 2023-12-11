@@ -3,7 +3,24 @@ import numpy as np
 import networkx as nx
 
 class HBellmanFord:
+    """
+    This class represents an implementation of the Hypergraph Bellman-Ford algorithm
+    for computing distances and centralities in a hypergraph.
+    """
     def __init__(self, nodes, edges, node_types, edge_types, edge_weights, hyperedges, hyperedge_types, hyperedge_weights):
+        """
+        Initialize the HBellmanFord object.
+
+        Parameters:
+        - nodes: List of nodes in the hypergraph.
+        - edges: List of edges in the hypergraph.
+        - node_types: Dictionary mapping nodes to their types.
+        - edge_types: Dictionary mapping edges to their types.
+        - edge_weights: Dictionary mapping edges to their weights.
+        - hyperedges: List of hyperedges in the hypergraph.
+        - hyperedge_types: Dictionary mapping hyperedges to their types.
+        - hyperedge_weights: Dictionary mapping hyperedges to their weights.
+        """
         self.nodes = nodes
         self.edges = edges
         self.node_types = node_types
@@ -14,34 +31,107 @@ class HBellmanFord:
         self.hyperedge_weights = hyperedge_weights
 
     def initialize_distances(self, source):
+        """
+        Initialize the distances from the source node to all other nodes.
+
+        Parameters:
+        - source: The source node.
+
+        Returns:
+        - Dictionary of distances.
+        """
         distances = {node: float('inf') for node in self.nodes}
         distances[source] = 0
         return distances
 
     def relax(self, u, v, weight, distances):
+        """
+        Relaxation step in the Bellman-Ford algorithm.
+
+        Parameters:
+        - u: Source node.
+        - v: Target node.
+        - weight: Weight of the edge.
+        - distances: Dictionary of distances.
+        """
         if distances[u] + weight < distances[v]:
             distances[v] = distances[u] + weight
 
     def eccentricity(self, distances):
+        """
+        Calculate the eccentricity of the hypergraph.
+
+        Parameters:
+        - distances: 2D array of distances.
+
+        Returns:
+        - Eccentricity value.
+        """
         return np.max([d for d in distances.flatten() if not np.isinf(d)])
 
     def radius(self, distances):
+        """
+        Calculate the radius of the hypergraph.
+
+        Parameters:
+        - distances: 2D array of distances.
+
+        Returns:
+        - Radius value.
+        """
         flat_distances = distances.flatten()
         return np.min(flat_distances[~np.isinf(flat_distances)])
 
     def diameter(self, distances):
+        """
+        Calculate the diameter of the hypergraph.
+
+        Parameters:
+        - distances: 2D array of distances.
+
+        Returns:
+        - Diameter value.
+        """
         flat_distances = distances.flatten()
         return np.max(flat_distances[~np.isinf(flat_distances)])
 
     def central_nodes(self, distances):
+        """
+        Find central nodes in the hypergraph.
+
+        Parameters:
+        - distances: 2D array of distances.
+
+        Returns:
+        - List of central nodes.
+        """
         radius = self.radius(distances)
         return [node for node, distance in enumerate(distances.flatten()) if np.isinf(distance) or distance == radius]
 
     def peripheral_nodes(self, distances):
+        """
+        Find peripheral nodes in the hypergraph.
+
+        Parameters:
+        - distances: 2D array of distances.
+
+        Returns:
+        - List of peripheral nodes.
+        """
         diameter = self.diameter(distances)
         return [node for node, distance in enumerate(distances.flatten()) if distance == diameter]
 
     def closeness_centrality(self, node, distances):
+        """
+        Calculate the closeness centrality of a node in the hypergraph.
+
+        Parameters:
+        - node: The target node.
+        - distances: 2D array of distances.
+
+        Returns:
+        - Closeness centrality value.
+        """
         total_shortest_paths = 0
         total_connected_nodes = 0
         for l in range(len(self.nodes)):
@@ -52,15 +142,33 @@ class HBellmanFord:
                         total_connected_nodes += 1
 
         if total_connected_nodes == 0:
-            return 0  # Изолированная вершина, возвращаем 0
+            return 0  # Isolated node, return 0
 
         return total_connected_nodes / total_shortest_paths
 
-
     def degree_centrality(self, node):
+        """
+        Calculate the degree centrality of a node in the hypergraph.
+
+        Parameters:
+        - node: The target node.
+
+        Returns:
+        - Degree centrality value.
+        """
         return self.node_types.get(node, 0) / (len(self.nodes) - 1)
 
     def betweenness_centrality(self, node, distances):
+        """
+        Calculate the betweenness centrality of a node in the hypergraph.
+
+        Parameters:
+        - node: The target node.
+        - distances: 2D array of distances.
+
+        Returns:
+        - Betweenness centrality value.
+        """
         total_shortest_paths = 0
         for l in range(len(self.nodes)):
             if l != node:
@@ -70,6 +178,17 @@ class HBellmanFord:
         return total_shortest_paths
 
     def bellman_ford(self, node_criteria, edge_criteria, hyperedge_criteria):
+        """
+        Run the Hypergraph Bellman-Ford algorithm.
+
+        Parameters:
+        - node_criteria: Node types to consider (0 for all types, or a list of specific types).
+        - edge_criteria: Edge types to consider (0 for all types, or a list of specific types).
+        - hyperedge_criteria: Hyperedge types to consider (0 for all types, or a list of specific types).
+
+        Returns:
+        - Distance matrix.
+        """
         distance_matrix = []
 
         for source_node in self.nodes:
@@ -93,6 +212,9 @@ class HBellmanFord:
         return distance_matrix
 
     def visualize_hypergraph(self):
+        """
+        Visualize the hypergraph using Matplotlib and NetworkX.
+        """
         G = nx.MultiDiGraph()
 
         for node in self.nodes:
@@ -129,8 +251,8 @@ if __name__ == "__main__":
     edges = [(1, 2), (2, 3), (2, 1), (3, 4), (3, 5)]
     hyperedges = [(1, 2, 3), (3, 5, 4)]
     node_types = {1: 0, 2: 1, 3: 0, 4: 0, 5: 0}
-    edge_types = {(1, 2): 1, (2, 3): 2, (2, 1): 1,  (3, 4): 1, (3, 5): 1}
-    edge_weights = {(1, 2): 5.4, (2, 3): 2.2,  (2, 1): 2.1,  (3, 4): 1, (3, 5): 1}
+    edge_types = {(1, 2): 1, (2, 3): 2, (2, 1): 1, (3, 4): 1, (3, 5): 1}
+    edge_weights = {(1, 2): 5.4, (2, 3): 2.2, (2, 1): 2.1, (3, 4): 1, (3, 5): 1}
     hyperedge_types = {(1, 2, 3): 1, (3, 5, 4): 1}
     hyperedge_weights = {(1, 2, 3): 3, (3, 5, 4): 2}
 
@@ -162,4 +284,3 @@ if __name__ == "__main__":
         print("Closeness Centrality:", bellman_ford.closeness_centrality(node, distances))
         print("Degree Centrality:", bellman_ford.degree_centrality(node))
         print("Betweenness Centrality:", bellman_ford.betweenness_centrality(node, distances))
-

@@ -1,7 +1,23 @@
 import numpy as np
 
 class HypergraphCoverageSolver:
+    """
+    This class represents an algorithm to solve the coverage problem for a hypergraph.
+    The problem is to determine whether an Unmanned Aerial Vehicle (UAV) can cover
+    all objects in the hypergraph, taking into account the UAV's radius of action.
+    """
     def __init__(self, nodes, edges, hyperedges, node_types, edge_types, hyperedge_types):
+        """
+        Initialize the HypergraphCoverageSolver.
+
+        Parameters:
+        - nodes: List of nodes in the hypergraph.
+        - edges: List of edges in the hypergraph.
+        - hyperedges: List of hyperedges in the hypergraph.
+        - node_types: Dictionary mapping nodes to their types.
+        - edge_types: Dictionary mapping edges to their weights.
+        - hyperedge_types: Dictionary mapping hyperedges to their weights.
+        """
         self.nodes = nodes
         self.edges = edges
         self.hyperedges = hyperedges
@@ -10,11 +26,25 @@ class HypergraphCoverageSolver:
         self.hyperedge_types = hyperedge_types
 
     def can_cover_objects(self, drone_radius):
-        min_radius = self.calculate_min_radius()
+        """
+        Check if the Unmanned Aerial Vehicle (UAV) can cover all objects in the hypergraph.
 
+        Parameters:
+        - drone_radius: The radius of action of the UAV.
+
+        Returns:
+        - True if the UAV can cover all objects, False otherwise.
+        """
+        min_radius = self.calculate_min_radius()
         return min_radius <= drone_radius
 
     def calculate_min_radius(self):
+        """
+        Calculate the minimum radius needed to cover all objects in the hypergraph.
+
+        Returns:
+        - The minimum radius.
+        """
         min_radius = 0.0
 
         for edge in self.edges:
@@ -26,9 +56,27 @@ class HypergraphCoverageSolver:
         return min_radius
 
     def get_edge_weight(self, edge):
+        """
+        Get the weight of an edge.
+
+        Parameters:
+        - edge: The edge.
+
+        Returns:
+        - The weight of the edge.
+        """
         return self.edge_types.get(edge, 1)
 
     def get_hyperedge_weight(self, hyperedge):
+        """
+        Get the weight of a hyperedge.
+
+        Parameters:
+        - hyperedge: The hyperedge.
+
+        Returns:
+        - The weight of the hyperedge.
+        """
         return self.hyperedge_types.get(hyperedge, 1)
 
 if __name__ == "__main__":

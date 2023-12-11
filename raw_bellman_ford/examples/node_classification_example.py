@@ -4,7 +4,23 @@ import torch.optim as optim
 from raw_bellman_ford.layers.bellman_ford_orig import BellmanFordLayer
 
 class NodeClassificationGNN(nn.Module):
+    """
+    NodeClassificationGNN is a graph neural network model for node classification.
+
+    Parameters:
+    - num_nodes: Number of nodes in the graph.
+    - num_features: Dimensionality of node features.
+    - num_classes: Number of classes for node classification.
+    """
     def __init__(self, num_nodes, num_features, num_classes):
+        """
+        Initialize the NodeClassificationGNN.
+
+        Parameters:
+        - num_nodes: Number of nodes in the graph.
+        - num_features: Dimensionality of node features.
+        - num_classes: Number of classes for node classification.
+        """
         super(NodeClassificationGNN, self).__init__()
         self.num_nodes = num_nodes
         self.num_features = num_features
@@ -15,6 +31,17 @@ class NodeClassificationGNN(nn.Module):
         self.fc = nn.Linear(num_features + num_nodes, num_classes)
 
     def forward(self, adj_matrix, source_node):
+        """
+        Forward pass of the NodeClassificationGNN.
+
+        Parameters:
+        - adj_matrix: Adjacency matrix of the graph.
+        - source_node: Source node for the Bellman-Ford algorithm.
+
+        Returns:
+        - output: Output predictions from the model.
+        - has_negative_cycle: Boolean indicating whether the graph contains a negative weight cycle.
+        """
         distances, predecessors, has_negative_cycle = self.bellman_ford_layer(adj_matrix, source_node)
 
         node_features = self.node_embedding(torch.arange(self.num_nodes))

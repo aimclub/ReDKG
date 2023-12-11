@@ -2,11 +2,36 @@ import torch
 import torch.nn as nn
 
 class BellmanFordLayer(nn.Module):
+    """
+    This class represents a Bellman-Ford layer in a neural network.
+    It computes shortest distances, predecessors, and detects negative weight cycles in a graph.
+
+    Parameters:
+    - num_nodes: Number of nodes in the graph.
+    """
     def __init__(self, num_nodes):
+        """
+        Initialize the BellmanFordLayer.
+
+        Parameters:
+        - num_nodes: Number of nodes in the graph.
+        """
         super(BellmanFordLayer, self).__init__()
         self.num_nodes = num_nodes
 
     def forward(self, adj_matrix, source_node):
+        """
+        Forward pass of the BellmanFordLayer.
+
+        Parameters:
+        - adj_matrix: Adjacency matrix of the graph.
+        - source_node: Source node for the Bellman-Ford algorithm.
+
+        Returns:
+        - distances: Matrix of shortest distances from the source node to all other nodes.
+        - predecessors: Matrix of predecessors for each node in the shortest paths.
+        - has_negative_cycle: Boolean indicating whether the graph contains a negative weight cycle.
+        """
         distances = torch.full((self.num_nodes, self.num_nodes), float('inf'))
         predecessors = torch.zeros((self.num_nodes, self.num_nodes), dtype=torch.long)
 

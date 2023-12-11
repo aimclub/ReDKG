@@ -2,15 +2,39 @@ import torch
 import torch.nn as nn
 
 class BellmanFordLayerModified(nn.Module):
+    """
+    This class represents a modified Bellman-Ford layer in a neural network.
+    It computes node features, graph diameter, and graph eccentricity based on the Bellman-Ford algorithm.
+    """
     def __init__(self, num_nodes, num_features):
+        """
+        Initialize the BellmanFordLayerModified.
+
+        Parameters:
+        - num_nodes: Number of nodes in the graph.
+        - num_features: Number of features for each node.
+        """
         super(BellmanFordLayerModified, self).__init__()
         self.num_nodes = num_nodes
         self.num_features = num_features
 
+        # Learnable parameters
         self.edge_weights = nn.Parameter(torch.rand(num_nodes, num_nodes))
         self.node_embedding = nn.Embedding(num_nodes, num_features)
 
     def forward(self, adj_matrix, source_node):
+        """
+        Forward pass of the BellmanFordLayerModified.
+
+        Parameters:
+        - adj_matrix: Adjacency matrix of the graph.
+        - source_node: Source node for the Bellman-Ford algorithm.
+
+        Returns:
+        - node_features: Computed node features, including distances.
+        - graph_diameter: Diameter of the graph.
+        - graph_eccentricity: Eccentricity of the graph.
+        """
         distances = torch.full((self.num_nodes,), float('inf'))
         predecessors = torch.full((self.num_nodes,), -1)
         distances[source_node] = 0
