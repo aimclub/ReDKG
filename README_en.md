@@ -309,6 +309,88 @@ Documentation
 =============
 Detailed information and description of ReDKG framework is available in the [`Documentation`](https://aimclub.github.io/ReDKG/)
 
+# BellmanFordLayerModified and HypergraphCoverageSolver
+
+## BellmanFordLayerModified
+
+`BellmanFordLayerModified` is a PyTorch layer implementing a modified Bellman-Ford algorithm for analyzing graph properties and extracting features from graph structures. This layer can be used in graph machine learning tasks such as path prediction and graph structure analysis.
+
+### Usage
+
+```python
+import torch
+from raw_bellman_ford.layers.bellman_ford_modified import BellmanFordLayerModified
+
+# Initialize the layer with the number of nodes and the number of features
+num_nodes = 4
+num_features = 5
+bellman_ford_layer = BellmanFordLayerModified(num_nodes, num_features)
+
+# Define the adjacency matrix of the graph and the source node
+adj_matrix = torch.tensor([[0, 2, float('inf'), 1],
+                          [float('inf'), 0, -1, float('inf')],
+                          [float('inf'), float('inf'), 0, -2],
+                          [float('inf'), float('inf'), float('inf'), 0]])
+source_node = 0
+
+# Calculate graph features, diameter, and eccentricity
+node_features, diameter, eccentricity = bellman_ford_layer(adj_matrix, source_node)
+
+print("Node Features:")
+print(node_features)
+print("Graph Diameter:", diameter)
+print("Graph Eccentricity:", eccentricity)
+```
+
+### Layer Parameters
+
+- `num_nodes`: The number of nodes in the graph.
+- `num_features`: The number of features extracted from the graph.
+- `edge_weights`: Weights of edges between nodes (trainable parameters).
+- `node_embedding`: Node embedding for feature extraction.
+
+### Application
+
+- `BellmanFordLayerModified` is useful when additional graph characteristics, such as diameter and eccentricity, are of interest along with paths.
+
+## HypergraphCoverageSolver
+
+`HypergraphCoverageSolver` is a Python class representing an algorithm to solve the coverage problem for a hypergraph. The problem is to determine whether an Unmanned Aerial Vehicle (UAV) can cover all objects in the hypergraph, taking into account the UAV's radius of action.
+
+### Usage
+
+```python
+from raw_bellman_ford.algorithms.coverage_solver import HypergraphCoverageSolver
+
+# Define nodes, edges, hyperedges, node types, edge types, and hyperedge types
+nodes = [1, 2, 3, 4, 5]
+edges = [(1, 2), (2, 3), (3, 1), ((1, 2, 3), 4), ((1, 2, 3), 5), (4, 5)]
+hyperedges = [(1, 2, 3)]
+node_types = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+edge_types = {(1, 2): 1.4, (2, 3): 1.5, (3, 1): 1.6, ((1, 2, 3), 4): 2.5, ((1, 2, 3), 5): 24.6, (4, 5): 25.7}
+hyperedge_types = {(1, 2, 3): 1}
+
+# Create an instance of the class
+hypergraph_solver = HypergraphCoverageSolver(nodes, edges, hyperedges, node_types, edge_types, hyperedge_types)
+```
+
+### Define UAV Radius and Check Coverage Feasibility
+
+```python
+# Define UAV radius
+drone_radius = 40
+
+# Check if the UAV can cover all objects in the hypergraph
+if hypergraph_solver.can_cover_objects(drone_radius):
+    print("The UAV can cover all objects in the hypergraph.")
+else:
+    print("The UAV cannot cover all objects in the hypergraph.")
+```
+
+### How It Works
+
+The algorithm for solving the hypergraph coverage problem first calculates the minimum radius required to cover all objects. It considers both regular edges and hyperedges, taking into account their weights. Then, the algorithm compares the computed minimum radius with the UAV's radius of action. If the UAV's radius is not less than the minimum radius, it is considered that the UAV can cover all objects in the hypergraph.
+
 ## Contribution
 To contribute this library, the current [code and documentation convention](/wiki/Development.md) should be followed.
 Project run linters and tests on each pull request, to install linters and testing-packages locally, run 
