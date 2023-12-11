@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from layers.bellman_ford_orig import BellmanFordLayer
+from raw_bellman_ford.layers.bellman_ford_orig import BellmanFordLayer
 
 class NodeClassificationGNN(nn.Module):
     def __init__(self, num_nodes, num_features, num_classes):

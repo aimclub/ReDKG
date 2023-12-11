@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from layers.bellman_ford_modified import BellmanFordLayerModified
+from raw_bellman_ford.layers.bellman_ford_modified import BellmanFordLayerModified
 
 class GraphPathPredictionModel(nn.Module):
     def __init__(self, num_nodes, num_features, hidden_dim):

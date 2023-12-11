@@ -25,7 +25,7 @@ class BellmanFordLayerModified(nn.Module):
 
         graph_diameter = torch.max(distances).item()
         graph_eccentricity = torch.max(distances[source_node]).item()
-        
+
         node_features = self.node_embedding(torch.arange(self.num_nodes))
         node_features = torch.cat([node_features, distances.unsqueeze(1)], dim=1)
 

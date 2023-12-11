@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from layers.bellman_ford_orig import BellmanFordLayer
+from raw_bellman_ford.layers.bellman_ford_orig import BellmanFordLayer
 
 class GNNWithBellmanFord(nn.Module):
     def __init__(self, num_nodes, num_features, num_classes):
