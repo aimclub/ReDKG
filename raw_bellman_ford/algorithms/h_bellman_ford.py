@@ -1,288 +1,358 @@
-"""Module containing class represents an implementation of the Hypergraph Bellman-Ford algorithm."""
+"""Module containing HBellmanFord and HypergraphMetrics classes."""
 
-import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import networkx as nx
 
 class HBellmanFord:
-    """
-    This class represents an implementation of the Hypergraph Bellman-Ford algorithm
-    for computing distances and centralities in a hypergraph.
-    """
-    def __init__(self, nodes, edges, node_types, edge_types, edge_weights, hyperedges, hyperedge_types, hyperedge_weights):
+    def __init__(self, nodes, edges, hyperedges, criteria = None):
         """
-        Initialize the HBellmanFord object.
+        Initializes an instance of the class.
 
-        Parameters:
-        - nodes: List of nodes in the hypergraph.
-        - edges: List of edges in the hypergraph.
-        - node_types: Dictionary mapping nodes to their types.
-        - edge_types: Dictionary mapping edges to their types.
-        - edge_weights: Dictionary mapping edges to their weights.
-        - hyperedges: List of hyperedges in the hypergraph.
-        - hyperedge_types: Dictionary mapping hyperedges to their types.
-        - hyperedge_weights: Dictionary mapping hyperedges to their weights.
+        Args:
+            nodes (dict): A dictionary representing the nodes.
+            edges (list): A list representing the edges.
+            hyperedges (dict): A dictionary representing the hyperedges.
+            node_types (dict, optional): A dictionary representing the node types. Defaults to None.
+            edge_weights (dict, optional): A dictionary representing the edge weights. Defaults to None.
+            hyperedge_weights (dict, optional): A dictionary representing the hyperedge weights. Defaults to None.
+            hyperedge_types (dict, optional): A dictionary representing the hyperedge types. Defaults to None.
         """
-        self.nodes = nodes
+        self.nodes = list(nodes.keys())
         self.edges = edges
-        self.node_types = node_types
-        self.edge_types = edge_types
-        self.edge_weights = edge_weights
-        self.hyperedges = hyperedges
-        self.hyperedge_types = hyperedge_types
-        self.hyperedge_weights = hyperedge_weights
+        self.hyperedges = list(hyperedges.keys())
+        self.edge_weights = {edge['nodes']: {"weight": edge['weight'], "attributes": edge['attributes']}  for edge in self.edges} if self.edges else {}
+        self.hyperedge_weights = {key: value.setdefault("weight", np.inf) for key, value in hyperedges.items()} if hyperedges else {}
+        self.criteria = criteria if criteria else {}
 
-    def initialize_distances(self, source):
+    def to_dict(self):
         """
-        Initialize the distances from the source node to all other nodes.
-
-        Parameters:
-        - source: The source node.
+        Convert the graph object to a dictionary representation.
 
         Returns:
-        - Dictionary of distances.
+            dict: A dictionary containing the graph data.
+                - "nodes" (list): A list of nodes in the graph.
+                - "edges" (list): A list of edges in the graph.
+                - "hyperedges" (list): A list of hyperedges in the graph.
+                - "node_types" (list): A list of node types in the graph.
+                - "edge_weights" (dict): A dictionary mapping edges to their weights.
+                - "hyperedge_weights" (dict): A dictionary mapping hyperedges to their weights.
+                - "hyperedge_types" (list): A list of hyperedge types in the graph.
         """
-        distances = {node: float('inf') for node in self.nodes}
-        distances[source] = 0
-        return distances
+        return {
+            "nodes": self.nodes,
+            "edges": self.edges,
+            "hyperedges": self.hyperedges,
+            "node_types": self.node_types,
+            "edge_weights": self.edge_weights,
+            "hyperedge_weights": self.hyperedge_weights,
+            "hyperedge_types": self.hyperedge_types,
+        }
 
-    def relax(self, u, v, weight, distances):
+class HypergraphMetrics:
+    def __init__(self, hypergraph: HBellmanFord):
         """
-        Relaxation step in the Bellman-Ford algorithm.
+        Initializes an instance of the class.
 
         Parameters:
-        - u: Source node.
-        - v: Target node.
-        - weight: Weight of the edge.
-        - distances: Dictionary of distances.
-        """
-        if distances[u] + weight < distances[v]:
-            distances[v] = distances[u] + weight
-
-    def eccentricity(self, distances):
-        """
-        Calculate the eccentricity of the hypergraph.
-
-        Parameters:
-        - distances: 2D array of distances.
+            hypergraph (Hypergraph): The hypergraph object to be used.
 
         Returns:
-        - Eccentricity value.
+            None
         """
-        return np.max([d for d in distances.flatten() if not np.isinf(d)])
-
-    def radius(self, distances):
+        self.hypergraph = hypergraph
+        self.matrix = self.create_matrix()
+        self.graph = self.create_graph()
+        self.num_nodes = len(self.matrix)
+    
+    def create_matrix(self):
         """
-        Calculate the radius of the hypergraph.
-
-        Parameters:
-        - distances: 2D array of distances.
+        Generates the adjacency matrix of the hypergraph.
 
         Returns:
-        - Radius value.
+            numpy.ndarray: The adjacency matrix of the hypergraph.
         """
-        flat_distances = distances.flatten()
-        return np.min(flat_distances[~np.isinf(flat_distances)])
+        num_nodes = len(self.hypergraph.nodes) + len(self.hypergraph.hyperedges)
+        matrix = np.full((num_nodes, num_nodes), np.inf)
 
-    def diameter(self, distances):
+        for edge, attr in self.hypergraph.edge_weights.items():
+            if isinstance(edge[0], int) and isinstance(edge[1], int):
+                matrix[self.hypergraph.nodes.index(edge[0]), self.hypergraph.nodes.index(edge[1])] = attr['weight']
+                if attr['attributes']['Por'] == 0:
+                    matrix[self.hypergraph.nodes.index(edge[1]), self.hypergraph.nodes.index(edge[0])] = attr['weight']
+        
+        for k in range(num_nodes):
+            for i in range(num_nodes):
+                for j in range(num_nodes):
+                    matrix[i, j] = min(matrix[i, j], matrix[i, k] + matrix[k, j])
+        for i, hyperedge in enumerate(self.hypergraph.hyperedges):
+            max = 0
+
+            for k in range(num_nodes):
+                for j in range(num_nodes):
+                    if (k + 1 in hyperedge) and (j + 1 in hyperedge) and (j != k) :
+                        if matrix[k, j] > max:
+                            max = matrix[k, j]
+            print(self.hypergraph.hyperedge_weights)
+            self.hypergraph.hyperedge_weights[hyperedge] = max
+
+        for edge, attr in self.hypergraph.edge_weights.items():
+                if (not isinstance(edge[0], int)) and (not isinstance(edge[1], int)):
+                    hyperedge1, hyperedge2 = edge
+                    matrix[len(self.hypergraph.nodes) + self.hypergraph.hyperedges.index(hyperedge1),
+                        len(self.hypergraph.nodes) + self.hypergraph.hyperedges.index(hyperedge2)] = attr['weight']
+                    if attr['attributes']['Por'] == 0:
+                        matrix[len(self.hypergraph.nodes) + self.hypergraph.hyperedges.index(hyperedge2),
+                            len(self.hypergraph.nodes) + self.hypergraph.hyperedges.index(hyperedge1)] = attr['weight']
+                        
+                elif not isinstance(edge[0], int):
+                    hyperedge, node = edge
+                    matrix[len(self.hypergraph.nodes) + self.hypergraph.hyperedges.index(hyperedge),
+                        self.hypergraph.nodes.index(node)] = attr['weight']
+                    if attr['attributes']['Por'] == 0:
+                        matrix[self.hypergraph.nodes.index(node),
+                            len(self.hypergraph.nodes) + self.hypergraph.hyperedges.index(hyperedge)] = attr['weight']
+
+                elif not isinstance(edge[1], int):
+                    node, hyperedge = edge
+                    matrix[len(self.hypergraph.nodes) + self.hypergraph.hyperedges.index(hyperedge),
+                        self.hypergraph.nodes.index(node)] = attr['weight']
+                    if attr['attributes']['Por'] == 0:
+                        matrix[self.hypergraph.nodes.index(node),
+                            len(self.hypergraph.nodes) + self.hypergraph.hyperedges.index(hyperedge)] = attr['weight']
+
+        for i, hyperedge in enumerate(self.hypergraph.hyperedges):
+            for j in self.hypergraph.nodes:
+                if j in hyperedge:  # Check If the vertex 'j' belongs to the hyperedge. (Adjust this as per your data structure)
+                    matrix[len(self.hypergraph.nodes) + i, j - 1] = min(
+                        matrix[len(self.hypergraph.nodes) + i, j - 1],
+                        self.hypergraph.hyperedge_weights.get(hyperedge, np.inf)
+                    )
+                    matrix[j - 1, len(self.hypergraph.nodes) + i] = min(
+                        matrix[j - 1, len(self.hypergraph.nodes) + i],
+                        self.hypergraph.hyperedge_weights.get(hyperedge, np.inf)
+                    )
+
+        for k in range(num_nodes):
+            for i in range(num_nodes):
+                for j in range(num_nodes):
+                    matrix[i, j] = min(matrix[i, j], matrix[i, k] + matrix[k, j])
+
+        for i in range(num_nodes):
+            matrix[i, i] = 0
+
+        return matrix
+
+    def create_graph(self):
         """
-        Calculate the diameter of the hypergraph.
+        Creates a graph based on the given matrix.
 
         Parameters:
-        - distances: 2D array of distances.
+            self (object): The current instance of the class.
+        
+        Returns:
+            graph (nx.Graph): The created graph.
+        """
+        graph = nx.Graph()
+        num_nodes = len(self.matrix)
+        for i in range(num_nodes):
+            for j in range(i + 1, num_nodes):
+                if np.isfinite(self.matrix[i, j]):
+                    graph.add_edge(i, j, weight=self.matrix[i, j])
+        return graph
+
+    def compute_centralities(self):
+        """
+        Calculate the centralities of the graph.
 
         Returns:
-        - Diameter value.
+            eccentricities (list): A list of eccentricities for each node in the graph.
+            radius (float): The radius of the graph.
+            diameter (float): The diameter of the graph.
+            closeness_centralities (list): A list of closeness centralities for each node in the graph.
+            degree_centralities (list): A list of degree centralities for each node in the graph.
         """
-        flat_distances = distances.flatten()
-        return np.max(flat_distances[~np.isinf(flat_distances)])
+        eccentricities = [np.max(distances) for distances in self.matrix]
+        radius = np.min([np.max(distances) for distances in self.matrix])
+        diameter = np.max(self.matrix)
 
-    def central_nodes(self, distances):
+        closeness_centralities = [1 / np.sum(distances) if np.sum(distances) != 0 else 0 for distances in self.matrix]
+        degree_centralities = [np.sum(distances != np.inf) / (self.num_nodes - 1) for distances in self.matrix]
+
+        return eccentricities, radius, diameter, closeness_centralities, degree_centralities
+
+    def compute_central_and_peripheral_nodes(self):
         """
-        Find central nodes in the hypergraph.
+        Compute the central and peripheral nodes of the graph.
+        
+        Returns:
+            central_nodes (list): A list of nodes that have the minimum eccentricity.
+            peripheral_nodes (list): A list of nodes that have the maximum eccentricity.
+        """
+        eccentricities = self.compute_centralities()[0]
+        min_eccentricity = np.min(eccentricities)
+        max_eccentricity = np.max(eccentricities)
+
+        central_nodes = [node for node, eccentricity in enumerate(eccentricities) if eccentricity == min_eccentricity]
+        peripheral_nodes = [node for node, eccentricity in enumerate(eccentricities) if eccentricity == max_eccentricity]
+
+        return central_nodes, peripheral_nodes
+
+    def print_matrix(self):
+        """
+        Print the matrix representation of the hypergraph.
+
+        This function prints the matrix representation of the hypergraph. It first prints the matrix as a list, 
+        followed by printing the matrix as a DataFrame with labeled rows and columns. The matrix includes both 
+        nodes and hyperedges as labels. 
 
         Parameters:
-        - distances: 2D array of distances.
+        None
 
         Returns:
-        - List of central nodes.
+        None
         """
-        radius = self.radius(distances)
-        return [node for node, distance in enumerate(distances.flatten()) if np.isinf(distance) or distance == radius]
+        print(self.matrix)
+        nodes = ["gv" + str(i) for i in self.hypergraph.nodes]
+        hyperedges = ["he" + str(i) for i in range(1, len(self.hypergraph.hyperedges) + 1)]
+        df = pd.DataFrame(self.matrix, index=nodes + hyperedges, columns=nodes + hyperedges)
+        print(df)
 
-    def peripheral_nodes(self, distances):
+    def print_eccentricities(self):
         """
-        Find peripheral nodes in the hypergraph.
+        Print the eccentricities of all nodes in the hypergraph.
+
+        This function computes the eccentricities of all nodes in the hypergraph and prints them. The eccentricity of a node in a hypergraph is the maximum distance between that node and any other node in the hypergraph. The function uses the `compute_centralities` method to calculate the eccentricities and then prints them in a formatted manner.
 
         Parameters:
-        - distances: 2D array of distances.
+        - None
 
         Returns:
-        - List of peripheral nodes.
+        - None
         """
-        diameter = self.diameter(distances)
-        return [node for node, distance in enumerate(distances.flatten()) if distance == diameter]
+        eccentricities = self.compute_centralities()[0]
+        print("\nEccentricities:")
+        for i, eccentricity in enumerate(eccentricities):
+            label = f"he{i - len(self.hypergraph.nodes) + 1}" if i >= len(self.hypergraph.nodes) else f"gv{i + 1}"
+            print(f"  {label}: {eccentricity:.2f}")
 
-    def closeness_centrality(self, node, distances):
+    def print_centralities(self):
         """
-        Calculate the closeness centrality of a node in the hypergraph.
+        Print the closeness centralities and degree centralities of the hypergraph.
+
+        This function computes the closeness centralities and degree centralities of the hypergraph using the `compute_centralities` method. It then prints the results in a formatted manner.
 
         Parameters:
-        - node: The target node.
-        - distances: 2D array of distances.
+        - None
 
         Returns:
-        - Closeness centrality value.
+        - None
         """
-        total_shortest_paths = 0
-        total_connected_nodes = 0
-        for l in range(len(self.nodes)):
-            if l != node:
-                for j in range(len(self.nodes)):
-                    if j != l and j != node and not np.isinf(distances[l][j]):
-                        total_shortest_paths += distances[l][j]
-                        total_connected_nodes += 1
+        closeness_centralities = self.compute_centralities()[3]
+        degree_centralities = self.compute_centralities()[4]
+        print("\nCloseness Centralities:")
+        for i, closeness_centrality in enumerate(closeness_centralities):
+            label = f"he{i - len(self.hypergraph.nodes) + 1}" if i >= len(self.hypergraph.nodes) else f"gv{i + 1}"
+            print(f"  {label}: {closeness_centrality:.2f}")
+        print("\nDegree Centralities:")
+        for i, degree_centrality in enumerate(degree_centralities):
+            label = f"he{i - len(self.hypergraph.nodes) + 1}" if i >= len(self.hypergraph.nodes) else f"gv{i + 1}"
+            print(f"  {label}: {degree_centrality:.2f}")
 
-        if total_connected_nodes == 0:
-            return 0  # Isolated node, return 0
-
-        return total_connected_nodes / total_shortest_paths
-
-    def degree_centrality(self, node):
+    def print_central_and_peripheral_nodes(self):
         """
-        Calculate the degree centrality of a node in the hypergraph.
+        Print the central and peripheral nodes of the hypergraph.
+
+        This function computes the central and peripheral nodes of the hypergraph using the `compute_central_and_peripheral_nodes` method. It then converts the node indices to labels based on whether the index is greater than or equal to the number of nodes in the hypergraph. The central nodes are labeled as `"hei"` if `i` is greater than or equal to the number of nodes, otherwise they are labeled as `"gvi"`, where `i` is the index. Similarly, the peripheral nodes are labeled as `"hej"` if `j` is greater than or equal to the number of nodes, otherwise they are labeled as `"gvj"`, where `j` is the index.
 
         Parameters:
-        - node: The target node.
+            self (class): The instance of the class.
 
         Returns:
-        - Degree centrality value.
+            None
         """
-        return self.node_types.get(node, 0) / (len(self.nodes) - 1)
-
-    def betweenness_centrality(self, node, distances):
+        central_nodes = self.compute_central_and_peripheral_nodes()[0]
+        peripheral_nodes = self.compute_central_and_peripheral_nodes()[1]
+        central_labels = [f"he{i - len(self.hypergraph.nodes) + 1}" if i >= len(self.hypergraph.nodes) else f"gv{i + 1}" for i in central_nodes]
+        peripheral_labels = [f"he{i - len(self.hypergraph.nodes) + 1}" if i >= len(self.hypergraph.nodes) else f"gv{i + 1}" for i in peripheral_nodes]
+        print("\nCentral Nodes:", central_labels)
+        print("Peripheral Nodes:", peripheral_labels)
+    
+    def compute_diameter_and_radius(self):
         """
-        Calculate the betweenness centrality of a node in the hypergraph.
-
-        Parameters:
-        - node: The target node.
-        - distances: 2D array of distances.
+        Compute the diameter and radius of the graph represented by the matrix.
 
         Returns:
-        - Betweenness centrality value.
+            The diameter and radius of the graph.
+
+        Notes:
+            - The diameter of a graph is the maximum distance between any two nodes.
+            - The radius of a graph is the minimum maximum distance from any node to all other nodes.
         """
-        total_shortest_paths = 0
-        for l in range(len(self.nodes)):
-            if l != node:
-                for j in range(len(self.nodes)):
-                    if j != l and j != node:
-                        total_shortest_paths += distances[l][node] / distances[l][j]
-        return total_shortest_paths
+        all_distances = self.matrix[np.isfinite(self.matrix)]
+        diameter = np.max(all_distances)
+        radius = np.min(np.max(self.matrix, axis=0))
+        return diameter, radius
 
-    def bellman_ford(self, node_criteria, edge_criteria, hyperedge_criteria):
+    def print_diameter_and_radius(self):
         """
-        Run the Hypergraph Bellman-Ford algorithm.
-
-        Parameters:
-        - node_criteria: Node types to consider (0 for all types, or a list of specific types).
-        - edge_criteria: Edge types to consider (0 for all types, or a list of specific types).
-        - hyperedge_criteria: Hyperedge types to consider (0 for all types, or a list of specific types).
-
+        Print the computed diameter and radius of the object.
+        
         Returns:
-        - Distance matrix.
+            tuple: A tuple containing the computed diameter and radius.
         """
-        distance_matrix = []
+        diameter, radius = self.compute_diameter_and_radius()
+        print(f"\nDiameter: {diameter:.2f}")
+        print(f"Radius: {radius:.2f}")
 
-        for source_node in self.nodes:
-            distances = self.initialize_distances(source_node)
-
-            for i in range(len(self.nodes) - 1):
-                for edge in self.edges:
-                    u, v = edge
-                    if (node_criteria == 0) or (self.node_types[v] in node_criteria):
-                        weight = self.edge_weights[edge]
-                        self.relax(u, v, weight, distances)
-
-                for hyperedge in self.hyperedges:
-                    u, v, w = hyperedge
-                    if (edge_criteria == 0) or (self.edge_types[(u, v)] in edge_criteria):
-                        weight = self.hyperedge_weights[hyperedge]
-                        self.relax(u, w, weight, distances)
-
-            distance_matrix.append([distances[i] for i in self.nodes])
-
-        return distance_matrix
-
-    def visualize_hypergraph(self):
-        """
-        Visualize the hypergraph using Matplotlib and NetworkX.
-        """
-        G = nx.MultiDiGraph()
-
-        for node in self.nodes:
-            node_label = f'gv({node})/tp({self.node_types[node]})'
-            G.add_node(node, color='skyblue', label=node_label)
-
-        for edge in self.edges:
-            u, v = edge
-            edge_label = f'ge({edge})/tp({self.edge_types[edge]})/wt({self.edge_weights[edge]})'
-            G.add_edge(u, v, color='black', label=edge_label)
-
-        for hyperedge in self.hyperedges:
-            hyperedge_label = f'ge({hyperedge})/tp({self.hyperedge_types[hyperedge]})/wt({self.hyperedge_weights[hyperedge]})'
-            G.add_node(hyperedge, color='red', label=hyperedge_label)
-            for u in hyperedge:
-                G.add_edge(u, hyperedge, color='red', label='')
-
-        pos = nx.spring_layout(G)
-
-        edges = G.edges()
-        colors = [G[u][v][0]['color'] if 'color' in G[u][v][0] else 'black' for u, v in edges]
-
-        node_labels = {node: G.nodes[node]['label'] for node in G.nodes}
-        nx.draw(G, pos, with_labels=True, font_weight='bold', edgelist=edges, edge_color=colors,
-                node_color='skyblue', node_size=1000, font_size=8, labels=node_labels)
-
-        edge_labels = {(u, v): G[u][v][0]['label'] if 'label' in G[u][v][0] else '' for (u, v) in edges}
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
-
-        plt.show()
+        return diameter, radius
 
 if __name__ == "__main__":
-    nodes = [1, 2, 3, 4, 5]
-    edges = [(1, 2), (2, 3), (2, 1), (3, 4), (3, 5)]
-    hyperedges = [(1, 2, 3), (3, 5, 4)]
-    node_types = {1: 0, 2: 1, 3: 0, 4: 0, 5: 0}
-    edge_types = {(1, 2): 1, (2, 3): 2, (2, 1): 1, (3, 4): 1, (3, 5): 1}
-    edge_weights = {(1, 2): 5.4, (2, 3): 2.2, (2, 1): 2.1, (3, 4): 1, (3, 5): 1}
-    hyperedge_types = {(1, 2, 3): 1, (3, 5, 4): 1}
-    hyperedge_weights = {(1, 2, 3): 3, (3, 5, 4): 2}
+    json_hypergraph = {
+    "nodes": {
+        1: {"type": 1, "weight": None},
+        2: {"type": 1, "weight": None},
+        3: {"type": 1, "weight": None},
+        4: {"type": 1, "weight": None},
+        5: {"type": 1, "weight": None},
+        6: {"type": 1, "weight": None},
+        7: {"type": 1, "weight": None},
+        8: {"type": 1, "weight": None},
+        9: {"type": 1, "weight": None},
+        10: {"type": 1, "weight": None},
+    },
+    "edges": [
+        {"nodes": (1, 2), "weight": 0.6, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": (2, 3), "weight": 0.5, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": (1, 4), "weight": 0.5, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": (3, 4), "weight": 0.6, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": (7, 8), "weight": 0.9, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": (8, 9), "weight": 0.5, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": (9, 10), "weight": 0.9, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": (10, 7), "weight": 0.9, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": ((1, 2, 3, 4), 5), "weight": 0.2, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": ((1, 2, 3, 4), 6), "weight": 0.8, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": (5, 6), "weight": 0.7, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": ((7, 8, 9, 10), 6), "weight": 0.9, "attributes": {"Por": 0, "Pt": 0}},
+        {"nodes": ((7, 8, 9, 10), (1, 2, 3, 4)), "weight": 0.6, "attributes": {"Por": 0, "Pt": 0}},
+    ],
+    "hyperedges": {
+        (1, 2, 3, 4): {"type": 1},
+        (7, 8, 9, 10): {"type": 1},
+    },
+    }
 
-    bellman_ford = HBellmanFord(nodes, edges, node_types, edge_types, edge_weights, hyperedges, hyperedge_types, hyperedge_weights)
-    node_criteria_all_types = 0
-    node_criteria_specific_types = [0, 1]
-    edge_criteria_all_types = 0
-    edge_criteria_specific_types = [1]
-    hyperedge_criteria_vertices = 0
-    hyperedge_criteria_hyperedges = [1]
+# Преобразование JSON в объект Hypergraph
+    hypergraph_from_json = HBellmanFord(**json_hypergraph)
 
-    distance_matrix = bellman_ford.bellman_ford(node_criteria_all_types, edge_criteria_all_types, hyperedge_criteria_vertices)
+    metrics_calculator = HypergraphMetrics(hypergraph_from_json)
 
-    bellman_ford.visualize_hypergraph()
+    metrics_calculator.print_matrix()
 
-    print("Full Distance Matrix:")
-    for row in distance_matrix:
-        print(row)
+    metrics_calculator.print_eccentricities()
 
-    distances = np.array(distance_matrix)
-    print("Eccentricity:", bellman_ford.eccentricity(distances))
-    print("Radius:", bellman_ford.radius(distances))
-    print("Diameter:", bellman_ford.diameter(distances))
-    print("Central Nodes:", bellman_ford.central_nodes(distances))
-    print("Peripheral Nodes:", bellman_ford.peripheral_nodes(distances))
+    metrics_calculator.print_centralities()
 
-    for node in range(len(nodes)):
-        print(f"\nNode {node} Centrality:")
-        print("Closeness Centrality:", bellman_ford.closeness_centrality(node, distances))
-        print("Degree Centrality:", bellman_ford.degree_centrality(node))
-        print("Betweenness Centrality:", bellman_ford.betweenness_centrality(node, distances))
+    metrics_calculator.print_central_and_peripheral_nodes()
+
+    metrics_calculator.print_diameter_and_radius()

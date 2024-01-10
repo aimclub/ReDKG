@@ -1,0 +1,33 @@
+{
+    "nodes": {
+        "1": {"type": 0},
+        "2": {"type": 0},
+        "3": {"type": 0},
+        "4": {"type": 0},
+        "5": {"type": 0},
+        "6": {"type": 0},
+        "7": {"type": 0},
+        "8": {"type": 0},
+        "9": {"type": 0},
+        "10": {"type": 0}
+    },
+    "edges": [
+        {"nodes": [1, 2], "weight": 0.6},
+        {"nodes": [2, 3], "weight": 0.5},
+        {"nodes": [1, 4], "weight": 0.5},
+        {"nodes": [3, 4], "weight": 0.6},
+        {"nodes": [7, 8], "weight": 0.9},
+        {"nodes": [8, 9], "weight": 0.5},
+        {"nodes": [9, 10], "weight": 0.9},
+        {"nodes": [10, 7], "weight": 0.9},
+        {"nodes": [[1, 2, 3, 4], 5], "weight": 0.2},
+        {"nodes": [[1, 2, 3, 4], 6], "weight": 0.8},
+        {"nodes": [5, 6], "weight": 0.7},
+        {"nodes": [[7, 8, 9, 10], 6], "weight": 0.9},
+        {"nodes": [[7, 8, 9, 10], [1, 2, 3, 4]], "weight": 0.6}
+    ],
+    "hyperedges": {
+        "1,2,3,4": {"weight": 1.1, "type": 1},
+        "7,8,9,10": {"weight": 1.4, "type": 1}
+    }
+}
