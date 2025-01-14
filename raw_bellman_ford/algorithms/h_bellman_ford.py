@@ -13,15 +13,7 @@ class HBellmanFord:
     """
 
     def __init__(
-            self,
-            nodes,
-            edges,
-            node_types,
-            edge_types,
-            edge_weights,
-            hyperedges,
-            hyperedge_types,
-            hyperedge_weights
+        self, nodes, edges, node_types, edge_types, edge_weights, hyperedges, hyperedge_types, hyperedge_weights
     ):
         """
         Initialize the HBellmanFord object.
@@ -55,7 +47,7 @@ class HBellmanFord:
         Returns:
         - Dictionary of distances.
         """
-        distances = {node: float('inf') for node in self.nodes}
+        distances = {node: float("inf") for node in self.nodes}
         distances[source] = 0
         return distances
 
@@ -121,8 +113,7 @@ class HBellmanFord:
         - List of central nodes.
         """
         radius = self.radius(distances)
-        return [node for node, distance in enumerate(distances.flatten()) if
-                np.isinf(distance) or distance == radius]
+        return [node for node, distance in enumerate(distances.flatten()) if np.isinf(distance) or distance == radius]
 
     def peripheral_nodes(self, distances):
         """
@@ -232,31 +223,42 @@ class HBellmanFord:
         G = nx.MultiDiGraph()
 
         for node in self.nodes:
-            node_label = f'gv({node})/tp({self.node_types[node]})'
-            G.add_node(node, color='skyblue', label=node_label)
+            node_label = f"gv({node})/tp({self.node_types[node]})"
+            G.add_node(node, color="skyblue", label=node_label)
 
         for edge in self.edges:
             u, v = edge
-            edge_label = f'ge({edge})/tp({self.edge_types[edge]})/wt({self.edge_weights[edge]})'
-            G.add_edge(u, v, color='black', label=edge_label)
+            edge_label = f"ge({edge})/tp({self.edge_types[edge]})/wt({self.edge_weights[edge]})"
+            G.add_edge(u, v, color="black", label=edge_label)
 
         for hyperedge in self.hyperedges:
-            hyperedge_label = f'ge({hyperedge})/tp({self.hyperedge_types[hyperedge]})/wt({self.hyperedge_weights[hyperedge]})'
-            G.add_node(hyperedge, color='red', label=hyperedge_label)
+            hyperedge_label = (
+                f"ge({hyperedge})/tp({self.hyperedge_types[hyperedge]})/wt({self.hyperedge_weights[hyperedge]})"
+            )
+            G.add_node(hyperedge, color="red", label=hyperedge_label)
             for u in hyperedge:
-                G.add_edge(u, hyperedge, color='red', label='')
+                G.add_edge(u, hyperedge, color="red", label="")
 
         pos = nx.spring_layout(G)
 
         edges = G.edges()
-        colors = [G[u][v][0]['color'] if 'color' in G[u][v][0] else 'black' for u, v in edges]
+        colors = [G[u][v][0]["color"] if "color" in G[u][v][0] else "black" for u, v in edges]
 
-        node_labels = {node: G.nodes[node]['label'] for node in G.nodes}
-        nx.draw(G, pos, with_labels=True, font_weight='bold', edgelist=edges, edge_color=colors,
-                node_color='skyblue', node_size=1000, font_size=8, labels=node_labels)
+        node_labels = {node: G.nodes[node]["label"] for node in G.nodes}
+        nx.draw(
+            G,
+            pos,
+            with_labels=True,
+            font_weight="bold",
+            edgelist=edges,
+            edge_color=colors,
+            node_color="skyblue",
+            node_size=1000,
+            font_size=8,
+            labels=node_labels,
+        )
 
-        edge_labels = {(u, v): G[u][v][0]['label'] if 'label' in G[u][v][0] else '' for (u, v) in
-                       edges}
+        edge_labels = {(u, v): G[u][v][0]["label"] if "label" in G[u][v][0] else "" for (u, v) in edges}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 
         plt.show()
@@ -272,8 +274,9 @@ if __name__ == "__main__":
     hyperedge_types = {(1, 2, 3): 1, (3, 5, 4): 1}
     hyperedge_weights = {(1, 2, 3): 3, (3, 5, 4): 2}
 
-    bellman_ford = HBellmanFord(nodes, edges, node_types, edge_types, edge_weights, hyperedges,
-                                hyperedge_types, hyperedge_weights)
+    bellman_ford = HBellmanFord(
+        nodes, edges, node_types, edge_types, edge_weights, hyperedges, hyperedge_types, hyperedge_weights
+    )
     node_criteria_all_types = 0
     node_criteria_specific_types = [0, 1]
     edge_criteria_all_types = 0
@@ -281,8 +284,9 @@ if __name__ == "__main__":
     hyperedge_criteria_vertices = 0
     hyperedge_criteria_hyperedges = [1]
 
-    distance_matrix = bellman_ford.bellman_ford(node_criteria_all_types, edge_criteria_all_types,
-                                                hyperedge_criteria_vertices)
+    distance_matrix = bellman_ford.bellman_ford(
+        node_criteria_all_types, edge_criteria_all_types, hyperedge_criteria_vertices
+    )
 
     bellman_ford.visualize_hypergraph()
 

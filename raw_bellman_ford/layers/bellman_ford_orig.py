@@ -37,7 +37,7 @@ class BellmanFordLayer(nn.Module):
         - predecessors: Matrix of predecessors for each node in the shortest paths.
         - has_negative_cycle: Boolean indicating whether the graph contains a negative weight cycle.
         """
-        distances = torch.full((self.num_nodes, self.num_nodes), float('inf'))
+        distances = torch.full((self.num_nodes, self.num_nodes), float("inf"))
         predecessors = torch.zeros((self.num_nodes, self.num_nodes), dtype=torch.long)
 
         distances[source_node, 0] = 0
@@ -67,20 +67,32 @@ if __name__ == "__main__":
     num_nodes = 4
     source_node = 0
 
-    adj_matrix1 = torch.tensor([[0, 2, 1, float('inf')],
-                                [float('inf'), 0, -1, float('inf')],
-                                [float('inf'), float('inf'), 0, -2],
-                                [float('inf'), float('inf'), float('inf'), 0]])
+    adj_matrix1 = torch.tensor(
+        [
+            [0, 2, 1, float("inf")],
+            [float("inf"), 0, -1, float("inf")],
+            [float("inf"), float("inf"), 0, -2],
+            [float("inf"), float("inf"), float("inf"), 0],
+        ]
+    )
 
-    adj_matrix2 = torch.tensor([[0, 2, float('inf'), 1],
-                                [1, 0, -1, float('inf')],
-                                [float('inf'), float('inf'), 0, -2],
-                                [float('inf'), 1, float('inf'), 0]])
+    adj_matrix2 = torch.tensor(
+        [
+            [0, 2, float("inf"), 1],
+            [1, 0, -1, float("inf")],
+            [float("inf"), float("inf"), 0, -2],
+            [float("inf"), 1, float("inf"), 0],
+        ]
+    )
 
-    adj_matrix3 = torch.tensor([[0, 2, 1, float('inf')],
-                                [float('inf'), 0, -1, float('inf')],
-                                [3, float('inf'), 0, -2],
-                                [float('inf'), 1, float('inf'), 0]])
+    adj_matrix3 = torch.tensor(
+        [
+            [0, 2, 1, float("inf")],
+            [float("inf"), 0, -1, float("inf")],
+            [3, float("inf"), 0, -2],
+            [float("inf"), 1, float("inf"), 0],
+        ]
+    )
 
     bellman_ford_layer = BellmanFordLayer(num_nodes)
 

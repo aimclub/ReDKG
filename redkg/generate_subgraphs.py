@@ -35,20 +35,28 @@ def generate_subgraphs(dataset, num_subgraphs=5, min_nodes=2, max_nodes=5):
         while len(selected_nodes) < random.randint(min_nodes, max_nodes):
             if selected_nodes:
                 new_node = random.choice(
-                    [link['target'] for link in dataset['links'] if
-                     link['source'] in {node['id'] for node in selected_nodes}] +
-                    [link['source'] for link in dataset['links'] if
-                     link['target'] in {node['id'] for node in selected_nodes}]
+                    [
+                        link["target"]
+                        for link in dataset["links"]
+                        if link["source"] in {node["id"] for node in selected_nodes}
+                    ]
+                    + [
+                        link["source"]
+                        for link in dataset["links"]
+                        if link["target"] in {node["id"] for node in selected_nodes}
+                    ]
                 )
             else:
-                new_node = random.choice(dataset['nodes'])['id']
-            if new_node not in {node['id'] for node in selected_nodes}:
-                selected_nodes.append({'id': new_node})
-        selected_node_ids = {node['id'] for node in selected_nodes}
-        selected_links = [link for link in dataset['links'] if
-                          link['source'] in selected_node_ids and link[
-                              'target'] in selected_node_ids]
-        subgraphs.append({'nodes': selected_nodes, 'links': selected_links})
+                new_node = random.choice(dataset["nodes"])["id"]
+            if new_node not in {node["id"] for node in selected_nodes}:
+                selected_nodes.append({"id": new_node})
+        selected_node_ids = {node["id"] for node in selected_nodes}
+        selected_links = [
+            link
+            for link in dataset["links"]
+            if link["source"] in selected_node_ids and link["target"] in selected_node_ids
+        ]
+        subgraphs.append({"nodes": selected_nodes, "links": selected_links})
     return subgraphs
 
 
@@ -79,9 +87,9 @@ def generate_subgraphs_dataset(subgraphs, large_dataset):
     dataset = []
     for i in range(len(subgraphs)):
         user_edge_index = []
-        for link in subgraphs[i]['links']:
-            source_idx = large_dataset.node_mapping.get(link['source'])
-            target_idx = large_dataset.node_mapping.get(link['target'])
+        for link in subgraphs[i]["links"]:
+            source_idx = large_dataset.node_mapping.get(link["source"])
+            target_idx = large_dataset.node_mapping.get(link["target"])
             # Add edge only if both nodes are on the subgraph
             if source_idx is not None and target_idx is not None:
                 user_edge_index.append([source_idx, target_idx])
@@ -89,8 +97,8 @@ def generate_subgraphs_dataset(subgraphs, large_dataset):
 
         # Convert subgraphs nodes of the small graph
         user_node_index = []
-        for link in subgraphs[i]['nodes']:
-            node_idx = large_dataset.node_mapping.get(link['id'])
+        for link in subgraphs[i]["nodes"]:
+            node_idx = large_dataset.node_mapping.get(link["id"])
             if node_idx is not None:
                 user_node_index.append(node_idx)
         # could be used later
@@ -121,7 +129,7 @@ if __name__ == "__main__":
             {"id": "python"},
             {"id": "linq"},
             {"id": "html"},
-            {"id": "sql"}
+            {"id": "sql"},
         ],
         "links": [
             {"source": "assembly", "target": "html"},
@@ -139,8 +147,8 @@ if __name__ == "__main__":
             {"source": "net", "target": "sql"},
             {"source": "net", "target": "vb"},
             {"source": "net", "target": "vb.net"},
-            {"source": "vb", "target": "vb.net"}
-        ]
+            {"source": "vb", "target": "vb.net"},
+        ],
     }
     combined_graph = generate_subgraphs(graph)
     import json

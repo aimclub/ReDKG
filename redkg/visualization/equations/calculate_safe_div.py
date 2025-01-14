@@ -1,4 +1,5 @@
 """Calculate safe div module."""
+
 from typing import Any
 
 import numpy as np

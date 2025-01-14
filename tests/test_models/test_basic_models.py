@@ -27,11 +27,7 @@ def test_MLP():
     """
     Test that the MLP model can be instantiated and run.
     """
-    model = MLP(
-        input_shape=20,
-        encoded_size=16,
-        arch=[32, 64, 32]
-    )
+    model = MLP(input_shape=20, encoded_size=16, arch=[32, 64, 32])
 
     x = torch.randn(16, 20)  # random node feature matrix of shape [num_nodes, in_channels]
 

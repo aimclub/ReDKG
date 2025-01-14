@@ -15,7 +15,7 @@ def test_GAT():
         num_layers=3,
         activation=F.relu,
         dropout_rate=0.5,
-        heads=2
+        heads=2,
     )
 
     x = torch.randn(16, 100)  # random node feature matrix of shape [num_nodes, in_channels]
