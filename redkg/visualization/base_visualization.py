@@ -1,7 +1,7 @@
 """Base visualization module."""
 
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, Union
+from typing import Any, Iterable
 
 import matplotlib
 import numpy as np

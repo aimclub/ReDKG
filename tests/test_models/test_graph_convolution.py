@@ -18,9 +18,10 @@ def mock_input():
 
 def test_initialization(mock_adj_matrix, monkeypatch):
     """Test initialization of GraphConvolution"""
+
     def mock_load(*args, **kwargs):
         return mock_adj_matrix.numpy()
-    
+
     monkeypatch.setattr(np, 'load', mock_load)
     layer = GraphConvolution(2, 3)
 
@@ -31,9 +32,10 @@ def test_initialization(mock_adj_matrix, monkeypatch):
 
 def test_forward(mock_adj_matrix, mock_input, monkeypatch):
     """Test forward pass"""
+
     def mock_load(*args, **kwargs):
         return mock_adj_matrix.numpy()
-    
+
     monkeypatch.setattr(np, 'load', mock_load)
     layer = GraphConvolution(2, 3)
 

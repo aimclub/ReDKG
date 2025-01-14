@@ -3,6 +3,7 @@
 import torch
 import torch.nn as nn
 
+
 class BellmanFordLayer(nn.Module):
     """
     This class represents a Bellman-Ford layer in a neural network.
@@ -11,6 +12,7 @@ class BellmanFordLayer(nn.Module):
     Parameters:
     - num_nodes: Number of nodes in the graph.
     """
+
     def __init__(self, num_nodes):
         """
         Initialize the BellmanFordLayer.
@@ -59,24 +61,25 @@ class BellmanFordLayer(nn.Module):
 
         return distances, predecessors, has_negative_cycle
 
+
 if __name__ == "__main__":
     num_nodes = 4
     source_node = 0
 
     adj_matrix1 = torch.tensor([[0, 2, 1, float('inf')],
-                               [float('inf'), 0, -1, float('inf')],
-                               [float('inf'), float('inf'), 0, -2],
-                               [float('inf'), float('inf'), float('inf'), 0]])
+                                [float('inf'), 0, -1, float('inf')],
+                                [float('inf'), float('inf'), 0, -2],
+                                [float('inf'), float('inf'), float('inf'), 0]])
 
     adj_matrix2 = torch.tensor([[0, 2, float('inf'), 1],
-                               [1, 0, -1, float('inf')],
-                               [float('inf'), float('inf'), 0, -2],
-                               [float('inf'), 1, float('inf'), 0]])
+                                [1, 0, -1, float('inf')],
+                                [float('inf'), float('inf'), 0, -2],
+                                [float('inf'), 1, float('inf'), 0]])
 
     adj_matrix3 = torch.tensor([[0, 2, 1, float('inf')],
-                               [float('inf'), 0, -1, float('inf')],
-                               [3, float('inf'), 0, -2],
-                               [float('inf'), 1, float('inf'), 0]])
+                                [float('inf'), 0, -1, float('inf')],
+                                [3, float('inf'), 0, -2],
+                                [float('inf'), 1, float('inf'), 0]])
 
     bellman_ford_layer = BellmanFordLayer(num_nodes)
 

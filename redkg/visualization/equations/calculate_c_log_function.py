@@ -1,7 +1,6 @@
 """Calculate c-log function module."""
 
 import math
-from typing import Union
 
 
 def calculate_c_log_function(n: int, m: int) -> int:

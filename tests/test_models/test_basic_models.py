@@ -1,5 +1,5 @@
 import torch
-import torch.nn.functional as F
+
 from redkg.models.basic_models import Net, MLP
 
 
@@ -18,7 +18,7 @@ def test_Net():
 
     # Check the forward pass
     assert not torch.isnan(output).any()
-    
+
     assert (output > 1).sum() == 0
     assert (output < -1).sum() == 0
 

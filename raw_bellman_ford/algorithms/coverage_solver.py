@@ -2,8 +2,18 @@
 
 import numpy as np
 
+
 class HypergraphCoverageSolver:
-    def __init__(self, nodes, edges, hyperedges, node_types, edge_weights, hyperedge_weights, hyperedge_types):
+    def __init__(
+            self,
+            nodes,
+            edges,
+            hyperedges,
+            node_types,
+            edge_weights,
+            hyperedge_weights,
+            hyperedge_types
+    ):
         """
         Initializes the HypergraphCoverageSolver object.
 
@@ -70,8 +80,8 @@ class HypergraphCoverageSolver:
                 u = hyperedge_index[u]
             if isinstance(v, tuple):
                 v = hyperedge_index[v]
-            distance_matrix[u-1, v-1] = self.get_edge_weight(edge)
-            distance_matrix[v-1, u-1] = self.get_edge_weight(edge)
+            distance_matrix[u - 1, v - 1] = self.get_edge_weight(edge)
+            distance_matrix[v - 1, u - 1] = self.get_edge_weight(edge)
 
         for hyperedge in self.hyperedges:
             hyperedge_index_value = hyperedge_index[hyperedge]
@@ -94,7 +104,8 @@ class HypergraphCoverageSolver:
         """
         print("Full Distance Matrix:")
         for i, row in enumerate(self.compute_shortest_distances()):
-            node_or_hyperedge = f"gv{i + 1}" if i < len(self.nodes) else f"he{i + 1 - len(self.nodes)}"
+            node_or_hyperedge = f"gv{i + 1}" if i < len(
+                self.nodes) else f"he{i + 1 - len(self.nodes)}"
             print(f"{node_or_hyperedge}: {row}")
 
     def can_cover_with_drone(self, drone_radius):
@@ -171,7 +182,9 @@ class HypergraphMetricsCalculator:
         - List of central nodes.
         """
         min_eccentricity = self.radius()
-        central_nodes = [i + 1 for i, eccentricity in enumerate(np.max(self.distance_matrix, axis=1)) if eccentricity == min_eccentricity]
+        central_nodes = [i + 1 for i, eccentricity in
+                         enumerate(np.max(self.distance_matrix, axis=1)) if
+                         eccentricity == min_eccentricity]
         return central_nodes
 
     def peripheral_nodes(self):
@@ -182,7 +195,9 @@ class HypergraphMetricsCalculator:
         - List of peripheral nodes.
         """
         max_eccentricity = np.max(np.max(self.distance_matrix, axis=1))
-        peripheral_nodes = [i + 1 for i, eccentricity in enumerate(np.max(self.distance_matrix, axis=1)) if eccentricity == max_eccentricity]
+        peripheral_nodes = [i + 1 for i, eccentricity in
+                            enumerate(np.max(self.distance_matrix, axis=1)) if
+                            eccentricity == max_eccentricity]
         return peripheral_nodes
 
     def closeness_centrality(self, node):
@@ -217,8 +232,11 @@ class HypergraphMetricsCalculator:
         for k in range(len(self.distance_matrix)):
             for i in range(len(self.distance_matrix)):
                 for j in range(len(self.distance_matrix)):
-                    if i != j and i != k and j != k and self.distance_matrix[i, j] != np.inf and self.distance_matrix[i, k] != 0 and self.distance_matrix[k, j] != 0:
-                        betweenness_values[i, j] += (self.distance_matrix[i, k] + self.distance_matrix[k, j]) / self.distance_matrix[i, j]
+                    if i != j and i != k and j != k and self.distance_matrix[i, j] != np.inf and \
+                            self.distance_matrix[i, k] != 0 and self.distance_matrix[k, j] != 0:
+                        betweenness_values[i, j] += (self.distance_matrix[i, k] +
+                                                     self.distance_matrix[k, j]) / \
+                                                    self.distance_matrix[i, j]
 
         betweenness_centrality = np.sum(betweenness_values) / 2
         return betweenness_centrality if not np.isinf(betweenness_centrality) else 0
@@ -234,17 +252,20 @@ class HypergraphMetricsCalculator:
         - Degree centrality value.
         """
         return np.sum(self.distance_matrix[node - 1] != np.inf) / (len(self.distance_matrix) - 1)
-    
+
+
 if __name__ == "__main__":
     nodes = [1, 2, 3, 4, 5, 6]
-    edges = [(1, 2), (2, 3),(1, 4), (3, 4), ((1, 2, 3, 4), 5), ((1, 2, 3, 4), 6), (5, 6)]
+    edges = [(1, 2), (2, 3), (1, 4), (3, 4), ((1, 2, 3, 4), 5), ((1, 2, 3, 4), 6), (5, 6)]
     hyperedges = [(1, 2, 3, 4)]
     node_types = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
-    edge_weights = {(1, 2): 0.6, (2, 3): 0.5,  (3, 4): 0.6, (1, 4): 0.5, ((1, 2, 3, 4), 5): 0.2, ((1, 2, 3, 4), 6): 0.8, (5, 6): 0.7}
+    edge_weights = {(1, 2): 0.6, (2, 3): 0.5, (3, 4): 0.6, (1, 4): 0.5, ((1, 2, 3, 4), 5): 0.2,
+                    ((1, 2, 3, 4), 6): 0.8, (5, 6): 0.7}
     hyperedge_weights = {(1, 2, 3, 4): 0.6}
     hyperedge_types = {(1, 2, 3, 4): 1}
 
-    hypergraph_solver = HypergraphCoverageSolver(nodes, edges, hyperedges, node_types, edge_weights, hyperedge_weights, hyperedge_types)
+    hypergraph_solver = HypergraphCoverageSolver(nodes, edges, hyperedges, node_types, edge_weights,
+                                                 hyperedge_weights, hyperedge_types)
     hypergraph_solver.print_distance_matrix()
 
     distance_matrix = hypergraph_solver.compute_shortest_distances()
@@ -266,7 +287,8 @@ if __name__ == "__main__":
     print(f"Peripheral Nodes: {metrics_calculator.peripheral_nodes()}")
 
     drone_radius = 1.0  # Drone radius
-    coverage_solver = HypergraphCoverageSolver(nodes, edges, hyperedges, node_types, edge_weights, hyperedge_weights, hyperedge_types)
+    coverage_solver = HypergraphCoverageSolver(nodes, edges, hyperedges, node_types, edge_weights,
+                                               hyperedge_weights, hyperedge_types)
     can_cover = coverage_solver.can_cover_with_drone(drone_radius)
 
     if can_cover:

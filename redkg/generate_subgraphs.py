@@ -21,7 +21,8 @@ def generate_subgraphs(dataset, num_subgraphs=5, min_nodes=2, max_nodes=5):
                 selected_nodes.append({'id': new_node})
         selected_node_ids = {node['id'] for node in selected_nodes}
         selected_links = [link for link in dataset['links'] if
-                          link['source'] in selected_node_ids and link['target'] in selected_node_ids]
+                          link['source'] in selected_node_ids and link[
+                              'target'] in selected_node_ids]
         subgraphs.append({'nodes': selected_nodes, 'links': selected_links})
     return subgraphs
 
@@ -45,7 +46,8 @@ def generate_subgraphs_dataset(subgraphs, large_dataset):
             node_idx = large_dataset.node_mapping.get(link['id'])
             if node_idx is not None:
                 user_node_index.append(node_idx)
-        user_node_indices = large_dataset.x[user_node_index]
+        # could be used later
+        # user_node_indices = large_dataset.x[user_node_index]
 
         # Make a mask for the subgraph nodes
         user_mask = torch.zeros_like(large_dataset.x)
