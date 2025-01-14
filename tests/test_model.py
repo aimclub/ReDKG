@@ -1,7 +1,8 @@
-import torch
 import random
-import numpy as np
 import sys
+
+import numpy as np
+import torch
 
 from redkg.dataloader import get_info
 from redkg.evaluator import Evaluator

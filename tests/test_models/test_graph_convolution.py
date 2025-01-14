@@ -1,6 +1,7 @@
+import numpy as np
 import pytest
 import torch
-import numpy as np
+
 from redkg.models.graph_convolution import GraphConvolution
 
 

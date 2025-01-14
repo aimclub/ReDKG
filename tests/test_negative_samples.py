@@ -1,5 +1,6 @@
-from redkg.negative_samples import common_neighbors, generate_negative_samples
 import torch
+
+from redkg.negative_samples import common_neighbors, generate_negative_samples
 
 
 def test_common_neighbors():

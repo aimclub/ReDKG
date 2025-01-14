@@ -1,5 +1,6 @@
-import torch
 import pytest
+import torch
+
 from redkg.generate_subgraphs import generate_subgraphs, generate_subgraphs_dataset
 
 

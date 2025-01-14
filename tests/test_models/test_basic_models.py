@@ -1,6 +1,6 @@
 import torch
 
-from redkg.models.basic_models import Net, MLP
+from redkg.models.basic_models import MLP, Net
 
 
 def test_Net():
