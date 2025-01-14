@@ -7,7 +7,7 @@ from redkg.visualization.utils.cached import cached
 
 
 @cached()
-def calculate_vertex_size(vertex_num):
+def calculate_vertex_size(vertex_num: int) -> float:
     """Calculate vertex size function."""
     return (
         Defaults.calculate_vertex_size_multiplier

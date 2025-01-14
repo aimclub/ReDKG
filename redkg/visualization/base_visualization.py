@@ -57,7 +57,7 @@ class BaseVisualization(ABC):
 
         # Create vertexes
         for coordinates, label, size, width in zip(
-            contract.vertex_coordinates.tolist(), vertex_label, contract.vertex_size, contract.vertex_line_width  # noqa
+            contract.vertex_coordinates.tolist(), vertex_label, contract.vertex_size, contract.vertex_line_width  # type: ignore[attr-defined] # noqa
         ):
             circle = Circle(coordinates, size)
             circle.lineWidth = width
