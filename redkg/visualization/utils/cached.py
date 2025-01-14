@@ -1,7 +1,7 @@
 """Cached decorator function."""
 
 from functools import lru_cache
-from typing import Callable, Any
+from typing import Any, Callable
 
 
 def cached(maxsize: int = 32, typed: bool = True) -> Callable[[Callable], Callable]:

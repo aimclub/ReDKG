@@ -1,9 +1,9 @@
 """Frozen dataset for immutable objects."""
 
 from dataclasses import dataclass
-from typing import Type, TypeVar, Callable
+from typing import Callable, Type, TypeVar
 
-T = TypeVar('T')  # Generic type for class
+T = TypeVar("T")  # Generic type for class
 
 
 def frozen_dataclass(cls: Type[T]) -> Type[T]:
