@@ -7,8 +7,9 @@ import networkx as nx
 
 class HBellmanFord:
     """
-    This class represents an implementation of the Hypergraph Bellman-Ford algorithm
-    for computing distances and centralities in a hypergraph.
+    This class represents an implementation of the Hypergraph Bellman-Ford algorithm.
+
+    It is used for computing distances and centralities in a hypergraph.
     """
 
     def __init__(
@@ -227,9 +228,7 @@ class HBellmanFord:
         return distance_matrix
 
     def visualize_hypergraph(self):
-        """
-        Visualize the hypergraph using Matplotlib and NetworkX.
-        """
+        """Visualize the hypergraph using Matplotlib and NetworkX."""
         G = nx.MultiDiGraph()
 
         for node in self.nodes:

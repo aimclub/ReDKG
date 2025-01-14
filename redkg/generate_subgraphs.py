@@ -4,6 +4,30 @@ from torch_geometric.data import Data
 
 
 def generate_subgraphs(dataset, num_subgraphs=5, min_nodes=2, max_nodes=5):
+    """
+    Generates subgraphs from a given dataset.
+
+    This function creates a specified number of subgraphs by randomly selecting nodes
+    and their associated links from the dataset. The size of each subgraph is constrained
+    by the specified minimum and maximum number of nodes.
+
+    Parameters
+    ----------
+    dataset : dict
+        The input graph dataset containing 'nodes' (list of nodes) and 'links'
+        (list of edges with 'source' and 'target' keys).
+    num_subgraphs : int, optional
+        The number of subgraphs to generate (default: 5).
+    min_nodes : int, optional
+        The minimum number of nodes in each subgraph (default: 2).
+    max_nodes : int, optional
+        The maximum number of nodes in each subgraph (default: 5).
+
+    Returns
+    -------
+    list
+        A list of subgraphs, where each subgraph is a dictionary with 'nodes' and 'links' as keys.
+    """
     subgraphs = []
     for _ in range(num_subgraphs):
         selected_nodes = []
@@ -28,6 +52,28 @@ def generate_subgraphs(dataset, num_subgraphs=5, min_nodes=2, max_nodes=5):
 
 
 def generate_subgraphs_dataset(subgraphs, large_dataset):
+    """
+    Generate a dataset from a list of subgraphs.
+
+    This function takes a list of subgraphs and a large dataset to create smaller datasets
+    corresponding to each subgraph. The smaller datasets contain node features, edge indices,
+    and labels derived from the large dataset, with a mask applied to isolate the subgraph nodes.
+
+    Args:
+        subgraphs (list[dict]): A list of subgraphs where each subgraph is represented as a
+            dictionary containing:
+                - 'links' (list[dict]): Edges in the subgraph, where each edge is represented
+                  as a dictionary with 'source' and 'target' node IDs.
+                - 'nodes' (list[dict]): Nodes in the subgraph, where each node is represented
+                  as a dictionary with an 'id' key.
+        large_dataset (Data): The large dataset containing the following attributes:
+            - `x` (Tensor): Node feature matrix of shape `(num_nodes, num_features)`.
+            - `y` (Tensor): Labels for nodes or graphs.
+            - `node_mapping` (dict): Mapping of node IDs to indices in the dataset.
+
+    Returns:
+        list[Data]: A list of `Data` objects, each representing a dataset for a subgraph.
+    """
     # Generate dataset from all subgraphs
     dataset = []
     for i in range(len(subgraphs)):

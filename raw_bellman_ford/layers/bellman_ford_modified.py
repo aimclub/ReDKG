@@ -7,6 +7,7 @@ import torch.nn as nn
 class BellmanFordLayerModified(nn.Module):
     """
     This class represents a modified Bellman-Ford layer in a neural network.
+
     It computes node features, graph diameter, and graph eccentricity based on the Bellman-Ford algorithm.
     """
 

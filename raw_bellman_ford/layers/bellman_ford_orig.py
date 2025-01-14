@@ -7,6 +7,7 @@ import torch.nn as nn
 class BellmanFordLayer(nn.Module):
     """
     This class represents a Bellman-Ford layer in a neural network.
+
     It computes shortest distances, predecessors, and detects negative weight cycles in a graph.
 
     Parameters:

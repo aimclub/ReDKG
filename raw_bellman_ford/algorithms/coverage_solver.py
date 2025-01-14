@@ -4,6 +4,24 @@ import numpy as np
 
 
 class HypergraphCoverageSolver:
+    """
+    HypergraphCoverageSolver class.
+
+    Provides tools for working with hypergraphs, including distance computation, weight handling,
+    and coverage checks.
+
+    Attributes:
+    - nodes, edges, hyperedges: Lists of nodes, ordinary edges, and hyperedges.
+    - node_types, edge_weights, hyperedge_weights, hyperedge_types: Dictionaries for types and weights.
+
+    Methods:
+    - get_edge_weight(edge): Gets the weight of an edge.
+    - get_hyperedge_weight(hyperedge): Gets the weight of a hyperedge.
+    - compute_shortest_distances(): Returns the shortest distance matrix.
+    - print_distance_matrix(): Prints the distance matrix.
+    - can_cover_with_drone(drone_radius): Checks coverage feasibility for a given radius.
+    """
+
     def __init__(
             self,
             nodes,
@@ -99,9 +117,7 @@ class HypergraphCoverageSolver:
         return distance_matrix
 
     def print_distance_matrix(self):
-        """
-        Prints the matrix of shortest distances.
-        """
+        """Prints the matrix of shortest distances."""
         print("Full Distance Matrix:")
         for i, row in enumerate(self.compute_shortest_distances()):
             node_or_hyperedge = f"gv{i + 1}" if i < len(
@@ -130,6 +146,25 @@ class HypergraphCoverageSolver:
 
 
 class HypergraphMetricsCalculator:
+    """
+    HypergraphMetricsCalculator class.
+
+    Calculates various metrics for a hypergraph based on its distance matrix.
+
+    Attributes:
+    - distance_matrix: Matrix representing distances in the hypergraph.
+
+    Methods:
+    - eccentricity(node): Calculates the eccentricity of a node.
+    - radius(): Computes the hypergraph radius.
+    - diameter(): Computes the hypergraph diameter.
+    - central_nodes(): Finds central nodes based on radius.
+    - peripheral_nodes(): Identifies peripheral nodes based on diameter.
+    - closeness_centrality(node): Computes the closeness centrality of a node.
+    - betweenness_centrality(node): Computes the betweenness centrality of a node.
+    - degree_centrality(node): Computes the degree centrality of a node.
+    """
+
     def __init__(self, distance_matrix):
         """
         Initializes the HypergraphMetricsCalculator object.
