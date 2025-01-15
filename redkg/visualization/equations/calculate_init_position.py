@@ -1,4 +1,5 @@
 """Calculate initial position module."""
+
 from typing import Any
 
 import numpy as np

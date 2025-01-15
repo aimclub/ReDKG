@@ -3,8 +3,6 @@
 from dataclasses import dataclass, field
 from typing import Any, Optional, Union
 
-from redkg.visualization.config.types import TGraphEdgeList
-
 
 @dataclass
 class BaseGraphContract:

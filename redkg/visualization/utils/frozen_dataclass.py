@@ -1,13 +1,16 @@
 """Frozen dataset for immutable objects."""
 
 from dataclasses import dataclass
+from typing import Callable, Type, TypeVar
+
+T = TypeVar("T")  # Generic type for class
 
 
-def frozen_dataclass(cls):
-    """Frozen dataclass decorator for dataclass based immutable enums."""
+def frozen_dataclass(cls: Type[T]) -> Type[T]:
+    """Frozen dataclass decorator for dataclass-based immutable enums."""
     return dataclass(frozen=True)(cls)
 
 
-def reference(cls):
-    """Frozen dataclass decorator for dataclass based immutable enums."""
+def reference(cls: Type[T]) -> Type[T]:
+    """Frozen dataclass decorator for dataclass-based immutable enums."""
     return frozen_dataclass(cls)

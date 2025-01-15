@@ -10,6 +10,6 @@ def read_test_data():
     valid = pd.read_csv(path.joinpath("valid.csv"))
 
     for i in [train, test, valid]:
-        i["neg_head"] = [eval(l) for l in i["neg_head"]]
-        i["neg_tail"] = [eval(l) for l in i["neg_tail"]]
+        i["neg_head"] = [eval(l_) for l_ in i["neg_head"]]
+        i["neg_tail"] = [eval(l_) for l_ in i["neg_tail"]]
     return train, test, valid

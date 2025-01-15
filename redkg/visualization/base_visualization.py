@@ -1,7 +1,7 @@
 """Base visualization module."""
 
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, Union
+from typing import Any, Iterable
 
 import matplotlib
 import numpy as np
@@ -57,7 +57,7 @@ class BaseVisualization(ABC):
 
         # Create vertexes
         for coordinates, label, size, width in zip(
-            contract.vertex_coordinates.tolist(), vertex_label, contract.vertex_size, contract.vertex_line_width  # noqa
+            contract.vertex_coordinates.tolist(), vertex_label, contract.vertex_size, contract.vertex_line_width  # type: ignore[attr-defined] # noqa
         ):
             circle = Circle(coordinates, size)
             circle.lineWidth = width
@@ -153,6 +153,25 @@ class BaseVisualization(ABC):
         vertex_size: Any,
         radius_increment: float = Defaults.radius_increment,
     ) -> tuple:  # noqa
+        """
+        Generate the layout for a graph with convex hulls for edges.
+
+        This method computes the geometric layout for a graph, creating paths and arcs for edges
+        based on the vertices' positions and sizes. It returns the paths and polygons for each edge.
+
+        Args:
+            num_vertex (int): Number of vertices in the graph.
+            edge_list (Any): List of edges, where each edge is a list of vertex indices.
+            position (Any): List of vertex positions in a 2D space.
+            vertex_size (Any): Size of the vertices.
+            radius_increment (float, optional): Factor to increase the vertex size for layout (default is `Defaults.radius_increment`).
+
+        Returns:
+            tuple: A tuple containing:
+                - line_paths (list): List of line paths for the edges.
+                - arc_paths (list): List of arc paths for the edges.
+                - polygons_vertices_index (list): List of vertex indices for the polygons formed by edges.
+        """
         # Make paths
         line_paths = [None] * len(edge_list)
         arc_paths = [None] * len(edge_list)

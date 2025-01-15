@@ -1,23 +1,21 @@
-import torch
-
-torch.manual_seed(0)
-
 import random
-
-random.seed(0)
-
-import numpy as np
-
-np.random.seed(0)
-
 import sys
 
-sys.path.append("../")
+import numpy as np
+import torch
 
 from redkg.dataloader import get_info
 from redkg.evaluator import Evaluator
 from redkg.models.kge import KGEModel
 from tests.utils import read_test_data
+
+torch.manual_seed(0)
+
+random.seed(0)
+
+np.random.seed(0)
+
+sys.path.append("../")
 
 train, test, valid = read_test_data()
 
@@ -76,8 +74,8 @@ def test_model():
             sum(
                 [
                     x
-                    for l in positive_score.tolist() + negative_tail_score.tolist() + negative_head_score.tolist()
-                    for x in l
+                    for l_ in positive_score.tolist() + negative_tail_score.tolist() + negative_head_score.tolist()
+                    for x in l_
                 ]
             ),
             3,

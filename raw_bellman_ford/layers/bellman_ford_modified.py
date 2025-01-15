@@ -3,11 +3,14 @@
 import torch
 import torch.nn as nn
 
+
 class BellmanFordLayerModified(nn.Module):
     """
     This class represents a modified Bellman-Ford layer in a neural network.
+
     It computes node features, graph diameter, and graph eccentricity based on the Bellman-Ford algorithm.
     """
+
     def __init__(self, num_nodes, num_features):
         """
         Initialize the BellmanFordLayerModified.
@@ -37,14 +40,14 @@ class BellmanFordLayerModified(nn.Module):
         - graph_diameter: Diameter of the graph.
         - graph_eccentricity: Eccentricity of the graph.
         """
-        distances = torch.full((self.num_nodes,), float('inf'))
+        distances = torch.full((self.num_nodes,), float("inf"))
         predecessors = torch.full((self.num_nodes,), -1)
         distances[source_node] = 0
 
         for _ in range(self.num_nodes - 1):
             for s in range(self.num_nodes):
                 for d in range(self.num_nodes):
-                    if s != d and adj_matrix[s][d] != float('inf'):
+                    if s != d and adj_matrix[s][d] != float("inf"):
                         if distances[s] + adj_matrix[s][d] < distances[d]:
                             distances[d] = distances[s] + adj_matrix[s][d]
                             predecessors[d] = s
@@ -57,12 +60,17 @@ class BellmanFordLayerModified(nn.Module):
 
         return node_features, graph_diameter, graph_eccentricity
 
+
 if __name__ == "__main__":
     num_nodes_1 = 4
-    adj_matrix_1 = torch.tensor([[0, 2, float('inf'), 1],
-                            [float('inf'), 0, -1, float('inf')],
-                            [float('inf'), float('inf'), 0, -2],
-                            [float('inf'), float('inf'), float('inf'), 0]])
+    adj_matrix_1 = torch.tensor(
+        [
+            [0, 2, float("inf"), 1],
+            [float("inf"), 0, -1, float("inf")],
+            [float("inf"), float("inf"), 0, -2],
+            [float("inf"), float("inf"), float("inf"), 0],
+        ]
+    )
     source_node_1 = 0
 
     bellman_ford_layer_1 = BellmanFordLayerModified(num_nodes_1, num_features=5)
@@ -75,10 +83,14 @@ if __name__ == "__main__":
     print("Graph Eccentricity:", eccentricity_1)
 
     num_nodes_2 = 4
-    adj_matrix_2 = torch.tensor([[0, 2, 1, float('inf')],
-                            [float('inf'), 0, -1, float('inf')],
-                            [float('inf'), float('inf'), 0, -2],
-                            [float('inf'), float('inf'), float('inf'), 0]])
+    adj_matrix_2 = torch.tensor(
+        [
+            [0, 2, 1, float("inf")],
+            [float("inf"), 0, -1, float("inf")],
+            [float("inf"), float("inf"), 0, -2],
+            [float("inf"), float("inf"), float("inf"), 0],
+        ]
+    )
     source_node_2 = 0
 
     bellman_ford_layer_2 = BellmanFordLayerModified(num_nodes_2, num_features=5)
@@ -91,10 +103,7 @@ if __name__ == "__main__":
     print("Graph Eccentricity:", eccentricity_2)
 
     num_nodes_3 = 4
-    adj_matrix_3 = torch.tensor([[0, 2, 1, 3],
-                            [-1, 0, -1, 4],
-                            [5, 2, 0, -2],
-                            [2, 3, 1, 0]])
+    adj_matrix_3 = torch.tensor([[0, 2, 1, 3], [-1, 0, -1, 4], [5, 2, 0, -2], [2, 3, 1, 0]])
     source_node_3 = 0
 
     bellman_ford_layer_3 = BellmanFordLayerModified(num_nodes_3, num_features=5)
@@ -107,10 +116,7 @@ if __name__ == "__main__":
     print("Graph Eccentricity:", eccentricity_3)
 
     num_nodes_4 = 4
-    adj_matrix_4 = torch.tensor([[0, 2, 0, 1],
-                            [0, 0, 0, 0],
-                            [0, 0, 0, 2],
-                            [0, 0, 0, 0]])
+    adj_matrix_4 = torch.tensor([[0, 2, 0, 1], [0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 0]])
     source_node_4 = 0
 
     bellman_ford_layer_4 = BellmanFordLayerModified(num_nodes_4, num_features=5)

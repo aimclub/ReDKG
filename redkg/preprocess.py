@@ -8,7 +8,7 @@ import pandas as pd
 from numpy.typing import NDArray
 
 from redkg.config import Config
-from utils import pickle_dump
+from redkg.utils import pickle_dump
 
 random.seed(14)
 np.random.seed(14)

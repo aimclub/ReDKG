@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 from raw_bellman_ford.layers.bellman_ford_orig import BellmanFordLayer
 
+
 class NodeClassificationGNN(nn.Module):
     """
     NodeClassificationGNN is a graph neural network model for node classification.
@@ -14,6 +15,7 @@ class NodeClassificationGNN(nn.Module):
     - num_features: Dimensionality of node features.
     - num_classes: Number of classes for node classification.
     """
+
     def __init__(self, num_nodes, num_features, num_classes):
         """
         Initialize the NodeClassificationGNN.
@@ -53,14 +55,12 @@ class NodeClassificationGNN(nn.Module):
 
         return output, has_negative_cycle
 
+
 if __name__ == "__main__":
     num_nodes = 4
     source_node = 0
 
-    adj_matrix = torch.tensor([[0, 2, 0, 1],
-                               [0, 0, -1, 0],
-                               [0, 0, 0, -2],
-                               [0, 0, 0, 0]])
+    adj_matrix = torch.tensor([[0, 2, 0, 1], [0, 0, -1, 0], [0, 0, 0, -2], [0, 0, 0, 0]])
 
     gnn_model = NodeClassificationGNN(num_nodes, num_features=5, num_classes=2)
 
@@ -78,12 +78,9 @@ if __name__ == "__main__":
         loss.backward()
         optimizer.step()
 
-        print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}, Negative Cycle: {has_negative_cycle}')
+        print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}, Negative Cycle: {has_negative_cycle}")
 
-    test_adj_matrix = torch.tensor([[0, 1, 1, 0],
-                                   [0, 0, 0, 1],
-                                   [1, 0, 0, 0],
-                                   [0, 0, 1, 0]])
+    test_adj_matrix = torch.tensor([[0, 1, 1, 0], [0, 0, 0, 1], [1, 0, 0, 0], [0, 0, 1, 0]])
 
     test_source_node = 0
 

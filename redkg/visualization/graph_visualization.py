@@ -32,8 +32,6 @@ class GraphVisualizer(BaseVisualization):
     Common methods defined in Base class.
     """
 
-    contract = None
-
     def __init__(self, contract: GraphVisualizationContract):
         """Class initialization with contract GraphVisualizationContract.
 
@@ -59,12 +57,18 @@ class GraphVisualizer(BaseVisualization):
             edge_list - List of the edges
             edge_weights - Weights of the edges
         """
-        self.contract = contract
+        if contract is None:
+            raise ValueError("Contract cannot be None")
+
+        self.contract: GraphVisualizationContract = contract  # type: ignore
 
         self.validate()
 
     def draw(self) -> Any:
         """Draw graph interface based on Contract."""
+        if self.contract.graph is None:
+            raise ValueError("contract.graph cannot be None")
+
         # Define base matplotlib Plot with axes (mutable object)
         fig, axes = plt.subplots(figsize=Defaults.figure_size)
 
@@ -213,6 +217,8 @@ class GraphVisualizer(BaseVisualization):
 
     def validate(self) -> None:
         """Validate parameters."""
+        if self.contract.graph is None:
+            raise ValueError("contract.graph cannot be None")
         graph_type_is_correct = isinstance(self.contract.graph, GraphContract)
 
         edge_style_are_valid = self.contract.edge_style in EdgeStyles().values

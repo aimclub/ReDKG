@@ -15,10 +15,10 @@ class GCN(torch.nn.Module):
         self.dropout_rate = dropout_rate
         self.convs = torch.nn.ModuleList()
 
-        self.convs.append(GCNConv(in_channels, hidden_channels, dropout=dropout_rate))
+        self.convs.append(GCNConv(in_channels, hidden_channels))
         for _ in range(num_layers - 2):  # Subtract 2 to account for the first and last layers
-            self.convs.append(GCNConv(hidden_channels, hidden_channels, dropout=dropout_rate))
-        self.convs.append(GCNConv(hidden_channels, out_channels, dropout=dropout_rate))
+            self.convs.append(GCNConv(hidden_channels, hidden_channels))
+        self.convs.append(GCNConv(hidden_channels, out_channels))
 
         # Edge predictor
         self.edge_predictor = nn.Sequential(

@@ -1,7 +1,7 @@
 """BaseVisualizationContract module."""
 
 from dataclasses import dataclass, field
-from typing import Any, Iterable, Optional, Union
+from typing import Any, Iterable, Union
 
 from redkg.visualization.config.parameters.defaults import Defaults
 

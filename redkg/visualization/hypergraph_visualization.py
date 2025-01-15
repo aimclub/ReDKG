@@ -29,8 +29,6 @@ class HypergraphVisualizer(BaseVisualization):
     Common methods defined in Base class.
     """
 
-    contract = None
-
     def __init__(self, contract: HypergraphVisualizationContract):
         """Class initialization with contract HypergraphVisualizationContract.
 
@@ -57,7 +55,10 @@ class HypergraphVisualizer(BaseVisualization):
             edge_list - List of the edges
             edge_weights - Weights of the edges
         """
-        self.contract = contract
+        if contract is None:
+            raise ValueError("Contract cannot be None")
+
+        self.contract: HypergraphVisualizationContract = contract  # type: ignore
 
         self.validate()
 
@@ -67,6 +68,8 @@ class HypergraphVisualizer(BaseVisualization):
         fig, axes = plt.subplots(figsize=Defaults.figure_size)
 
         # Copy data from source
+        if self.contract.graph is None:
+            raise ValueError("self.contract.graph cannot be None")
         vertex_num, edge_list = self.contract.graph.vertex_num, deepcopy(self.contract.graph.edge_list[0])
 
         # Define style contract
@@ -166,6 +169,9 @@ class HypergraphVisualizer(BaseVisualization):
         - edge style (circle)
         - vertex number
         """
+        if self.contract.graph is None:
+            raise ValueError("contract.graph cannot be None")
+
         hypergraph_type_is_correct = isinstance(self.contract.graph, HypergraphContract)
 
         edge_style_are_valid = self.contract.edge_style == EdgeStyles.circle

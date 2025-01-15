@@ -1,5 +1,5 @@
-numpy  >= 1.15.4
-scikit-learn
-networkx >= 2.5.0
-pandas >= 1.0.0
+numpy==1.24.1
+scikit-learn == 1.6.0
+networkx == 3.2.1
+pandas == 2.2.3
 torch==2.1.1

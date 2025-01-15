@@ -1,5 +1,6 @@
-import torch
 import pytest
+import torch
+
 from redkg.generate_subgraphs import generate_subgraphs, generate_subgraphs_dataset
 
 
@@ -7,10 +8,7 @@ def test_generate_subgraphs():
     """
     Test that the generated subgraphs have the correct number of nodes and links.
     """
-    dataset = {
-        'nodes': [{'id': i} for i in range(10)],
-        'links': [{'source': i, 'target': i + 1} for i in range(9)]
-    }
+    dataset = {"nodes": [{"id": i} for i in range(10)], "links": [{"source": i, "target": i + 1} for i in range(9)]}
     num_subgraphs = 5
     min_nodes = 2
     max_nodes = 5
@@ -19,10 +17,10 @@ def test_generate_subgraphs():
 
     assert len(result) == num_subgraphs
     for subgraph in result:
-        assert min_nodes <= len(subgraph['nodes']) <= max_nodes
-        for link in subgraph['links']:
-            assert link['source'] in [node['id'] for node in subgraph['nodes']]
-            assert link['target'] in [node['id'] for node in subgraph['nodes']]
+        assert min_nodes <= len(subgraph["nodes"]) <= max_nodes
+        for link in subgraph["links"]:
+            assert link["source"] in [node["id"] for node in subgraph["nodes"]]
+            assert link["target"] in [node["id"] for node in subgraph["nodes"]]
 
 
 @pytest.fixture
@@ -30,6 +28,7 @@ def large_dataset():
     """
     Return a mock dataset with 20 nodes and 5 features.
     """
+
     class MockDataset:
         def __init__(self):
             self.node_mapping = {i: i for i in range(20)}
@@ -44,14 +43,8 @@ def test_generate_subgraphs_dataset(large_dataset):
     Test that the generated subgraphs have the correct number of nodes and links.
     """
     subgraphs = [
-        {
-            'nodes': [{'id': i} for i in range(5)],
-            'links': [{'source': i, 'target': i + 1} for i in range(4)]
-        },
-        {
-            'nodes': [{'id': i + 5} for i in range(5)],
-            'links': [{'source': i + 5, 'target': i + 6} for i in range(4)]
-        }
+        {"nodes": [{"id": i} for i in range(5)], "links": [{"source": i, "target": i + 1} for i in range(4)]},
+        {"nodes": [{"id": i + 5} for i in range(5)], "links": [{"source": i + 5, "target": i + 6} for i in range(4)]},
     ]
 
     result = generate_subgraphs_dataset(subgraphs, large_dataset)

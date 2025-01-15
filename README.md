@@ -23,17 +23,21 @@
 
 На первом шаге необходимо выполнить установку библиотеки, [Pytorch Geometric](https://github.com/pyg-team/pytorch_geometric/) и Torch 1.1.2.
 
+```
+pip install -q git+https://github.com/pyg-team/pytorch_geometric.git
+```
+
 ### PyTorch 1.12
 
 ```
-# CUDA 10.2
-conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=10.2 -c pytorch
-# CUDA 11.3
-conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.3 -c pytorch
-# CUDA 11.6
-conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.6 -c pytorch -c conda-forge
+# CUDA 11.8
+conda install pytorch==2.5.0 torchvision==0.20.0 torchaudio==2.5.0  pytorch-cuda=11.8 -c pytorch -c nvidia
+# CUDA 12.1
+conda install pytorch==2.5.0 torchvision==0.20.0 torchaudio==2.5.0 pytorch-cuda=12.1 -c pytorch -c nvidia
+# CUDA 12.4
+conda install pytorch==2.5.0 torchvision==0.20.0 torchaudio==2.5.0 pytorch-cuda=12.4 -c pytorch -c nvidia
 # CPU Only
-conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cpuonly -c pytorch
+conda install pytorch==2.5.0 torchvision==0.20.0 torchaudio==2.5.0 cpuonly -c pytorch
 ```
 
 После установки необходимых библиотек необходимо скопировать репозиторий и выполнить следующую команду, находясь в
@@ -123,7 +127,7 @@ labels = torch.tensor(list(range(len(graph_data['nodes']))), dtype=torch.long)
 
 large_dataset = Data(x=features, edge_index=edge_index, y=labels, node_mapping=node_mapping, node_index=node_index)
 torch.save(large_dataset, 'large_dataset.pth')
-large_dataset.cuda()
+# large_dataset.cuda()  # Если есть cuda ядра
 ```
 
 Далее необходимо сгенерировать подграфы для обучения модели. Для этого можно использовать следующий код:

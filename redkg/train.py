@@ -27,8 +27,7 @@ def train_gnn_model(model, optimizer, subgraph, positive_edges, negative_edges):
     node_embeddings = model(subgraph.x, subgraph.edge_index)
 
     # Подготовка меток и объединение положительных и отрицательных примеров
-    labels = torch.cat([torch.ones(len(positive_edges)), torch.zeros(len(negative_edges))], dim=0).to(
-        subgraph.x.device)
+    labels = torch.cat([torch.ones(len(positive_edges)), torch.zeros(len(negative_edges))], dim=0).to(subgraph.x.device)
 
     # Убедимся, что edges имеет правильный тип данных
     edges = torch.cat([torch.tensor(positive_edges), torch.tensor(negative_edges)], dim=0).to(subgraph.x.device).long()
