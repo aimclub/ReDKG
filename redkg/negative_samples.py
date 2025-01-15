@@ -1,7 +1,10 @@
 import random
+from typing import Dict, List, Set
+
+from torch import Tensor
 
 
-def common_neighbors(edge_index, num_nodes):
+def common_neighbors(edge_index: Tensor, num_nodes: int) -> Dict[int, Set[int]]:
     """
     Create a dictionary of neighbors for each node.
 
@@ -13,7 +16,7 @@ def common_neighbors(edge_index, num_nodes):
         dict: A dictionary mapping each node to its set of neighbors.
     """
     # Создание списка соседей для каждого узла
-    neighbors = {i: set() for i in range(num_nodes)}
+    neighbors: Dict[int, Set[int]] = {i: set() for i in range(num_nodes)}
     for edge in edge_index.t().tolist():
         neighbors[edge[0]].add(edge[1])
         neighbors[edge[1]].add(edge[0])
@@ -39,7 +42,7 @@ def generate_negative_samples(edge_index, num_nodes, num_neg_samples, max_attemp
         # Returns [[0, 2], [1, 0]]
     """
     neighbors = common_neighbors(edge_index, num_nodes)
-    negative_samples = []
+    negative_samples: List[List[int]] = []
     attempts = 0
 
     while len(negative_samples) < num_neg_samples and attempts < max_attempts:

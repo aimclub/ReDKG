@@ -1,7 +1,7 @@
 """CorePhysicalModel module."""
 
 from copy import deepcopy
-from typing import Any, Union
+from typing import Any, Union, no_type_check
 
 import numpy as np
 from sklearn.metrics import euclidean_distances
@@ -72,6 +72,9 @@ class CorePhysicalModel:
     def __make_one_step(
         self, position: Any, velocity: float, H: Any, epsilon: float, damping: float, delta: float
     ) -> tuple:
+        if isinstance(self.nums, int):
+            raise ValueError("self.num considered to be list not int")
+
         edge_center = calculate_edge_center(H, position)
 
         vertex_to_vertex_distance = euclidean_distances(position)
@@ -122,7 +125,7 @@ class CorePhysicalModel:
 
     @staticmethod
     def __node_attraction(
-        position: Any, e_center: list, vertex_to_edge_dist: Any, x0: float = 0.1, k: float = 1.0
+        position: Any, e_center: Any, vertex_to_edge_dist: Any, x0: float = 0.1, k: float = 1.0
     ) -> Any:
         x = deepcopy(vertex_to_edge_dist)
         x[vertex_to_edge_dist > 0] -= x0
@@ -139,7 +142,7 @@ class CorePhysicalModel:
         return f
 
     @staticmethod
-    def __node_repulsion(position: list, vertex_to_vertex_distance: Any, k: float = 1.0) -> Any:
+    def __node_repulsion(position: Any, vertex_to_vertex_distance: Any, k: float = 1.0) -> Any:
         distance = vertex_to_vertex_distance.copy()
 
         r, c = np.diag_indices_from(distance)
@@ -159,7 +162,7 @@ class CorePhysicalModel:
         return force
 
     @staticmethod
-    def __edge_repulsion(edge_center: list, H: Any, edge_to_edge_dist: Any, k: float = 1.0) -> Any:
+    def __edge_repulsion(edge_center: Any, H: Any, edge_to_edge_dist: Any, k: float = 1.0) -> Any:
         distance = edge_to_edge_dist.copy()
 
         r, c = np.diag_indices_from(distance)
@@ -179,7 +182,7 @@ class CorePhysicalModel:
         return np.matmul(H, force)
 
     @staticmethod
-    def __center_gravity(position: Any, center: list, vertex_to_vertex_distance: Any, k: float = 1) -> Any:
+    def __center_gravity(position: Any, center: Any, vertex_to_vertex_distance: Any, k: float = 1) -> Any:
         force_scale = vertex_to_vertex_distance
         force_direction = center[np.newaxis, np.newaxis, :] - position[:, np.newaxis, :]
         force_direction_length = np.linalg.norm(force_direction, axis=2)

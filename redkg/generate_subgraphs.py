@@ -1,10 +1,16 @@
 import random
+from typing import Any, Dict, List
 
 import torch
 from torch_geometric.data import Data
 
 
-def generate_subgraphs(dataset, num_subgraphs=5, min_nodes=2, max_nodes=5):
+def generate_subgraphs(
+    dataset: Dict[str, List],
+    num_subgraphs: int = 5,
+    min_nodes: int = 2,
+    max_nodes: int = 5,
+) -> List[Dict[str, List[Dict[str, Any]]]]:
     """
     Generates subgraphs from a given dataset.
 
@@ -31,7 +37,7 @@ def generate_subgraphs(dataset, num_subgraphs=5, min_nodes=2, max_nodes=5):
     """
     subgraphs = []
     for _ in range(num_subgraphs):
-        selected_nodes = []
+        selected_nodes: List[Dict[str, int]] = []
         while len(selected_nodes) < random.randint(min_nodes, max_nodes):
             if selected_nodes:
                 new_node = random.choice(
